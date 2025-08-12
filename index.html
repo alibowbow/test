@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aquila Research — Official Site</title>
+  <meta name="description" content="미국 주식·크립토 리서치를 위한 실전 인사이트. 거시 경제, 파생상품, 크립토, 기술적 분석을 체계적으로 연결하여 제공합니다." />
+  <meta name="keywords" content="Aquila Research, 리서치, 매크로, 파생, 옵션, VIX, IV, RP, RRP, 비트코인, 알트코인, 투자 리서치, 크립토" />
+  <meta property="og:title" content="Aquila Research — Official Site" />
+  <meta property="og:description" content="미국 주식·크립토 리서치를 위한 실전 인사이트. 거시 경제, 파생상품, 크립토, 기술적 분석을 체계적으로 연결합니다." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://i.ibb.co/FkdcKZPd/logo.png" />
+  <meta name="theme-color" content="#010409" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { 
+      --dark-bg: #010409;
+      --slate-900: #0d1117;
+      --slate-800: #161b22;
+      --slate-700: #21262d;
+      --slate-400: #8b949e;
+      --slate-300: #c9d1d9;
+      --accent: #58a6ff; 
+      --accent-glow: rgba(88, 166, 255, 0.5);
+    }
+    html { 
+      scroll-behavior: smooth; 
+    }
+    body { 
+      font-family: 'Poppins', 'Noto Sans KR', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--slate-300);
+    }
+    .font-kor { font-family: 'Noto Sans KR', sans-serif; }
+    .font-display { font-family: 'Cormorant Garamond', serif; }
+
+    /* Focus Ring */
+    a:focus-visible, button:focus-visible { 
+      outline: 3px solid var(--accent); 
+      outline-offset: 2px; 
+      border-radius: 8px;
+    }
+
+    /* Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s cubic-bezier(0.165, 0.84, 0.44, 1), transform 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .section-bg {
+        background-color: var(--slate-900);
+    }
+    
+    .card-glow-border {
+        position: relative;
+        overflow: hidden;
+        background: var(--slate-800);
+        border: 1px solid var(--slate-700);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-glow-border:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    }
+    .card-glow-border::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(110deg, transparent 30%, var(--accent-glow), transparent 70%);
+        transform: translateX(-100%) skewX(-25deg);
+        transition: transform 1s ease;
+    }
+    .card-glow-border:hover::before {
+        transform: translateX(100%) skewX(-25deg);
+    }
+    .card-content {
+        position: relative;
+        z-index: 1;
+        background: inherit;
+        transition: background-color 0.3s ease;
+    }
+     .card-glow-border:hover {
+        background-color: #1c232e;
+    }
+    
+    #particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        background: radial-gradient(ellipse at center, rgba(13, 17, 23, 0.1) 0%, var(--dark-bg) 70%);
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-lg border-b border-slate-700/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="#home" class="flex items-center gap-3 group" aria-label="Aquila Research Home">
+          <img src="https://i.ibb.co/FkdcKZPd/logo.png" alt="Aquila Research Logo" class="h-10 w-10 rounded-full object-cover transition-transform group-hover:scale-110" />
+        </a>
+        <div class="flex items-center gap-6">
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+              <a href="#about" class="text-slate-300 hover:text-sky-400 transition-colors" data-lang="nav_about">소개</a>
+              <a href="#method" class="text-slate-300 hover:text-sky-400 transition-colors" data-lang="nav_method">방법론</a>
+              <a href="#content" class="text-slate-300 hover:text-sky-400 transition-colors" data-lang="nav_content">콘텐츠</a>
+              <a href="#channels" class="text-slate-300 hover:text-sky-400 transition-colors" data-lang="nav_channels">채널</a>
+              <a href="#premium" class="text-slate-300 hover:text-sky-400 transition-colors" data-lang="nav_premium">프리미엄</a>
+            </nav>
+            <!-- Language Toggle -->
+            <div class="hidden sm:flex items-center border-l border-slate-700 pl-6">
+                <button id="lang-ko" class="text-sm font-semibold text-white px-2 py-1">KO</button>
+                <span class="text-slate-600">/</span>
+                <button id="lang-en" class="text-sm font-semibold text-slate-500 hover:text-white px-2 py-1 transition-colors">EN</button>
+            </div>
+            <button id="navBtn" class="md:hidden inline-flex items-center justify-center rounded-md p-2 text-slate-300 hover:bg-slate-800" aria-label="Open menu">
+              <svg id="menuIconOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+              <svg id="menuIconClose" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileNav" class="hidden md:hidden bg-slate-900 border-t border-slate-700">
+      <nav class="px-4 py-4 space-y-2 text-sm font-medium">
+        <a href="#about" class="block py-2 px-3 rounded-md text-slate-300 hover:bg-slate-800" data-lang="nav_about_mobile">소개</a>
+        <a href="#method" class="block py-2 px-3 rounded-md text-slate-300 hover:bg-slate-800" data-lang="nav_method_mobile">방법론</a>
+        <a href="#content" class="block py-2 px-3 rounded-md text-slate-300 hover:bg-slate-800" data-lang="nav_content_mobile">콘텐츠</a>
+        <a href="#channels" class="block py-2 px-3 rounded-md text-slate-300 hover:bg-slate-800" data-lang="nav_channels_mobile">채널</a>
+        <a href="#premium" class="block py-2 px-3 rounded-md text-slate-300 hover:bg-slate-800" data-lang="nav_premium_mobile">프리미엄</a>
+        <div class="sm:hidden flex items-center justify-center pt-4 border-t border-slate-700">
+            <button id="lang-ko-mobile" class="text-sm font-semibold text-white px-3 py-1">KO</button>
+            <span class="text-slate-600">/</span>
+            <button id="lang-en-mobile" class="text-sm font-semibold text-slate-500 hover:text-white px-3 py-1 transition-colors">EN</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="home" class="relative overflow-hidden h-screen flex items-center justify-center">
+      <canvas id="particle-canvas"></canvas>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="reveal">
+          <h1 class="text-6xl sm:text-8xl lg:text-9xl font-display font-bold tracking-tighter text-white" data-lang="hero_brand_name">
+            AQUILA RESEARCH
+          </h1>
+          <p class="mt-2 text-2xl sm:text-3xl text-slate-400 font-kor" data-lang="hero_brand_name_ko">아퀼라 리서치</p>
+          <p class="mt-8 max-w-2xl mx-auto text-lg sm:text-xl text-slate-300 font-kor" data-lang="hero_subtitle">
+            미국 주식·크립토 리서치를 위한 <span class="font-semibold text-slate-100">실전 인사이트</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 sm:py-24 section-bg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-12 gap-12 items-center">
+          <div class="lg:col-span-6 reveal">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white font-kor" data-lang="about_title">Aquila Research 소개</h2>
+            <p class="mt-5 text-slate-300 leading-relaxed font-kor" data-lang="about_desc">
+              Aquila Research는 미국 주식과 크립토를 통합된 시각으로 분석하는 <span class="font-semibold text-white">프리미엄 리서치 하우스</span>입니다. 유동성 흐름, 파생상품 데이터, 크립토 사이클 및 기술적 분석을 결합하여 시장의 변곡점을 포착하고, <span class="font-semibold text-white">실용적인 투자 관점</span>을 제시합니다.
+            </p>
+            <ul class="mt-6 space-y-3 text-slate-300">
+              <li class="flex items-start gap-3"><svg class="w-6 h-6 text-sky-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span data-lang="about_item1"><strong class="text-white">거시 & 파생상품:</strong> 유동성, VIX/변동성, 옵션 데이터 분석</span></li>
+              <li class="flex items-start gap-3"><svg class="w-6 h-6 text-sky-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span data-lang="about_item2"><strong class="text-white">크립토 사이클:</strong> BTC 도미넌스, 섹터별 순환매, 온체인 데이터</span></li>
+              <li class="flex items-start gap-3"><svg class="w-6 h-6 text-sky-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span data-lang="about_item3"><strong class="text-white">기술적 분석:</strong> 추세 및 패턴 분석, 명확한 무효화 기준</span></li>
+            </ul>
+          </div>
+          <div class="lg:col-span-6 reveal">
+            <div class="rounded-2xl border border-slate-700 bg-slate-800/50 shadow-lg p-8">
+              <h3 class="font-bold text-white font-kor text-lg" data-lang="about_values_title">핵심 가치</h3>
+              <p class="mt-3 text-slate-300 font-kor" data-lang="about_values_desc">단편적인 정보가 아닌, 데이터에 기반한 구조적 분석으로 시장의 '왜'를 설명하고 '어떻게'에 대한 답을 찾습니다.</p>
+              <div class="mt-6 grid sm:grid-cols-3 gap-4 text-center">
+                <div class="rounded-xl p-4 bg-slate-900/70 border border-slate-700">
+                  <div class="font-semibold text-white" data-lang="about_value1_title">일관성</div>
+                  <div class="mt-1 text-sm text-slate-400 font-kor" data-lang="about_value1_desc">일관된 분석 프레임워크</div>
+                </div>
+                <div class="rounded-xl p-4 bg-slate-900/70 border border-slate-700">
+                  <div class="font-semibold text-white" data-lang="about_value2_title">투명성</div>
+                  <div class="mt-1 text-sm text-slate-400 font-kor" data-lang="about_value2_desc">근거 중심의 명확한 리포트</div>
+                </div>
+                <div class="rounded-xl p-4 bg-slate-900/70 border border-slate-700">
+                  <div class="font-semibold text-white" data-lang="about_value3_title">실용성</div>
+                  <div class="mt-1 text-sm text-slate-400 font-kor" data-lang="about_value3_desc">실행 가능한 시나리오 제시</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Methodology Section -->
+    <section id="method" class="py-20 sm:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center reveal">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white font-kor" data-lang="method_title">리서치 방법론</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-slate-300 font-kor" data-lang="method_subtitle">세 가지 핵심 요소를 유기적으로 결합하여 시장을 다각도로 분석합니다.</p>
+        </div>
+        <div class="mt-12 grid md:grid-cols-3 gap-8">
+          <article class="reveal rounded-2xl card-glow-border">
+            <div class="p-8 card-content rounded-2xl">
+                <h3 class="font-semibold text-white text-lg" data-lang="method_card1_title">Macro & Derivatives</h3>
+                <p class="mt-3 text-sm text-slate-400 leading-relaxed font-kor" data-lang="method_card1_desc">
+                주요 경제 지표와 이벤트를 포함한 탑다운 분석으로 거시 경제 흐름을 파악하고, 옵션 및 변동성 데이터를 통해 시장 심리를 측정합니다.
+                </p>
+            </div>
+          </article>
+          <article class="reveal rounded-2xl card-glow-border" style="transition-delay: 150ms;">
+             <div class="p-8 card-content rounded-2xl">
+                <h3 class="font-semibold text-white text-lg" data-lang="method_card2_title">Crypto Core Strategy</h3>
+                <p class="mt-3 text-sm text-slate-400 leading-relaxed font-kor" data-lang="method_card2_desc">
+                BTC 도미넌스, 스테이블코인 흐름, 섹터별 순환매를 추적하여 크립토 시장의 내부 동력을 분석합니다. 주요 이벤트와 온체인 데이터를 통해 자금 흐름을 포착합니다.
+                </p>
+            </div>
+          </article>
+          <article class="reveal rounded-2xl card-glow-border" style="transition-delay: 300ms;">
+             <div class="p-8 card-content rounded-2xl">
+                <h3 class="font-semibold text-white text-lg" data-lang="method_card3_title">Technical Execution</h3>
+                <p class="mt-3 text-sm text-slate-400 leading-relaxed font-kor" data-lang="method_card3_desc">
+                추세 및 패턴 분석을 활용하여 주요 시나리오를 설정합니다. 명확한 진입 근거와 리스크 관리 기준을 통해 전략적 트레이딩을 지원합니다.
+                </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Offered Section -->
+    <section id="content" class="py-20 sm:py-24 section-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center reveal">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white font-kor" data-lang="content_title">제공 콘텐츠</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-slate-300 font-kor" data-lang="content_subtitle">핵심만 담은 리포트로 시장의 흐름을 놓치지 마세요.</p>
+            </div>
+            <div class="mt-12 grid md:grid-cols-3 gap-8">
+                <article class="reveal rounded-2xl card-glow-border">
+                    <div class="p-8 card-content rounded-2xl">
+                        <h3 class="font-semibold text-white text-lg" data-lang="content_card1_title">Weekly Macro Pulse</h3>
+                        <p class="mt-2 text-sm text-slate-400 font-kor" data-lang="content_card1_desc">주요 뉴스, 주간 옵션 만기 캘린더, 유동성 분석을 통해 거시 경제의 흐름과 시장 변곡점을 예측하고 대비합니다.</p>
+                    </div>
+                </article>
+                <article class="reveal rounded-2xl card-glow-border" style="transition-delay: 150ms;">
+                    <div class="p-8 card-content rounded-2xl">
+                        <h3 class="font-semibold text-white text-lg" data-lang="content_card2_title">Daily BTC/ETH Note</h3>
+                        <p class="mt-2 text-sm text-slate-400 font-kor" data-lang="content_card2_desc">핵심 가격대, 주요 시나리오, 리스크 관리 기준을 명확하고 간결하게 제시합니다.</p>
+                    </div>
+                </article>
+                <article class="reveal rounded-2xl card-glow-border" style="transition-delay: 300ms;">
+                    <div class="p-8 card-content rounded-2xl">
+                        <h3 class="font-semibold text-white text-lg" data-lang="content_card3_title">Alt Radar (Ad-hoc)</h3>
+                        <p class="mt-2 text-sm text-slate-400 font-kor" data-lang="content_card3_desc">잠재력 있는 알트코인을 분석하고, 시장의 주요 이벤트와 자금 흐름을 포착하여 유망 코인에 대한 인사이트를 제공합니다.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Channels Section -->
+    <section id="channels" class="py-20 sm:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center reveal">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white font-kor" data-lang="channels_title">공식 채널</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-slate-300 font-kor" data-lang="channels_subtitle">공식 채널에서 최신 업데이트와 공지사항을 가장 먼저 확인하세요.</p>
+        </div>
+        <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+          <a href="https://x.com/aqresearch" target="_blank" rel="noopener" class="reveal group flex items-center justify-center gap-3 rounded-xl border border-slate-700 bg-slate-800/50 p-4 shadow-lg hover:!bg-black hover:!border-white transition-all duration-300" aria-label="X official channel">
+            <svg class="h-6 w-6 text-slate-300 group-hover:text-white transition-colors" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2H21l-6.59 7.523L22 22h-6.89l-4.3-5.61L5.6 22H3l7.06-8.06L2 2h6.89l3.9 5.2L18.244 2Zm-2.41 18h1.33L7.27 4h-1.3l9.864 16Z"/></svg>
+            <span class="font-medium text-slate-300 group-hover:text-white transition-colors">X</span>
+          </a>
+          <a href="https://www.youtube.com/@aquilare" target="_blank" rel="noopener" class="reveal group flex items-center justify-center gap-3 rounded-xl border border-slate-700 bg-slate-800/50 p-4 shadow-lg hover:!bg-red-600 hover:!border-red-500 transition-all duration-300" aria-label="YouTube channel" style="transition-delay: 100ms;">
+            <svg class="h-6 w-6 text-red-500 group-hover:text-white transition-colors" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.7 31.7 0 0 0 0 12a31.7 31.7 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.7 31.7 0 0 0 24 12a31.7 31.7 0 0 0-.5-5.8ZM9.8 15.5V8.5l6.3 3.5-6.3 3.5Z"/></svg>
+            <span class="font-medium text-slate-300 group-hover:text-white transition-colors">YouTube</span>
+          </a>
+          <a href="https://www.threads.com/@aqresearch" target="_blank" rel="noopener" class="reveal group flex items-center justify-center gap-3 rounded-xl border border-slate-700 bg-slate-800/50 p-4 shadow-lg hover:!bg-black hover:!border-white transition-all duration-300" aria-label="Threads channel" style="transition-delay: 200ms;">
+             <svg class="h-6 w-6 text-slate-300 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M13.33 5.005a6.992 6.992 0 0 0-1.408-.138c-3.81 0-6.94 3.13-6.94 6.94s3.13 6.94 6.94 6.94a6.94 6.94 0 0 0 6.94-6.94c0-1.485-.468-2.852-1.25-3.987a.75.75 0 0 0-1.233.862 5.44 5.44 0 0 1 .983 3.125c0 3.007-2.433 5.44-5.44-5.44-3.007 0-5.44-2.433-5.44-5.44s2.433-5.44 5.44-5.44c.53 0 1.04.077 1.52.22a.75.75 0 0 0 .87-.627Z"/>
+            </svg>
+            <span class="font-medium text-slate-300 group-hover:text-white transition-colors">Threads</span>
+          </a>
+          <a href="https.t.me/aqrsc" target="_blank" rel="noopener" class="reveal group flex items-center justify-center gap-3 rounded-xl border border-slate-700 bg-slate-800/50 p-4 shadow-lg hover:!bg-sky-500 hover:!border-sky-400 transition-all duration-300" aria-label="Telegram channel" style="transition-delay: 300ms;">
+            <svg class="h-6 w-6 text-sky-500 group-hover:text-white transition-colors" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.04 15.59 8.7 20.5c.57 0 .82-.24 1.12-.53l2.7-2.58 5.6 4.1c1.03.57 1.77.27 2.05-.95l3.72-17.46v-.01c.33-1.55-.56-2.16-1.56-1.78L1.47 9.45c-1.48.57-1.46 1.37-.25 1.73l5.63 1.76 13.08-8.26c.62-.41 1.19-.18.72.23"/></svg>
+            <span class="font-medium text-slate-300 group-hover:text-white transition-colors">Telegram</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Premium Section -->
+    <section id="premium" class="py-20 sm:py-24 section-bg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal rounded-2xl bg-slate-800/50 shadow-xl p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center gap-8">
+          <div class="flex-1">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white font-kor" data-lang="premium_title">Aquila Premium</h2>
+            <p class="mt-4 text-slate-300 font-kor" data-lang="premium_desc">핵심 리서치 패키지를 <span class="font-semibold text-sky-400">네이버 프리미엄 채널</span>에서 독점 제공합니다. 정기 리포트와 시그널 알림으로 시장의 맥락을 놓치지 마세요.</p>
+            <ul class="mt-6 text-slate-300 space-y-2 text-sm font-kor">
+              <li class="flex items-center gap-2" data-lang="premium_item1"><svg class="w-5 h-5 text-sky-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Weekly Macro Pulse</li>
+              <li class="flex items-center gap-2" data-lang="premium_item2"><svg class="w-5 h-5 text-sky-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Daily BTC/ETH Note</li>
+              <li class="flex items-center gap-2" data-lang="premium_item3"><svg class="w-5 h-5 text-sky-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Alt Radar (Ad-hoc)</li>
+            </ul>
+          </div>
+          <div class="shrink-0 mt-6 lg:mt-0">
+            <a data-naver-premium-url="https://premium.naver.com/aqresearch"
+               class="group inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 bg-white text-slate-900 font-semibold shadow-lg hover:bg-slate-200 focus-visible:outline-none transition-transform hover:scale-105">
+              <span data-lang="premium_cta">구독하러 가기</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 sm:py-24">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="reveal">
+          <h2 class="text-3xl sm:text-4xl font-bold text-white font-kor" data-lang="contact_title">문의하기</h2>
+          <p class="mt-4 text-slate-300 font-kor" data-lang="contact_desc">협업, 제휴 및 기타 문의 사항은 아래 이메일로 연락 주시기 바랍니다.</p>
+          <div class="mt-8">
+            <div class="inline-flex items-center gap-4 rounded-xl border border-slate-700 bg-slate-800/50 p-4 shadow-sm">
+              <span id="contact-email" class="text-slate-100 font-medium">official@aqresearch.com</span>
+              <button id="copy-btn" class="p-2 rounded-md hover:bg-slate-700 transition-colors" aria-label="Copy email address">
+                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              </button>
+            </div>
+            <p id="copy-feedback" class="mt-3 text-sm text-sky-400 font-medium h-5"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-700 section-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-3 group">
+          <img src="https://i.ibb.co/FkdcKZPd/logo.png" alt="Aquila Research Logo" class="h-10 w-10 rounded-full object-cover transition-transform group-hover:scale-110" />
+          <div>
+            <div class="font-semibold text-white">Aquila Research</div>
+            <div class="text-xs text-slate-400">© <span id="yy"></span> All rights reserved.</div>
+          </div>
+        </div>
+        <div class="text-xs text-slate-400 text-center md:text-right max-w-xl leading-relaxed font-kor" data-lang="footer_disclaimer">
+          본 웹사이트에서 제공되는 모든 정보는 교육 및 정보 제공을 목적으로 하며, 특정 금융 상품에 대한 투자 권유가 아닙니다. 크립토 및 파생상품 투자는 높은 변동성과 원금 손실의 위험을 수반하므로, 모든 투자에 대한 최종 결정과 책임은 투자자 본인에게 있습니다.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Particle Animation
+      const canvas = document.getElementById('particle-canvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+        const mouse = {
+            x: null,
+            y: null,
+            radius: (canvas.height / 120) * (canvas.width / 120)
+        };
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = 'rgba(88, 166, 255, 0.5)';
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius + this.size) {
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) { this.x += 3; }
+                    if (mouse.x > this.x && this.x > this.size * 10) { this.x -= 3; }
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) { this.y += 3; }
+                    if (mouse.y > this.y && this.y > this.size * 10) { this.y -= 3; }
+                }
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * .4) - .2;
+                let directionY = (Math.random() * .4) - .2;
+                particlesArray.push(new Particle(x, y, directionX, directionY, size));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+        
+        function connect() {
+          let opacityValue = 1;
+          for (let a = 0; a < particlesArray.length; a++) {
+              for (let b = a; b < particlesArray.length; b++) {
+                  let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
+                                 ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                  if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                      opacityValue = 1 - (distance / 20000);
+                      ctx.strokeStyle = `rgba(88, 166, 255, ${opacityValue})`;
+                      ctx.lineWidth = 1;
+                      ctx.beginPath();
+                      ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                      ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                      ctx.stroke();
+                  }
+              }
+          }
+      }
+
+        window.addEventListener('resize', function() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            mouse.radius = (canvas.height / 120) * (canvas.width / 120);
+            init();
+        });
+
+        window.addEventListener('mouseout', function() {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+        
+        init();
+        animate();
+      }
+
+      const translations = {
+        en: {
+            nav_about: "About",
+            nav_method: "Methodology",
+            nav_content: "Content",
+            nav_channels: "Channels",
+            nav_premium: "Premium",
+            nav_about_mobile: "About",
+            nav_method_mobile: "Methodology",
+            nav_content_mobile: "Content",
+            nav_channels_mobile: "Channels",
+            nav_premium_mobile: "Premium",
+            hero_brand_name: "AQUILA RESEARCH",
+            hero_brand_name_ko: "Aquila Research",
+            hero_subtitle: "Actionable Insights for US Stocks & Crypto Research",
+            about_title: "About Aquila Research",
+            about_desc: "Aquila Research is a <span class='font-semibold text-white'>premium research house</span> that analyzes US stocks and crypto from an integrated perspective. We identify market turning points by combining liquidity flows, derivatives data, crypto cycles, and technical analysis to present <span class='font-semibold text-white'>actionable investment views.</span>",
+            about_item1: "<strong class='text-white'>Macro & Derivatives:</strong> Analysis of liquidity, VIX/volatility, and options data.",
+            about_item2: "<strong class='text-white'>Crypto Cycle:</strong> BTC dominance, sector rotation, and on-chain data.",
+            about_item3: "<strong class='text-white'>Technical Analysis:</strong> Trend and pattern analysis with clear invalidation levels.",
+            about_values_title: "Core Values",
+            about_values_desc: "We explain the 'why' of the market and find answers to 'how' through data-driven structural analysis, not fragmented information.",
+            about_value1_title: "Consistency",
+            about_value1_desc: "Consistent analytical framework.",
+            about_value2_title: "Transparency",
+            about_value2_desc: "Clear, evidence-based reports.",
+            about_value3_title: "Actionability",
+            about_value3_desc: "Presentation of actionable scenarios.",
+            method_title: "Research Methodology",
+            method_subtitle: "We analyze the market from multiple angles by organically combining three core elements.",
+            method_card1_title: "Macro & Derivatives",
+            method_card1_desc: "We grasp the flow of the macroeconomy through top-down analysis including key economic indicators and events, and measure market sentiment via options and volatility data.",
+            method_card2_title: "Crypto Core Strategy",
+            method_card2_desc: "We analyze the internal dynamics of the crypto market by tracking BTC dominance, stablecoin flows, and sector rotation. We capture capital flow through major events and on-chain data.",
+            method_card3_title: "Technical Execution",
+            method_card3_desc: "We establish key scenarios using trend and pattern analysis. We support strategic trading with clear entry rationale and risk management criteria.",
+            content_title: "Content Offered",
+            content_subtitle: "Don't miss the market flow with our concise reports.",
+            content_card1_title: "Weekly Macro Pulse",
+            content_card1_desc: "Prepare for market turning points by predicting the macroeconomic flow through key news, the weekly options expiration calendar, and liquidity analysis.",
+            content_card2_title: "Daily BTC/ETH Note",
+            content_card2_desc: "We provide key price levels, main scenarios, and risk management criteria in a clear and concise manner.",
+            content_card3_title: "Alt Radar (Ad-hoc)",
+            content_card3_desc: "We analyze promising altcoins and provide insights by capturing major market events and capital flows.",
+            channels_title: "Official Channels",
+            channels_subtitle: "Be the first to check for the latest updates and announcements on our official channels.",
+            premium_title: "Aquila Premium",
+            premium_desc: "Our core research package is exclusively available on the <span class='font-semibold text-sky-400'>Naver Premium Channel</span>. Don't miss the market context with our regular reports and signal alerts.",
+            premium_item1: "Weekly Macro Pulse",
+            premium_item2: "Daily BTC/ETH Note",
+            premium_item3: "Alt Radar (Ad-hoc)",
+            premium_cta: "Subscribe Now",
+            contact_title: "Contact Us",
+            contact_desc: "For collaboration, partnership, and other inquiries, please contact us at the email below.",
+            footer_disclaimer: "All information provided on this website is for educational and informational purposes only and does not constitute an investment recommendation for any specific financial product. Investments in crypto and derivatives involve high volatility and risk of principal loss. The final decision and responsibility for all investments lie with the investor.",
+            copy_success: "Email address copied!",
+            copy_fail: "Failed to copy."
+        },
+        ko: {
+            nav_about: "소개",
+            nav_method: "방법론",
+            nav_content: "콘텐츠",
+            nav_channels: "채널",
+            nav_premium: "프리미엄",
+            nav_about_mobile: "소개",
+            nav_method_mobile: "방법론",
+            nav_content_mobile: "콘텐츠",
+            nav_channels_mobile: "채널",
+            nav_premium_mobile: "프리미엄",
+            hero_brand_name: "AQUILA RESEARCH",
+            hero_brand_name_ko: "아퀼라 리서치",
+            hero_subtitle: "미국 주식·크립토 리서치를 위한 <span class='font-semibold text-slate-100'>실전 인사이트</span>",
+            about_title: "Aquila Research 소개",
+            about_desc: "Aquila Research는 미국 주식과 크립토를 통합된 시각으로 분석하는 <span class='font-semibold text-white'>프리미엄 리서치 하우스</span>입니다. 유동성 흐름, 파생상품 데이터, 크립토 사이클 및 기술적 분석을 결합하여 시장의 변곡점을 포착하고, <span class='font-semibold text-white'>실용적인 투자 관점</span>을 제시합니다.",
+            about_item1: "<strong class='text-white'>거시 & 파생상품:</strong> 유동성, VIX/변동성, 옵션 데이터 분석",
+            about_item2: "<strong class='text-white'>크립토 사이클:</strong> BTC 도미넌스, 섹터별 순환매, 온체인 데이터",
+            about_item3: "<strong class='text-white'>기술적 분석:</strong> 추세 및 패턴 분석, 명확한 무효화 기준",
+            about_values_title: "핵심 가치",
+            about_values_desc: "단편적인 정보가 아닌, 데이터에 기반한 구조적 분석으로 시장의 '왜'를 설명하고 '어떻게'에 대한 답을 찾습니다.",
+            about_value1_title: "일관성",
+            about_value1_desc: "일관된 분석 프레임워크",
+            about_value2_title: "투명성",
+            about_value2_desc: "근거 중심의 명확한 리포트",
+            about_value3_title: "실용성",
+            about_value3_desc: "실행 가능한 시나리오 제시",
+            method_title: "리서치 방법론",
+            method_subtitle: "세 가지 핵심 요소를 유기적으로 결합하여 시장을 다각도로 분석합니다.",
+            method_card1_title: "Macro & Derivatives",
+            method_card1_desc: "주요 경제 지표와 이벤트를 포함한 탑다운 분석으로 거시 경제 흐름을 파악하고, 옵션 및 변동성 데이터를 통해 시장 심리를 측정합니다.",
+            method_card2_title: "Crypto Core Strategy",
+            method_card2_desc: "BTC 도미넌스, 스테이블코인 흐름, 섹터별 순환매를 추적하여 크립토 시장의 내부 동력을 분석합니다. 주요 이벤트와 온체인 데이터를 통해 자금 흐름을 포착합니다.",
+            method_card3_title: "Technical Execution",
+            method_card3_desc: "추세 및 패턴 분석을 활용하여 주요 시나리오를 설정합니다. 명확한 진입 근거와 리스크 관리 기준을 통해 전략적 트레이딩을 지원합니다.",
+            content_title: "제공 콘텐츠",
+            content_subtitle: "핵심만 담은 리포트로 시장의 흐름을 놓치지 마세요.",
+            content_card1_title: "Weekly Macro Pulse",
+            content_card1_desc: "주요 뉴스, 주간 옵션 만기 캘린더, 유동성 분석을 통해 거시 경제의 흐름과 시장 변곡점을 예측하고 대비합니다.",
+            content_card2_title: "Daily BTC/ETH Note",
+            content_card2_desc: "핵심 가격대, 주요 시나리오, 리스크 관리 기준을 명확하고 간결하게 제시합니다.",
+            content_card3_title: "Alt Radar (Ad-hoc)",
+            content_card3_desc: "잠재력 있는 알트코인을 분석하고, 시장의 주요 이벤트와 자금 흐름을 포착하여 유망 코인에 대한 인사이트를 제공합니다.",
+            channels_title: "공식 채널",
+            channels_subtitle: "공식 채널에서 최신 업데이트와 공지사항을 가장 먼저 확인하세요.",
+            premium_title: "Aquila Premium",
+            premium_desc: "핵심 리서치 패키지를 <span class='font-semibold text-sky-400'>네이버 프리미엄 채널</span>에서 독점 제공합니다. 정기 리포트와 시그널 알림으로 시장의 맥락을 놓치지 마세요.",
+            premium_item1: "Weekly Macro Pulse",
+            premium_item2: "Daily BTC/ETH Note",
+            premium_item3: "Alt Radar (Ad-hoc)",
+            premium_cta: "구독하러 가기",
+            contact_title: "문의하기",
+            contact_desc: "협업, 제휴 및 기타 문의 사항은 아래 이메일로 연락 주시기 바랍니다.",
+            footer_disclaimer: "본 웹사이트에서 제공되는 모든 정보는 교육 및 정보 제공을 목적으로 하며, 특정 금융 상품에 대한 투자 권유가 아닙니다. 크립토 및 파생상품 투자는 높은 변동성과 원금 손실의 위험을 수반하므로, 모든 투자에 대한 최종 결정과 책임은 투자자 본인에게 있습니다.",
+            copy_success: "이메일 주소가 복사되었습니다!",
+            copy_fail: "복사에 실패했습니다."
+        }
+      };
+      
+      let currentLang = 'ko';
+
+      const langKoBtn = document.getElementById('lang-ko');
+      const langEnBtn = document.getElementById('lang-en');
+      const langKoMobileBtn = document.getElementById('lang-ko-mobile');
+      const langEnMobileBtn = document.getElementById('lang-en-mobile');
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+
+        const isKo = lang === 'ko';
+        
+        langKoBtn.classList.toggle('text-white', isKo);
+        langKoBtn.classList.toggle('text-slate-500', !isKo);
+        langKoBtn.classList.toggle('hover:text-white', !isKo);
+        
+        langEnBtn.classList.toggle('text-white', !isKo);
+        langEnBtn.classList.toggle('text-slate-500', isKo);
+        langEnBtn.classList.toggle('hover:text-white', isKo);
+        
+        langKoMobileBtn.classList.toggle('text-white', isKo);
+        langKoMobileBtn.classList.toggle('text-slate-500', !isKo);
+        
+        langEnMobileBtn.classList.toggle('text-white', !isKo);
+        langEnMobileBtn.classList.toggle('text-slate-500', isKo);
+
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.getAttribute('data-lang');
+            if (translations[lang] && translations[lang][key]) {
+                el.innerHTML = translations[lang][key];
+            }
+        });
+      }
+
+      langKoBtn.addEventListener('click', () => setLanguage('ko'));
+      langEnBtn.addEventListener('click', () => setLanguage('en'));
+      langKoMobileBtn.addEventListener('click', () => setLanguage('ko'));
+      langEnMobileBtn.addEventListener('click', () => setLanguage('en'));
+
+      // Set initial language
+      setLanguage(currentLang);
+
+      // Set current year
+      const yearEl = document.getElementById('yy');
+      if (yearEl) {
+        yearEl.textContent = new Date().getFullYear();
+      }
+
+      // Mobile nav toggle
+      const navBtn = document.getElementById('navBtn');
+      const mobileNav = document.getElementById('mobileNav');
+      const menuIconOpen = document.getElementById('menuIconOpen');
+      const menuIconClose = document.getElementById('menuIconClose');
+      
+      if (navBtn && mobileNav && menuIconOpen && menuIconClose) {
+        navBtn.addEventListener('click', () => {
+          mobileNav.classList.toggle('hidden');
+          menuIconOpen.classList.toggle('hidden');
+          menuIconClose.classList.toggle('hidden');
+        });
+
+        mobileNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNav.classList.add('hidden');
+                menuIconOpen.classList.remove('hidden');
+                menuIconClose.classList.add('hidden');
+            });
+        });
+      }
+
+      // Naver Premium URL
+      const premiumURL = document.querySelector('[data-naver-premium-url]')?.getAttribute('data-naver-premium-url') || '#';
+      document.querySelectorAll('[data-naver-premium-url]').forEach(el => {
+        el.setAttribute('href', premiumURL);
+        el.setAttribute('target', '_blank');
+        el.setAttribute('rel', 'noopener noreferrer');
+      });
+
+      // Scroll Reveal Animation
+      const revealElements = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+      revealElements.forEach(el => observer.observe(el));
+
+      // Copy to clipboard
+      const copyBtn = document.getElementById('copy-btn');
+      const emailSpan = document.getElementById('contact-email');
+      const feedbackEl = document.getElementById('copy-feedback');
+
+      if (copyBtn && emailSpan && feedbackEl) {
+        copyBtn.addEventListener('click', () => {
+          const emailText = emailSpan.textContent;
+          const tempTextArea = document.createElement('textarea');
+          tempTextArea.value = emailText;
+          document.body.appendChild(tempTextArea);
+          tempTextArea.select();
+          try {
+            document.execCommand('copy');
+            feedbackEl.textContent = translations[currentLang].copy_success;
+          } catch (err) {
+            feedbackEl.textContent = translations[currentLang].copy_fail;
+            console.error('Fallback: Oops, unable to copy', err);
+          }
+          document.body.removeChild(tempTextArea);
+          
+          setTimeout(() => { feedbackEl.textContent = ''; }, 3000);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
