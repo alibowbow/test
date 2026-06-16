@@ -43,7 +43,8 @@
     .cow-head{fill:#150f0e;stroke:#150f0e;}
 
     /* special-cut markers on map */
-    .sp-marker{cursor:pointer;}
+    .sp-marker{display:none;cursor:pointer;}
+    .sp-marker.active{display:block;}
     .sp-marker circle{transition:filter .2s;}
     .sp-marker:hover circle{filter:drop-shadow(0 0 7px #f0a830);}
     .sp-marker.active circle{stroke:#fff;stroke-width:3;filter:drop-shadow(0 0 9px #f0a830);}
@@ -65,6 +66,7 @@
     .seg.active{background:linear-gradient(90deg,var(--red),var(--red-deep));color:#fff;border-color:transparent;}
     .seg.dim{opacity:.4;}
     .seg.sp-on{background:var(--gold);color:#1a1110;border-color:transparent;}
+    .spchip{border-color:rgba(240,168,48,.4);color:#e3c184;}
 
     /* range */
     input[type=range]{-webkit-appearance:none;appearance:none;height:8px;border-radius:99px;outline:none;}
@@ -129,9 +131,8 @@
       <div class="grid lg:grid-cols-2 gap-6 items-start">
         <!-- Left: map + filter -->
         <div class="panel p-5">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs muted">소 그림을 클릭해 부위 탐험</span>
-            <button id="special-toggle" class="seg px-3 py-1.5 rounded-full text-xs" onclick="toggleSpecial()">💎 특수부위 보기</button>
+          <div class="mb-2">
+            <span class="text-xs muted">소 그림을 클릭해 부위 탐험 · 아래 <b class="text-[var(--gold)]">특수부위</b> 버튼으로 위치 확인</span>
           </div>
           <div class="w-full aspect-[16/10] flex items-center justify-center">
             <svg viewBox="0 0 640 400" class="w-full h-full" id="cow-svg" role="img" aria-label="소 부위 지도">
@@ -188,7 +189,7 @@
               <path d="M188,136 C260,122 380,118 466,122 C506,126 532,134 546,152" fill="none" stroke="#f5e6d8" stroke-width="1.5" stroke-dasharray="2 7" opacity="0.22" style="pointer-events:none"/>
 
               <!-- SPECIAL CUTS layer (toggled) -->
-              <g id="special-layer" style="display:none">
+              <g id="special-layer">
                 <g class="sp-marker" data-sp="salchi" onclick="selectSpecial('salchi')"><circle cx="268" cy="138" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="268" y="138" class="sp-num">1</text></g>
                 <g class="sp-marker" data-sp="saeu" onclick="selectSpecial('saeu')"><circle cx="348" cy="168" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="348" y="168" class="sp-num">2</text></g>
                 <g class="sp-marker" data-sp="buchae" onclick="selectSpecial('buchae')"><circle cx="236" cy="216" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="236" y="216" class="sp-num">3</text></g>
@@ -569,6 +570,7 @@
     function selectCut(id){
       const d = beefData[id];
       if(!d) return;
+      clearSpecial();
       document.querySelectorAll('.cow-part').forEach(p=>p.classList.remove('active'));
       d.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el) el.classList.add('active'); });
 
@@ -644,21 +646,11 @@
       document.querySelectorAll('#special-chips [data-spchip]').forEach(c=>c.classList.toggle('sp-on', c.getAttribute('data-spchip')===id));
     }
 
-    function toggleSpecial(force){
-      const layer=document.getElementById('special-layer');
-      const svg=document.getElementById('cow-svg');
-      const btn=document.getElementById('special-toggle');
-      const show = (typeof force==='boolean') ? force : (layer.style.display==='none');
-      layer.style.display = show ? '' : 'none';
-      svg.classList.toggle('show-special', show);
-      btn.classList.toggle('active', show);
-      btn.innerText = show ? '💎 특수부위 끄기' : '💎 특수부위 보기';
-      if(!show){
-        document.getElementById('special-info').classList.add('hidden');
-        document.querySelectorAll('.sp-marker').forEach(m=>m.classList.remove('active'));
-        document.querySelectorAll('#special-grid [data-sp]').forEach(c=>c.classList.remove('sp-card-active'));
-        document.querySelectorAll('#special-chips [data-spchip]').forEach(c=>c.classList.remove('sp-on'));
-      }
+    function clearSpecial(){
+      document.querySelectorAll('.sp-marker').forEach(m=>m.classList.remove('active'));
+      document.querySelectorAll('#special-grid [data-sp]').forEach(c=>c.classList.remove('sp-card-active'));
+      document.querySelectorAll('#special-chips [data-spchip]').forEach(c=>c.classList.remove('sp-on'));
+      const box=document.getElementById('special-info'); if(box) box.classList.add('hidden');
     }
 
     document.addEventListener('DOMContentLoaded', function(){
@@ -681,8 +673,8 @@
       /* special-cut chips (all 9, always visible) */
       const sc=document.getElementById('special-chips');
       sc.innerHTML = specialCuts.map(s=>
-        `<button class="seg px-3 py-1.5 rounded-full" data-spchip="${s.id}" style="border-color:var(--gold)">${s.no}. ${s.ko}</button>`).join('');
-      sc.querySelectorAll('[data-spchip]').forEach(b=>b.addEventListener('click',()=>{ toggleSpecial(true); selectSpecial(b.getAttribute('data-spchip')); }));
+        `<button class="seg spchip px-3 py-1.5 rounded-full" data-spchip="${s.id}">${s.no}. ${s.ko}</button>`).join('');
+      sc.querySelectorAll('[data-spchip]').forEach(b=>b.addEventListener('click',()=>selectSpecial(b.getAttribute('data-spchip'))));
 
       /* tabs */
       document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
@@ -695,7 +687,7 @@
       /* special cuts */
       document.getElementById('special-grid').innerHTML = specialCuts.map(s=>`
         <div class="panel-2 p-4 cursor-pointer transition-colors hover:bg-[#2a2017]" data-sp="${s.id}"
-             onclick="toggleSpecial(true);selectSpecial('${s.id}');document.getElementById('map').scrollIntoView({behavior:'smooth'});">
+             onclick="selectSpecial('${s.id}')">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="grid place-items-center w-6 h-6 rounded-full text-xs font-black shrink-0" style="background:var(--gold);color:#1a1110">${s.no}</span>
