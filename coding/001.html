@@ -118,20 +118,61 @@
       <div class="grid lg:grid-cols-2 gap-6 items-start">
         <!-- Left: map + filter -->
         <div class="panel p-5">
-          <div class="w-full aspect-[3/2] flex items-center justify-center">
-            <svg viewBox="0 0 600 400" class="w-full h-full" id="cow-svg">
-              <polygon points="20,100 60,60 110,60 110,140 60,160 20,150" class="cow-head" />
-              <path d="M 540,110 Q 580,150 590,200" stroke="#150f0e" stroke-width="4" fill="none" />
-              <g onclick="selectCut('chuck')"><polygon points="110,60 190,70 190,170 110,150" class="cow-part" id="poly-chuck"/><text x="150" y="115" class="cow-text">목심</text></g>
-              <g onclick="selectCut('ribeye')"><polygon points="190,70 320,80 320,150 190,170" class="cow-part" id="poly-ribeye"/><text x="255" y="115" class="cow-text">등심</text></g>
-              <g onclick="selectCut('striploin')"><polygon points="320,80 420,80 420,150 320,150" class="cow-part" id="poly-striploin"/><text x="370" y="110" class="cow-text">채끝</text></g>
-              <g onclick="selectCut('tenderloin')"><polygon points="330,120 400,120 390,160 320,160" class="cow-part" id="poly-tenderloin" style="stroke:#150f0e;stroke-width:2;"/><text x="360" y="145" class="cow-text" style="font-size:12px;fill:#fbbf24;">안심</text></g>
-              <g onclick="selectCut('round')"><polygon points="420,80 540,110 540,240 420,210" class="cow-part" id="poly-round"/><text x="480" y="160" class="cow-text">우둔/설도</text></g>
-              <g onclick="selectCut('ribs')"><polygon points="190,170 320,150 320,220 190,220" class="cow-part" id="poly-ribs"/><text x="255" y="190" class="cow-text">갈비</text></g>
-              <g onclick="selectCut('brisket')"><polygon points="190,220 320,220 420,210 420,250 190,260" class="cow-part" id="poly-brisket"/><text x="310" y="240" class="cow-text">양지</text></g>
-              <g onclick="selectCut('blade')"><polygon points="110,150 190,170 190,260 110,240" class="cow-part" id="poly-blade"/><text x="150" y="205" class="cow-text">앞다리</text></g>
-              <g onclick="selectCut('shank')"><polygon points="130,240 170,260 150,340 120,340" class="cow-part" id="poly-shank"/><text x="145" y="295" class="cow-text" style="font-size:12px;">사태</text></g>
-              <g onclick="selectCut('shank')"><polygon points="440,240 500,240 480,340 440,340" class="cow-part" id="poly-shank-hind"/><text x="470" y="295" class="cow-text" style="font-size:12px;">사태</text></g>
+          <div class="w-full aspect-[16/10] flex items-center justify-center">
+            <svg viewBox="0 0 640 400" class="w-full h-full" id="cow-svg" role="img" aria-label="소 부위 지도">
+              <defs>
+                <radialGradient id="cowVig" cx="46%" cy="40%" r="62%">
+                  <stop offset="0%" stop-color="#3a201c"/>
+                  <stop offset="100%" stop-color="#1c1614" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="hideG" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#241813"/>
+                  <stop offset="100%" stop-color="#120c0b"/>
+                </linearGradient>
+                <filter id="softSh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+              </defs>
+
+              <rect x="0" y="0" width="640" height="400" fill="url(#cowVig)"/>
+              <ellipse cx="360" cy="372" rx="244" ry="16" fill="#000" opacity="0.38" filter="url(#softSh)"/>
+
+              <!-- far legs (depth) -->
+              <g fill="#0e0a09">
+                <rect x="216" y="252" width="21" height="96" rx="6"/>
+                <rect x="476" y="252" width="21" height="96" rx="6"/>
+              </g>
+
+              <!-- head + neck + tail silhouette -->
+              <g fill="url(#hideG)" stroke="#0e0a09" stroke-width="2" stroke-linejoin="round">
+                <path d="M180,128 C150,126 128,134 116,154 L130,208 C152,212 176,206 198,196 L188,150 Z"/>
+                <ellipse cx="106" cy="160" rx="42" ry="35"/>
+                <ellipse cx="70" cy="184" rx="25" ry="19"/>
+                <path d="M118,140 C108,118 126,108 140,120 C134,134 130,142 118,140 Z"/>
+                <path d="M548,150 C568,150 574,172 573,198 C572,242 581,270 585,296 C587,310 575,314 569,302 C558,278 556,248 553,208 C551,184 546,168 548,150 Z"/>
+              </g>
+              <path d="M138,120 C140,104 151,99 158,101 C152,108 150,116 145,122 Z" fill="#cbb89a" stroke="#0e0a09" stroke-width="1.5"/>
+              <circle cx="92" cy="158" r="4.5" fill="#f5e6d8"/><circle cx="92" cy="159" r="2" fill="#1a1110"/>
+              <ellipse cx="58" cy="186" rx="4" ry="6" fill="#0e0a09"/>
+              <circle cx="580" cy="300" r="9" fill="#120c0b"/>
+
+              <!-- body base (fills behind segments) -->
+              <path d="M178,130 C250,112 380,108 470,114 C516,118 548,128 556,154 C563,174 561,192 552,204 L540,240 C470,260 360,266 262,258 C224,254 200,244 194,214 C186,150 178,150 178,130 Z" fill="#2a1f1b"/>
+
+              <!-- INTERACTIVE CUTS (ids/classes preserved) -->
+              <g onclick="selectCut('chuck')"><polygon points="178,130 265,116 265,186 196,196" class="cow-part" id="poly-chuck"/><text x="226" y="154" class="cow-text">목심</text></g>
+              <g onclick="selectCut('ribeye')"><polygon points="265,116 380,112 380,182 265,186" class="cow-part" id="poly-ribeye"/><text x="322" y="150" class="cow-text">등심</text></g>
+              <g onclick="selectCut('striploin')"><polygon points="380,112 470,116 470,186 380,182" class="cow-part" id="poly-striploin"/><text x="424" y="150" class="cow-text">채끝</text></g>
+              <g onclick="selectCut('round')"><polygon points="470,116 540,142 556,190 536,238 456,254 470,186" class="cow-part" id="poly-round"/><text x="504" y="180" class="cow-text" style="font-size:13px;">우둔·설도</text></g>
+              <g onclick="selectCut('blade')"><polygon points="196,196 265,186 266,256 214,250" class="cow-part" id="poly-blade"/><text x="234" y="224" class="cow-text">앞다리</text></g>
+              <g onclick="selectCut('ribs')"><polygon points="265,186 380,182 362,260 266,256" class="cow-part" id="poly-ribs"/><text x="320" y="222" class="cow-text">갈비</text></g>
+              <g onclick="selectCut('brisket')"><polygon points="380,182 470,186 456,254 362,260" class="cow-part" id="poly-brisket"/><text x="416" y="226" class="cow-text">양지</text></g>
+              <g onclick="selectCut('shank')"><polygon points="232,250 258,250 256,348 234,348" class="cow-part" id="poly-shank"/><text x="245" y="300" class="cow-text" style="font-size:12px;">사태</text></g>
+              <g onclick="selectCut('shank')"><polygon points="492,250 520,250 518,348 494,348" class="cow-part" id="poly-shank-hind"/><text x="506" y="300" class="cow-text" style="font-size:12px;">사태</text></g>
+              <g onclick="selectCut('tenderloin')"><path d="M390,159 C405,156 436,156 450,160 C454,176 452,188 446,192 C430,196 408,196 394,191 C388,184 387,168 390,159 Z" class="cow-part" id="poly-tenderloin" style="stroke:#0e0a09;stroke-width:2;"/><text x="420" y="176" class="cow-text" style="font-size:12px;fill:#fbbf24;">안심</text></g>
+
+              <!-- hooves -->
+              <g fill="#0c0807"><rect x="230" y="342" width="28" height="12" rx="3"/><rect x="492" y="342" width="28" height="12" rx="3"/></g>
+              <!-- spine accent -->
+              <path d="M188,136 C260,122 380,118 466,122 C506,126 532,134 546,152" fill="none" stroke="#f5e6d8" stroke-width="1.5" stroke-dasharray="2 7" opacity="0.22" style="pointer-events:none"/>
             </svg>
           </div>
           <!-- method filter -->
