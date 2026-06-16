@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>운석은 불타고 로켓은 멀쩡한 이유 — 대기권 진입의 물리학</title>
+  <meta name="description" content="운석·로켓·우주 쓰레기가 대기를 통과하며 불타 사라지는 원리, 얼마나 큰 물체까지 다 타는지, 지구로 돌아오는 로켓은 왜 멀쩡한지를 인터랙티브 시각화로 설명합니다." />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#06070d; --panel:#11141d; --panel-2:#161a25;
+      --line:#262c3a; --txt:#e7eaf2; --muted:#9aa3b6;
+      --plasma:#38bdf8; --hot:#ff7a18; --fire:#ff3b3b; --gold:#ffd24a; --green:#34d399;
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:'Noto Sans KR',sans-serif;
+      background:radial-gradient(1200px 700px at 50% -10%, #141a2e 0%, var(--bg) 55%) no-repeat, var(--bg);
+      color:var(--txt);
+    }
+    .font-tech{font-family:'Orbitron',sans-serif;letter-spacing:.02em;}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:1.25rem;}
+    .panel-2{background:var(--panel-2);border:1px solid var(--line);border-radius:1rem;}
+    .muted{color:var(--muted);}
+    a:focus-visible,button:focus-visible{outline:3px solid var(--plasma);outline-offset:2px;border-radius:8px;}
+
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.16,.84,.44,1),transform .8s cubic-bezier(.16,.84,.44,1);}
+    .reveal.visible{opacity:1;transform:none;}
+
+    /* Hero meteor */
+    @keyframes shoot{0%{transform:translate(-10vw,-40px) rotate(28deg);opacity:0}8%{opacity:1}100%{transform:translate(110vw,420px) rotate(28deg);opacity:0}}
+    .meteor{position:absolute;top:0;left:0;height:2px;width:160px;border-radius:99px;
+      background:linear-gradient(90deg,transparent,rgba(255,210,74,.0),rgba(255,122,24,.9),#fff);
+      box-shadow:0 0 14px 2px rgba(255,140,40,.7);animation:shoot 6s linear infinite;}
+    .meteor::after{content:"";position:absolute;right:-3px;top:-2px;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 16px 5px rgba(255,180,80,.95);}
+
+    /* Speed bars */
+    .speed-bar{height:100%;width:0;border-radius:99px;transition:width 1.4s cubic-bezier(.16,.84,.44,1);}
+
+    /* Toggle buttons */
+    .seg{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);transition:.2s;}
+    .seg.active{background:linear-gradient(90deg,var(--hot),var(--fire));color:#fff;border-color:transparent;box-shadow:0 6px 20px -6px rgba(255,80,40,.6);}
+
+    /* Shock pulse */
+    @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+    .pulse{animation:pulse 1.8s ease-in-out infinite;}
+
+    input[type=range]{-webkit-appearance:none;appearance:none;height:8px;border-radius:99px;
+      background:linear-gradient(90deg,var(--plasma),var(--green),var(--gold),var(--hot),var(--fire));outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+      background:#fff;border:4px solid #0b0e16;box-shadow:0 0 0 3px rgba(255,255,255,.25),0 6px 16px rgba(0,0,0,.6);cursor:pointer;}
+    input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid #0b0e16;cursor:pointer;}
+
+    ::-webkit-scrollbar{width:9px;height:9px}
+    ::-webkit-scrollbar-track{background:#0d1018}
+    ::-webkit-scrollbar-thumb{background:#39414f;border-radius:6px}
+    ::-webkit-scrollbar-thumb:hover{background:#4b5566}
+    .chip{font-size:.7rem;padding:.15rem .55rem;border-radius:99px;border:1px solid var(--line);}
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Sticky nav -->
+  <header class="sticky top-0 z-50 backdrop-blur-lg bg-[#06070d]/80 border-b border-[var(--line)]">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#top" class="font-tech text-sm sm:text-base text-white flex items-center gap-2">
+        <span class="text-[var(--hot)]">☄️</span> ATMOSPHERIC ENTRY
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#principle" class="muted hover:text-white transition-colors">원리</a>
+        <a href="#energy" class="muted hover:text-white transition-colors">에너지</a>
+        <a href="#size" class="muted hover:text-white transition-colors">크기</a>
+        <a href="#rocket" class="muted hover:text-white transition-colors">로켓</a>
+        <a href="#summary" class="muted hover:text-white transition-colors">요약</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="top" class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="meteor" style="top:6%;animation-delay:0s"></div>
+      <div class="meteor" style="top:22%;animation-delay:2.2s;width:120px"></div>
+      <div class="meteor" style="top:40%;animation-delay:4.1s;width:200px"></div>
+    </div>
+    <div class="relative max-w-6xl mx-auto px-4 pt-20 pb-16 sm:pt-28 sm:pb-20 text-center">
+      <span class="chip muted">대기권 진입 · 삭마(ablation) · 열차폐</span>
+      <h1 class="mt-5 text-3xl sm:text-5xl lg:text-6xl font-black leading-tight">
+        운석은 <span class="text-[var(--hot)]">불타 사라지고</span><br class="hidden sm:block"/>
+        로켓은 <span class="text-[var(--plasma)]">멀쩡히 돌아오는</span> 이유
+      </h1>
+      <p class="mt-6 max-w-2xl mx-auto muted text-base sm:text-lg leading-relaxed">
+        대기를 뚫고 떨어지는 물체는 왜 불타오를까요? 그 빛은 정말 '마찰' 때문일까요?
+        얼마나 큰 물체까지 대기가 다 태워줄까요? 그리고 지구로 돌아오는 로켓은 어떻게
+        그 지옥불을 견딜까요? — 스크롤하며 직접 확인해 보세요.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm">
+        <a href="#principle" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[var(--hot)] to-[var(--fire)] text-white font-semibold shadow-lg shadow-orange-900/40 hover:scale-105 transition-transform">핵심 원리부터 보기 ↓</a>
+        <a href="#size" class="px-5 py-2.5 rounded-full panel-2 text-white font-semibold hover:bg-[#1c2230] transition-colors">크기별 운명 시뮬레이터 →</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="max-w-6xl mx-auto px-4 pb-24 space-y-20 sm:space-y-28">
+
+    <!-- ===== 1. PRINCIPLE ===== -->
+    <section id="principle" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">🔥</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">1. 진짜 원인은 '마찰'이 아니라 '압축'</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">
+        가장 흔한 오해는 "공기와의 마찰로 뜨거워진다"는 설명입니다. 마찰도 조금은 있지만,
+        진짜 주범은 <b class="text-white">공기의 단열 압축(adiabatic compression)</b>이 만드는
+        <b class="text-white">충격파(bow shock)</b>입니다.
+      </p>
+
+      <div class="mt-6 grid lg:grid-cols-2 gap-6 items-stretch">
+        <!-- Diagram -->
+        <div class="panel p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold">물체 앞에서 일어나는 일</h3>
+            <div class="inline-flex rounded-full overflow-hidden text-xs">
+              <button id="myth-btn" class="seg px-3 py-1.5">통념: 마찰</button>
+              <button id="real-btn" class="seg active px-3 py-1.5">실제: 압축·충격파</button>
+            </div>
+          </div>
+
+          <svg viewBox="0 0 460 280" class="w-full rounded-xl bg-[#0a0d15]">
+            <!-- incoming air arrows -->
+            <g stroke="#3a4256" stroke-width="2" marker-end="url(#arrow)">
+              <line x1="450" y1="70" x2="360" y2="70"/>
+              <line x1="450" y1="140" x2="360" y2="140"/>
+              <line x1="450" y1="210" x2="360" y2="210"/>
+            </g>
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#3a4256"/>
+              </marker>
+              <radialGradient id="shockGrad" cx="50%" cy="50%" r="60%">
+                <stop offset="0%" stop-color="#fff"/>
+                <stop offset="35%" stop-color="#ffd24a"/>
+                <stop offset="70%" stop-color="#ff7a18"/>
+                <stop offset="100%" stop-color="#ff3b3b" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="bodyGrad" x1="0" x2="1">
+                <stop offset="0%" stop-color="#cfd6e6"/>
+                <stop offset="100%" stop-color="#7b8aa3"/>
+              </linearGradient>
+            </defs>
+
+            <!-- shock-heated compressed air cap -->
+            <g id="shock-layer">
+              <path d="M150,140 m0,-86 a86,86 0 0 0 0,172 a120,120 0 0 0 0,-172 Z"
+                    fill="url(#shockGrad)" class="pulse"/>
+              <path id="shock-arc" d="M120,46 A120,120 0 0 1 120,234" fill="none"
+                    stroke="#ffe08a" stroke-width="3"/>
+            </g>
+
+            <!-- the falling body (blunt) -->
+            <path d="M150,100 q44,40 0,80 q-26,-40 0,-80 Z" fill="#aeb8cc" stroke="#e7eaf2" stroke-width="2"/>
+            <!-- compressed molecules -->
+            <g id="molecules" fill="#fff">
+              <circle cx="132" cy="116" r="3"/><circle cx="140" cy="140" r="3"/>
+              <circle cx="132" cy="164" r="3"/><circle cx="122" cy="128" r="2.4"/>
+              <circle cx="122" cy="152" r="2.4"/>
+            </g>
+
+            <!-- labels -->
+            <text id="lbl-shock" x="64" y="40" fill="#ffd24a" font-size="13" font-weight="700">충격파 (수천~수만 ℃)</text>
+            <text x="300" y="60" fill="#8a93a6" font-size="12">밀려오는 공기</text>
+            <text x="186" y="145" fill="#dfe5f1" font-size="12">물체</text>
+            <text id="lbl-mech" x="40" y="262" fill="#9aa3b6" font-size="12.5">압축된 공기가 가열 → 물체로 열 전달 + 빛 방출</text>
+          </svg>
+
+          <p id="mech-note" class="mt-3 text-sm leading-relaxed muted">
+            물체가 음속의 수십 배로 달리면 앞의 공기가 <b class="text-white">미처 비켜나지 못하고</b>
+            얇은 층으로 압축됩니다. 이 단열 압축으로 공기가 <b class="text-[var(--gold)]">수천~수만 ℃</b>까지
+            달궈지고, 그 뜨거운 공기(플라스마)가 물체를 가열하며 빛을 냅니다.
+            별똥별의 빛은 '돌이 타는 빛'이 아니라 대부분 <b class="text-white">달궈진 공기와 증발한 물질이 내는 빛</b>입니다.
+          </p>
+        </div>
+
+        <!-- Steps -->
+        <div class="panel p-5 flex flex-col">
+          <h3 class="font-semibold mb-4">불타 사라지기까지 — 4단계</h3>
+          <ol class="space-y-4 flex-1">
+            <li class="flex gap-3">
+              <span class="shrink-0 w-8 h-8 rounded-full bg-[var(--plasma)]/15 text-[var(--plasma)] font-bold grid place-items-center">1</span>
+              <div><b>초고속 진입</b><br><span class="muted text-sm">초속 11~72 km(음속의 30~200배)로 대기에 돌입. 공기가 비켜날 틈이 없습니다.</span></div>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 w-8 h-8 rounded-full bg-[var(--gold)]/15 text-[var(--gold)] font-bold grid place-items-center">2</span>
+              <div><b>단열 압축 → 충격파</b><br><span class="muted text-sm">앞쪽 공기가 압축되며 충격파 층이 생기고 수천~수만 ℃로 가열됩니다.</span></div>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 w-8 h-8 rounded-full bg-[var(--hot)]/15 text-[var(--hot)] font-bold grid place-items-center">3</span>
+              <div><b>삭마(Ablation)</b><br><span class="muted text-sm">표면이 녹고 증발해 깎여 나갑니다. 이 증기와 들뜬 공기가 밝은 꼬리를 만듭니다(고도 약 75~120 km).</span></div>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 w-8 h-8 rounded-full bg-[var(--fire)]/15 text-[var(--fire)] font-bold grid place-items-center">4</span>
+              <div><b>소멸 또는 생존</b><br><span class="muted text-sm">작으면 완전히 증발(별똥별), 충분히 크면 일부가 살아남아 운석으로 떨어집니다.</span></div>
+            </li>
+          </ol>
+          <div class="mt-4 p-3 rounded-xl bg-[var(--plasma)]/10 border border-[var(--plasma)]/30 text-sm">
+            💡 <b>핵심 한 줄:</b> 물체를 태우는 건 마찰이 아니라, 앞에서 <b>짓눌려 달궈진 공기</b>입니다.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. ENERGY ===== -->
+    <section id="energy" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">⚡</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">2. 모든 것은 '속도'가 결정한다</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">
+        운동에너지는 <b class="text-white">속도의 제곱(½mv²)</b>에 비례합니다. 게다가 물체가 받는
+        <b class="text-white">가열률은 속도의 약 세제곱(∝v³)</b>에 비례하죠. 속도가 2배면 에너지는 4배,
+        가열은 약 8배. 그래서 같은 대기라도 누가 들어오느냐에 따라 운명이 완전히 갈립니다.
+      </p>
+
+      <div class="mt-6 panel p-5 sm:p-7 speed-chart">
+        <h3 class="font-semibold mb-1">진입 속도 비교 <span class="muted font-normal text-sm">(초속 km)</span></h3>
+        <p class="muted text-xs mb-5">막대 길이는 속도에 비례 · 오른쪽 숫자는 궤도 재진입(7.8 km/s) 대비 <b>예상 가열률(∝v³)</b></p>
+
+        <div class="space-y-4 text-sm">
+          <!-- each row: label / bar / value -->
+          <div class="grid grid-cols-[120px_1fr_auto] sm:grid-cols-[160px_1fr_auto] items-center gap-3">
+            <span>✈️ 여객기 순항</span>
+            <div class="h-5 rounded-full bg-[#0a0d15]"><div class="speed-bar" style="background:#586079" data-pct="0.35"></div></div>
+            <span class="muted tabular-nums">0.25 · ×0.00003</span>
+          </div>
+          <div class="grid grid-cols-[120px_1fr_auto] sm:grid-cols-[160px_1fr_auto] items-center gap-3">
+            <span>🚀 팰컨9 부스터</span>
+            <div class="h-5 rounded-full bg-[#0a0d15]"><div class="speed-bar" style="background:#38bdf8" data-pct="2.8"></div></div>
+            <span class="muted tabular-nums">~2 · ×0.02</span>
+          </div>
+          <div class="grid grid-cols-[120px_1fr_auto] sm:grid-cols-[160px_1fr_auto] items-center gap-3">
+            <span>🛰️ 궤도 재진입</span>
+            <div class="h-5 rounded-full bg-[#0a0d15]"><div class="speed-bar" style="background:#34d399" data-pct="10.8"></div></div>
+            <span class="text-[var(--green)] tabular-nums">7.8 · ×1 (기준)</span>
+          </div>
+          <div class="grid grid-cols-[120px_1fr_auto] sm:grid-cols-[160px_1fr_auto] items-center gap-3">
+            <span>☄️ 운석 (느림)</span>
+            <div class="h-5 rounded-full bg-[#0a0d15]"><div class="speed-bar" style="background:#ffd24a" data-pct="15.3"></div></div>
+            <span class="text-[var(--gold)] tabular-nums">11 · ×2.8</span>
+          </div>
+          <div class="grid grid-cols-[120px_1fr_auto] sm:grid-cols-[160px_1fr_auto] items-center gap-3">
+            <span>☄️ 운석 (평균)</span>
+            <div class="h-5 rounded-full bg-[#0a0d15]"><div class="speed-bar" style="background:#ff7a18" data-pct="27.8"></div></div>
+            <span class="text-[var(--hot)] tabular-nums">~20 · ×17</span>
+          </div>
+          <div class="grid grid-cols-[120px_1fr_auto] sm:grid-cols-[160px_1fr_auto] items-center gap-3">
+            <span>☄️ 운석 (최고)</span>
+            <div class="h-5 rounded-full bg-[#0a0d15]"><div class="speed-bar" style="background:#ff3b3b" data-pct="100"></div></div>
+            <span class="text-[var(--fire)] tabular-nums">72 · ×785</span>
+          </div>
+        </div>
+
+        <div class="mt-6 grid sm:grid-cols-3 gap-3 text-sm">
+          <div class="panel-2 p-4">
+            <div class="text-2xl font-black text-[var(--hot)]">½mv²</div>
+            <div class="muted mt-1">에너지는 속도의 <b>제곱</b>에 비례</div>
+          </div>
+          <div class="panel-2 p-4">
+            <div class="text-2xl font-black text-[var(--fire)]">∝ v³</div>
+            <div class="muted mt-1">표면 가열률은 속도의 <b>세제곱</b>에 가깝게 비례</div>
+          </div>
+          <div class="panel-2 p-4">
+            <div class="text-2xl font-black text-[var(--plasma)]">~9×</div>
+            <div class="muted mt-1">평균 운석은 궤도 재진입보다 <b>약 9배 빠르고</b>, 가열은 수백 배</div>
+          </div>
+        </div>
+        <p class="mt-4 text-xs muted">
+          * 운석의 운동에너지(약 200 MJ/kg @20 km/s)는 암석을 증발시키는 데 필요한 에너지(약 6~8 MJ/kg)의 수십 배라,
+          보호장치가 없으면 표면이 계속 깎여 사라집니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== 3. SIZE SIMULATOR ===== -->
+    <section id="size" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">🪨</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">3. 얼마나 큰 물체까지 다 타버릴까?</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">
+        핵심은 <b class="text-white">표면적 대 부피의 비율</b>입니다. 작을수록 부피(질량) 대비 표면이 넓어
+        금방 다 깎여 증발합니다. 커질수록 속이 두꺼워 끝까지 버티죠. 아래 슬라이더로
+        지름을 바꿔 운명을 직접 확인해 보세요.
+      </p>
+
+      <div class="mt-6 panel p-5 sm:p-7">
+        <!-- readout -->
+        <div class="grid md:grid-cols-[200px_1fr] gap-6 items-center">
+          <!-- visual -->
+          <div class="grid place-items-center">
+            <svg viewBox="0 0 200 200" class="w-44 h-44">
+              <circle cx="100" cy="100" r="92" fill="#0a0d15" stroke="#1c2230"/>
+              <circle id="halo" cx="100" cy="100" r="40" fill="none" stroke="#ff7a18" stroke-width="6" opacity="0.5" class="pulse"/>
+              <circle id="obj" cx="100" cy="100" r="20" fill="#aeb8cc" stroke="#e7eaf2" stroke-width="2"/>
+            </svg>
+          </div>
+          <!-- info -->
+          <div>
+            <div class="flex flex-wrap items-end gap-x-4 gap-y-1">
+              <span class="muted text-sm">지름</span>
+              <span id="size-val" class="font-tech text-3xl sm:text-4xl font-extrabold">20 m</span>
+              <span id="verdict" class="chip" style="border-color:#ffd24a;color:#ffd24a">공중 폭발</span>
+            </div>
+            <div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm">
+              <div class="panel-2 p-3">
+                <div class="muted text-xs">교란 / 소멸 고도</div>
+                <div id="alt-val" class="font-semibold mt-0.5">약 50~25 km 상공</div>
+              </div>
+              <div class="panel-2 p-3">
+                <div class="muted text-xs">실제 사례</div>
+                <div id="ex-val" class="font-semibold mt-0.5">첼랴빈스크 (2013, ~20 m)</div>
+              </div>
+            </div>
+            <p id="desc-val" class="mt-3 text-sm muted leading-relaxed">
+              공기 저항으로 산산조각 나며 공중에서 폭발합니다. 충격파가 지상의 유리창을 깰 수 있습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- slider -->
+        <div class="mt-6">
+          <input id="size-slider" type="range" min="0" max="1000" value="540" class="w-full" />
+          <div class="flex justify-between text-[11px] muted mt-2 font-tech">
+            <span>1 cm</span><span>1 m</span><span>25 m</span><span>140 m</span><span>1 km</span><span>10 km</span>
+          </div>
+        </div>
+
+        <!-- outcome legend -->
+        <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-[11px]">
+          <div class="panel-2 p-2 text-center"><div class="w-full h-1.5 rounded-full mb-1" style="background:#38bdf8"></div>완전 소멸<br><span class="muted">별똥별</span></div>
+          <div class="panel-2 p-2 text-center"><div class="w-full h-1.5 rounded-full mb-1" style="background:#34d399"></div>대부분 소멸<br><span class="muted">운석 가능</span></div>
+          <div class="panel-2 p-2 text-center"><div class="w-full h-1.5 rounded-full mb-1" style="background:#ffd24a"></div>공중 폭발<br><span class="muted">Airburst</span></div>
+          <div class="panel-2 p-2 text-center"><div class="w-full h-1.5 rounded-full mb-1" style="background:#ff7a18"></div>국지 재앙<br><span class="muted">도시급</span></div>
+          <div class="panel-2 p-2 text-center"><div class="w-full h-1.5 rounded-full mb-1" style="background:#ff3b3b"></div>지역 파괴<br><span class="muted">충돌</span></div>
+          <div class="panel-2 p-2 text-center"><div class="w-full h-1.5 rounded-full mb-1" style="background:#ff2d2d"></div>대멸종급<br><span class="muted">전 지구</span></div>
+        </div>
+
+        <p class="mt-5 text-xs muted leading-relaxed">
+          ⚠️ 경계값은 대략적인 기준입니다. 실제 결과는 <b>속도·진입 각도·구성 성분(돌/철/얼음)·강도</b>에
+          따라 크게 달라집니다. 같은 크기라도 철질 운석은 더 잘 살아남고, 얕은 각도로 들어오면 더 오래 가열됩니다.
+          대체로 <b class="text-white">수 m 이하</b>는 대부분 소멸하고, <b class="text-white">수십 m 이상</b>이면 대기가 더 이상 완전히 막아주지 못합니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== 4. ROCKET ===== -->
+    <section id="rocket" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">🚀</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">4. 그런데 로켓은 왜 안 탈까?</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">
+        사실 로켓과 우주선도 <b class="text-white">엄청나게 뜨거워집니다.</b> 다만 운석과 달리
+        <b class="text-white">'견디도록 설계'</b>되었을 뿐이죠. 비결은 네 가지입니다.
+      </p>
+
+      <!-- four reasons -->
+      <div class="mt-6 grid md:grid-cols-2 gap-6">
+        <!-- Blunt body -->
+        <div class="panel p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold">① 뭉툭한 몸체 (Allen–Eggers, 1951)</h3>
+            <div class="inline-flex rounded-full overflow-hidden text-xs">
+              <button id="sharp-btn" class="seg px-3 py-1.5">뾰족</button>
+              <button id="blunt-btn" class="seg active px-3 py-1.5">뭉툭</button>
+            </div>
+          </div>
+          <svg viewBox="0 0 420 220" class="w-full rounded-xl bg-[#0a0d15]">
+            <defs>
+              <radialGradient id="hot2" cx="50%" cy="50%" r="60%">
+                <stop offset="0%" stop-color="#fff"/><stop offset="40%" stop-color="#ffd24a"/>
+                <stop offset="80%" stop-color="#ff7a18"/><stop offset="100%" stop-color="#ff3b3b" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <g stroke="#3a4256" stroke-width="2" marker-end="url(#arrow)">
+              <line x1="410" y1="60" x2="330" y2="60"/><line x1="410" y1="110" x2="330" y2="110"/><line x1="410" y1="160" x2="330" y2="160"/>
+            </g>
+
+            <!-- SHARP version -->
+            <g id="sharp-grp" style="display:none">
+              <!-- attached shock hugging the nose -->
+              <path d="M120,40 L70,110 L120,180" fill="none" stroke="#ff3b3b" stroke-width="4" class="pulse"/>
+              <polygon points="120,80 250,95 250,125 120,140" fill="#aeb8cc" stroke="#e7eaf2" stroke-width="2"/>
+              <!-- hot nose -->
+              <circle cx="120" cy="110" r="16" fill="url(#hot2)"/>
+              <text x="60" y="110" fill="#ff6a6a" font-size="12" text-anchor="end">열이 코끝에<tspan x="60" dy="14">직접 박힘 🔥</tspan></text>
+              <text x="200" y="150" fill="#9aa3b6" font-size="11">→ 뾰족하면 타버린다</text>
+            </g>
+
+            <!-- BLUNT version -->
+            <g id="blunt-grp">
+              <!-- detached bow shock standing off -->
+              <path d="M120,30 A110,110 0 0 1 120,190" fill="none" stroke="#ffd24a" stroke-width="4" class="pulse"/>
+              <!-- hot air layer in the standoff gap -->
+              <path d="M150,70 q-44,40 0,80 q40,-40 0,-80 Z" fill="url(#hot2)" opacity="0.85"/>
+              <!-- blunt capsule -->
+              <path d="M170,70 q34,40 0,80 L250,150 L250,70 Z" fill="#aeb8cc" stroke="#e7eaf2" stroke-width="2"/>
+              <text x="92" y="44" fill="#ffd24a" font-size="12" text-anchor="end">분리 충격파<tspan x="92" dy="14">(공기가 열을 안고 떠남)</tspan></text>
+              <text x="200" y="172" fill="#9aa3b6" font-size="11">→ 열의 ~90%가 공기로</text>
+            </g>
+          </svg>
+          <p id="blunt-note" class="mt-3 text-sm muted leading-relaxed">
+            뭉툭하면 충격파가 기체에서 <b class="text-white">멀찍이 떨어져(detached)</b> 형성됩니다.
+            뜨거운 공기층이 기체에 직접 닿지 않고 옆으로 흘러가며, <b class="text-[var(--gold)]">재진입 에너지의 약 90%를 기체가 아닌 공기를 데우는 데</b> 써버립니다.
+            뾰족하게 만들면 오히려 충격파가 코끝에 달라붙어 타버립니다.
+          </p>
+        </div>
+
+        <!-- Heat shield + speed + decel -->
+        <div class="panel p-5 space-y-4">
+          <div>
+            <h3 class="font-semibold mb-2">② 열차폐 시스템 (TPS)</h3>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div class="panel-2 p-3">
+                <div class="font-semibold text-[var(--hot)]">삭마형 (Ablative)</div>
+                <div class="muted text-xs mt-1">일부러 타서 떨어져 나가며 열을 가져감. 아폴로·오리온·드래건(PICA-X). 달 귀환 시 표면 ~2,800 ℃까지.</div>
+              </div>
+              <div class="panel-2 p-3">
+                <div class="font-semibold text-[var(--plasma)]">단열 타일</div>
+                <div class="muted text-xs mt-1">열을 거의 통과시키지 않고 복사로 방출. 우주왕복선 세라믹 타일, 스타십 육각 타일. 표면 ~1,650 ℃.</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2">③ 더 느린 속도 + ④ 제어된 감속</h3>
+            <ul class="space-y-2 text-sm muted">
+              <li class="flex gap-2"><span class="text-[var(--green)]">▸</span> 궤도 재진입은 <b class="text-white">초속 7.8 km</b> — 운석(11~72 km/s)보다 훨씬 느림</li>
+              <li class="flex gap-2"><span class="text-[var(--green)]">▸</span> 얕은 각도로 <b class="text-white">상층 대기에서 천천히</b> 감속해 가열을 시간·고도에 분산</li>
+              <li class="flex gap-2"><span class="text-[var(--green)]">▸</span> 운석은 보호장치·감속전략이 전혀 없는 '맨몸'이라 그냥 증발</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Falcon 9 special case -->
+      <div class="mt-6 panel p-5">
+        <h3 class="font-semibold mb-1">🛬 특별편: 팰컨9 부스터는 왜 더 멀쩡할까?</h3>
+        <p class="muted text-sm mb-5">궤도에 가지 않는 1단 부스터는 <b class="text-white">더 느리게</b> 들어오고, 엔진을 <b class="text-white">거꾸로 분사해</b> 스스로 감속합니다.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+          <div class="panel-2 p-4 text-center">
+            <div class="text-2xl mb-1">↩️</div><div class="font-semibold">부스트백 번</div>
+            <div class="muted text-xs mt-1">발사장 쪽으로 방향 전환</div>
+          </div>
+          <div class="panel-2 p-4 text-center">
+            <div class="text-2xl mb-1">🔥</div><div class="font-semibold">엔트리 번</div>
+            <div class="muted text-xs mt-1">대기 진입 직전 역추진으로 감속·앞쪽에 보호 가스막</div>
+          </div>
+          <div class="panel-2 p-4 text-center">
+            <div class="text-2xl mb-1">🪶</div><div class="font-semibold">그리드핀 활강</div>
+            <div class="muted text-xs mt-1">자세·방향 제어하며 하강</div>
+          </div>
+          <div class="panel-2 p-4 text-center">
+            <div class="text-2xl mb-1">🛬</div><div class="font-semibold">랜딩 번</div>
+            <div class="muted text-xs mt-1">착륙 직전 최종 감속</div>
+          </div>
+        </div>
+        <p class="mt-4 text-xs muted">
+          부스터는 분리 시 약 초속 2 km로 <b>궤도 속도에 한참 못 미칩니다.</b> 더해서 역추진으로 속도를 더 죽이니,
+          운석이나 궤도 캡슐이 겪는 지옥불에 비하면 훨씬 약한 가열만 받습니다. (그래도 그을음은 남습니다!)
+          반대로 <b>궤도에서 돌아오는 캡슐</b>(드래건 등)은 운석급 가열을 받기 때문에 반드시 두꺼운 열차폐가 필요합니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== 5. SUMMARY ===== -->
+    <section id="summary" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">📊</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">5. 한눈에 보기 — 운석 vs 우주선</h2>
+      </div>
+
+      <div class="mt-5 panel overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm min-w-[560px]">
+            <thead>
+              <tr class="border-b border-[var(--line)] text-left">
+                <th class="p-4 font-semibold muted">구분</th>
+                <th class="p-4 font-semibold text-[var(--fire)]">☄️ 운석 (맨몸)</th>
+                <th class="p-4 font-semibold text-[var(--plasma)]">🚀 귀환 우주선/로켓</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--line)]">
+              <tr><td class="p-4 muted">진입 속도</td><td class="p-4">11~72 km/s</td><td class="p-4">캡슐 ~7.8 km/s · 부스터 ~2 km/s</td></tr>
+              <tr><td class="p-4 muted">형상</td><td class="p-4">불규칙 (제어 불가)</td><td class="p-4">의도적으로 <b>뭉툭</b> (분리 충격파)</td></tr>
+              <tr><td class="p-4 muted">열 보호</td><td class="p-4 text-[var(--fire)]">없음 → 표면이 증발·삭마</td><td class="p-4 text-[var(--green)]">열차폐(삭마형/타일)로 방어</td></tr>
+              <tr><td class="p-4 muted">감속 전략</td><td class="p-4">없음 (그냥 돌입)</td><td class="p-4">얕은 각도·상층 활강 + 역추진</td></tr>
+              <tr><td class="p-4 muted">결과</td><td class="p-4 text-[var(--fire)]">대부분 소멸 (작으면 완전)</td><td class="p-4 text-[var(--green)]">가열을 견디고 생존·착륙</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mt-6 grid sm:grid-cols-3 gap-4">
+        <div class="panel p-5">
+          <div class="text-3xl mb-2">🔥</div>
+          <h4 class="font-semibold">왜 타는가</h4>
+          <p class="muted text-sm mt-1">마찰이 아니라 <b class="text-white">앞에서 압축돼 수천~수만 ℃로 달궈진 공기</b> 때문.</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-3xl mb-2">🪨</div>
+          <h4 class="font-semibold">어디까지 타는가</h4>
+          <p class="muted text-sm mt-1">대체로 <b class="text-white">수 m 이하</b>는 소멸. <b class="text-white">수십 m</b>면 공중폭발, 그 이상은 지면 충돌.</p>
+        </div>
+        <div class="panel p-5">
+          <div class="text-3xl mb-2">🚀</div>
+          <h4 class="font-semibold">로켓은 왜 멀쩡한가</h4>
+          <p class="muted text-sm mt-1"><b class="text-white">뭉툭한 몸체 + 열차폐 + 느린 속도 + 제어 감속</b>으로 견디도록 설계됨.</p>
+        </div>
+      </div>
+
+      <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-[var(--hot)]/15 to-[var(--plasma)]/15 border border-[var(--line)]">
+        <p class="text-center text-base sm:text-lg leading-relaxed">
+          🌠 운석이 타는 것과 로켓이 안 타는 것은 <b>다른 물리</b>가 아닙니다.<br class="hidden sm:block"/>
+          <b class="text-[var(--gold)]">똑같은 압축 가열</b>을 — 운석은 무방비로 맞고, 로켓은 <b class="text-[var(--plasma)]">설계로 이겨낼</b> 뿐입니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- Sources -->
+    <section class="reveal">
+      <details class="panel p-5">
+        <summary class="cursor-pointer font-semibold">📚 참고 자료 및 확인된 수치</summary>
+        <ul class="mt-3 space-y-1.5 text-sm muted list-disc list-inside">
+          <li>가열 메커니즘(단열 압축·충격파, 마찰 아님): Wikipedia — <a class="text-[var(--plasma)] hover:underline" href="https://en.wikipedia.org/wiki/Atmospheric_entry" target="_blank" rel="noopener">Atmospheric entry</a></li>
+          <li>뭉툭한 몸체·분리 충격파·에너지 ~90% 공기로: NASA History — <a class="text-[var(--plasma)] hover:underline" href="https://www.hq.nasa.gov/pao/History/SP-4209/ch3-4.htm" target="_blank" rel="noopener">Reentry Vehicles: Spheres vs. Blunt Bodies</a>, <a class="text-[var(--plasma)] hover:underline" href="https://en.wikipedia.org/wiki/Harry_Julian_Allen" target="_blank" rel="noopener">H. Julian Allen</a></li>
+          <li>첼랴빈스크(20 m, ~19 km/s, 고도 23~30 km, ~500 kt)·툰구스카(50~60 m, 고도 5~10 km): <a class="text-[var(--plasma)] hover:underline" href="https://en.wikipedia.org/wiki/Meteor_air_burst" target="_blank" rel="noopener">Meteor air burst</a>, <a class="text-[var(--plasma)] hover:underline" href="https://physicstoday.aip.org/features/chelyabinsk-portrait-of-an-asteroid-airburst" target="_blank" rel="noopener">Physics Today</a></li>
+          <li>가열률 ∝ √ρ·v³ (Sutton–Graves 관계): 재진입 공력가열 표준 근사식</li>
+        </ul>
+        <p class="mt-3 text-xs muted">※ 본 문서의 온도·크기 경계값은 교육용 근사치이며, 실제 값은 물체의 속도·각도·성분에 따라 달라집니다.</p>
+      </details>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-[var(--line)]">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm muted">
+      <span>☄️ 대기권 진입의 물리학 · 시각화 답변 아카이브</span>
+      <span class="font-tech text-xs">coding / 002</span>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      /* ---------- Reveal on scroll + animate speed bars ---------- */
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            if (e.target.querySelector('.speed-bar')) animateBars(e.target);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.18 });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+      function animateBars(scope) {
+        scope.querySelectorAll('.speed-bar').forEach(function (bar) {
+          var pct = bar.getAttribute('data-pct');
+          requestAnimationFrame(function () { bar.style.width = pct + '%'; });
+        });
+      }
+
+      /* ---------- Myth / Reality toggle ---------- */
+      var mythBtn = document.getElementById('myth-btn');
+      var realBtn = document.getElementById('real-btn');
+      var lblShock = document.getElementById('lbl-shock');
+      var lblMech = document.getElementById('lbl-mech');
+      var molecules = document.getElementById('molecules');
+      var shockLayer = document.getElementById('shock-layer');
+      var mechNote = document.getElementById('mech-note');
+
+      function showReal() {
+        realBtn.classList.add('active'); mythBtn.classList.remove('active');
+        shockLayer.style.opacity = 1; molecules.style.opacity = 1;
+        lblShock.textContent = '충격파 (수천~수만 ℃)';
+        lblMech.textContent = '압축된 공기가 가열 → 물체로 열 전달 + 빛 방출';
+        mechNote.innerHTML = '물체가 음속의 수십 배로 달리면 앞의 공기가 <b class="text-white">미처 비켜나지 못하고</b> 얇은 층으로 압축됩니다. 이 단열 압축으로 공기가 <b class="text-[var(--gold)]">수천~수만 ℃</b>까지 달궈지고, 그 뜨거운 공기(플라스마)가 물체를 가열하며 빛을 냅니다. 별똥별의 빛은 \'돌이 타는 빛\'이 아니라 대부분 <b class="text-white">달궈진 공기와 증발한 물질이 내는 빛</b>입니다.';
+      }
+      function showMyth() {
+        mythBtn.classList.add('active'); realBtn.classList.remove('active');
+        shockLayer.style.opacity = 0.18; molecules.style.opacity = 0.25;
+        lblShock.textContent = '“마찰로 탄다” (흔한 오해)';
+        lblMech.textContent = '실제로 마찰(점성 저항)은 가열의 일부일 뿐';
+        mechNote.innerHTML = '많은 사람이 \'공기 마찰로 탄다\'고 생각합니다. 하지만 표면을 스치는 마찰(점성 저항)은 <b class="text-white">부차적 요인</b>일 뿐입니다. 희박한 상층 대기에서도 물체가 워낙 빨라, 진짜 열은 앞쪽 공기를 <b class="text-white">짓눌러(압축) 데우는 데서</b> 나옵니다. <b class="text-[var(--gold)]">오른쪽 \'압축·충격파\'</b>를 눌러 실제 메커니즘을 보세요.';
+      }
+      mythBtn.addEventListener('click', showMyth);
+      realBtn.addEventListener('click', showReal);
+
+      /* ---------- Blunt / Sharp toggle ---------- */
+      var bluntBtn = document.getElementById('blunt-btn');
+      var sharpBtn = document.getElementById('sharp-btn');
+      var bluntGrp = document.getElementById('blunt-grp');
+      var sharpGrp = document.getElementById('sharp-grp');
+      var bluntNote = document.getElementById('blunt-note');
+
+      function showBlunt() {
+        bluntBtn.classList.add('active'); sharpBtn.classList.remove('active');
+        bluntGrp.style.display = ''; sharpGrp.style.display = 'none';
+        bluntNote.innerHTML = '뭉툭하면 충격파가 기체에서 <b class="text-white">멀찍이 떨어져(detached)</b> 형성됩니다. 뜨거운 공기층이 기체에 직접 닿지 않고 옆으로 흘러가며, <b class="text-[var(--gold)]">재진입 에너지의 약 90%를 기체가 아닌 공기를 데우는 데</b> 써버립니다. 뾰족하게 만들면 오히려 충격파가 코끝에 달라붙어 타버립니다.';
+      }
+      function showSharp() {
+        sharpBtn.classList.add('active'); bluntBtn.classList.remove('active');
+        sharpGrp.style.display = ''; bluntGrp.style.display = 'none';
+        bluntNote.innerHTML = '뾰족한(유선형) 몸체는 충격파가 코끝에 <b class="text-white">달라붙어(attached)</b> 열이 한 점에 집중됩니다. 비행기엔 좋지만 재진입에선 <b class="text-[var(--fire)]">그 부분이 녹아버립니다.</b> 그래서 재진입체는 일부러 둔하게 만듭니다.';
+      }
+      bluntBtn.addEventListener('click', showBlunt);
+      sharpBtn.addEventListener('click', showSharp);
+
+      /* ---------- Size simulator ---------- */
+      var slider = document.getElementById('size-slider');
+      var sizeVal = document.getElementById('size-val');
+      var verdict = document.getElementById('verdict');
+      var altVal = document.getElementById('alt-val');
+      var exVal = document.getElementById('ex-val');
+      var descVal = document.getElementById('desc-val');
+      var objC = document.getElementById('obj');
+      var halo = document.getElementById('halo');
+
+      // slider 0..1000  ->  diameter 0.01 m .. 10000 m (log scale)
+      var LOG_MIN = Math.log10(0.01), LOG_MAX = Math.log10(10000);
+      function sliderToD(v) { return Math.pow(10, LOG_MIN + (v / 1000) * (LOG_MAX - LOG_MIN)); }
+      function fmtSize(d) {
+        if (d < 1) return Math.round(d * 100) + ' cm';
+        if (d < 1000) return (d < 10 ? d.toFixed(1) : Math.round(d)) + ' m';
+        return (d / 1000).toFixed(1) + ' km';
+      }
+      function fate(d) {
+        if (d < 0.02) return { v: '완전 소멸 · 별똥별', c: '#38bdf8', alt: '약 100~75 km 상공',
+          ex: '모래알~콩알 크기 유성', desc: '대기 상층에서 빛을 내며 완전히 증발합니다. 우리가 밤하늘에서 보는 대부분의 별똥별이 여기에 해당합니다.' };
+        if (d < 1) return { v: '대부분 소멸 · 운석 가능', c: '#34d399', alt: '약 80~40 km 상공',
+          ex: '주먹~수박 크기 유성체', desc: '표면이 계속 깎여 대부분 타지만, 단단한 핵 일부가 살아남아 운석으로 떨어질 수 있습니다.' };
+        if (d < 25) return { v: '공중 폭발 (Airburst)', c: '#ffd24a', alt: '약 50~25 km 상공',
+          ex: '첼랴빈스크 (2013, ~20 m)', desc: '공기 저항을 못 버티고 산산조각 나며 공중에서 폭발합니다. 충격파가 지상의 유리창을 깨고 부상자를 낼 수 있습니다.' };
+        if (d < 140) return { v: '대형 폭발 · 국지 재앙', c: '#ff7a18', alt: '약 15~5 km 상공 또는 지면',
+          ex: '툰구스카 (1908, ~50~60 m)', desc: '도시 하나를 쓸어버릴 에너지. 일부는 지면에 충돌해 크레이터를 만듭니다 (배린저 크레이터, ~50 m 철질).' };
+        if (d < 1000) return { v: '지역 파괴급 충돌', c: '#ff3b3b', alt: '지면 충돌',
+          ex: '직경 수백 m급 소행성', desc: '대기는 더 이상 방패가 되지 못합니다. 광역적 파괴와 (해상이면) 거대 해일을 일으킵니다.' };
+        return { v: '전 지구적 대멸종급', c: '#ff2d2d', alt: '지면 충돌',
+          ex: '칙술루브 충돌체 (~10 km · 공룡 멸종)', desc: '대기는 사실상 아무 영향도 주지 못합니다. 기후를 바꾸고 대멸종을 일으킬 수 있습니다.' };
+      }
+      function radiusForD(d) {
+        var t = (Math.log10(d) - LOG_MIN) / (LOG_MAX - LOG_MIN); // 0..1
+        return 8 + t * 76; // 8..84 px
+      }
+      function update() {
+        var d = sliderToD(+slider.value);
+        var f = fate(d);
+        sizeVal.textContent = fmtSize(d);
+        verdict.textContent = f.v;
+        verdict.style.borderColor = f.c; verdict.style.color = f.c;
+        altVal.textContent = f.alt;
+        exVal.textContent = f.ex;
+        descVal.textContent = f.desc;
+        var r = radiusForD(d);
+        objC.setAttribute('r', r);
+        objC.setAttribute('fill', d < 1 ? '#aeb8cc' : f.c);
+        halo.setAttribute('r', Math.min(r + 14, 90));
+        halo.setAttribute('stroke', f.c);
+      }
+      slider.addEventListener('input', update);
+      update();
+    });
+  </script>
+</body>
+</html>
