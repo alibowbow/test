@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub 버전관리 쉽게 이해하기 — 브랜치 · PR · 머지</title>
+  <meta name="description" content="Git/GitHub의 핵심 개념(저장소·커밋·브랜치·머지·풀리퀘스트)을 비유와 인터랙티브 워크플로우로 쉽게 설명합니다. '무조건 main에 merge'하는 습관도 함께 짚어봅니다." />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#06070d; --panel:#11141d; --panel-2:#161a25;
+      --line:#262c3a; --txt:#e7eaf2; --muted:#9aa3b6;
+      --main:#58a6ff;   /* main 브랜치 - 파랑 */
+      --feat:#a371f7;   /* 작업 브랜치 - 보라 */
+      --ok:#3fb950;     /* merge/성공 - 초록 */
+      --warn:#d29922;   /* 주의 - 노랑 */
+      --danger:#f85149; /* 위험 - 빨강 */
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:'Noto Sans KR',sans-serif;
+      background:radial-gradient(1200px 700px at 50% -10%, #141a2e 0%, var(--bg) 55%) no-repeat, var(--bg);
+      color:var(--txt);
+    }
+    .font-tech{font-family:'Orbitron',sans-serif;letter-spacing:.02em;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:1.25rem;}
+    .panel-2{background:var(--panel-2);border:1px solid var(--line);border-radius:1rem;}
+    .muted{color:var(--muted);}
+    a:focus-visible,button:focus-visible{outline:3px solid var(--main);outline-offset:2px;border-radius:8px;}
+
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.16,.84,.44,1),transform .8s cubic-bezier(.16,.84,.44,1);}
+    .reveal.visible{opacity:1;transform:none;}
+
+    .chip{font-size:.7rem;padding:.15rem .55rem;border-radius:99px;border:1px solid var(--line);}
+
+    @keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+    .pulse{animation:pulse 1.6s ease-in-out infinite;}
+
+    /* git graph step transitions */
+    [data-step]{transition:opacity .5s ease;}
+    .glow{filter:drop-shadow(0 0 6px currentColor);}
+
+    /* flip cards */
+    .flip{perspective:1000px;}
+    .flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+    .flip:hover .flip-inner,.flip:focus-within .flip-inner{transform:rotateY(180deg);}
+    .flip-face{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center;padding:1rem;border-radius:1rem;}
+    .flip-back{transform:rotateY(180deg);}
+
+    /* cmd block */
+    .cmd{position:relative;}
+    .cmd code{display:block;padding:.85rem 4.2rem .85rem 1rem;border-radius:.75rem;background:#0a0d15;border:1px solid var(--line);white-space:pre-wrap;word-break:break-all;}
+    .cmd button{position:absolute;top:.55rem;right:.55rem;font-size:.7rem;padding:.25rem .6rem;border-radius:.5rem;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);}
+    .cmd button:hover{color:#fff;border-color:var(--main);}
+
+    ::-webkit-scrollbar{width:9px;height:9px}
+    ::-webkit-scrollbar-track{background:#0d1018}
+    ::-webkit-scrollbar-thumb{background:#39414f;border-radius:6px}
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Sticky nav -->
+  <header class="sticky top-0 z-50 backdrop-blur-lg bg-[#06070d]/80 border-b border-[var(--line)]">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#top" class="font-tech text-sm sm:text-base text-white flex items-center gap-2">
+        <span class="text-[var(--main)]">⑂</span> GIT &amp; GITHUB
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#why" class="muted hover:text-white transition-colors">왜?</a>
+        <a href="#concepts" class="muted hover:text-white transition-colors">개념</a>
+        <a href="#flow" class="muted hover:text-white transition-colors">워크플로우</a>
+        <a href="#habit" class="muted hover:text-white transition-colors">main 습관</a>
+        <a href="#cheat" class="muted hover:text-white transition-colors">명령어</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="top" class="relative overflow-hidden">
+    <div class="relative max-w-6xl mx-auto px-4 pt-20 pb-14 sm:pt-28 sm:pb-16 text-center">
+      <span class="chip muted">버전관리 · 브랜치 · 풀리퀘스트 · 머지</span>
+      <h1 class="mt-5 text-3xl sm:text-5xl lg:text-6xl font-black leading-tight">
+        브랜치? PR? 머지?<br class="hidden sm:block"/>
+        <span class="text-[var(--main)]">한 장</span>으로 이해하는 <span class="text-[var(--feat)]">버전관리</span>
+      </h1>
+      <p class="mt-6 max-w-2xl mx-auto muted text-base sm:text-lg leading-relaxed">
+        "그냥 무조건 main에 합쳐버린다"면 이 문서가 딱입니다. 게임 세이브·평행우주 비유로
+        개념을 잡고, <b class="text-white">클릭 한 번씩 진행되는 워크플로우</b>로 전체 흐름을 직접 따라가 보세요.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm">
+        <a href="#flow" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[var(--main)] to-[var(--feat)] text-white font-semibold shadow-lg shadow-indigo-900/40 hover:scale-105 transition-transform">워크플로우 따라가기 ↓</a>
+        <a href="#concepts" class="px-5 py-2.5 rounded-full panel-2 text-white font-semibold hover:bg-[#1c2230] transition-colors">먼저 개념부터 →</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="max-w-6xl mx-auto px-4 pb-24 space-y-20 sm:space-y-28">
+
+    <!-- ===== 1. WHY ===== -->
+    <section id="why" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">🤔</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">1. 버전관리가 왜 필요할까?</h2>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-6 items-stretch">
+        <div class="panel p-5">
+          <h3 class="font-semibold mb-3 text-[var(--danger)]">😱 버전관리가 없으면…</h3>
+          <div class="space-y-2 mono text-sm">
+            <div class="panel-2 px-3 py-2">보고서_최종.html</div>
+            <div class="panel-2 px-3 py-2">보고서_최종_v2.html</div>
+            <div class="panel-2 px-3 py-2">보고서_최종_진짜최종.html</div>
+            <div class="panel-2 px-3 py-2 text-[var(--danger)]">보고서_최종_진짜최종_이게진짜.html</div>
+          </div>
+          <p class="mt-3 text-sm muted leading-relaxed">언제 무엇을 왜 바꿨는지 모르고, 되돌리기도 어렵고, 여럿이 함께 고치면 누가 무엇을 덮어썼는지 알 수 없습니다.</p>
+        </div>
+        <div class="panel p-5">
+          <h3 class="font-semibold mb-3 text-[var(--ok)]">✅ Git이 있으면…</h3>
+          <ul class="space-y-3 text-sm">
+            <li class="flex gap-3"><span class="text-[var(--ok)]">▸</span><span><b>되감기</b> — 언제든 과거 어느 시점으로든 돌아갈 수 있어요(시간여행).</span></li>
+            <li class="flex gap-3"><span class="text-[var(--ok)]">▸</span><span><b>기록</b> — 누가·언제·왜 바꿨는지 모든 변경이 남습니다.</span></li>
+            <li class="flex gap-3"><span class="text-[var(--ok)]">▸</span><span><b>분기</b> — 망가뜨릴 걱정 없이 따로 떼어내 실험할 수 있어요.</span></li>
+            <li class="flex gap-3"><span class="text-[var(--ok)]">▸</span><span><b>협업</b> — 여러 명이 충돌 없이 같은 프로젝트를 고칩니다.</span></li>
+          </ul>
+          <div class="mt-4 p-3 rounded-xl bg-[var(--main)]/10 border border-[var(--main)]/30 text-sm">
+            💡 <b>Git</b> = 내 컴퓨터의 시간여행 저장 시스템 &nbsp;·&nbsp; <b>GitHub</b> = 그걸 인터넷에 올려 함께 쓰는 곳
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. CONCEPTS ===== -->
+    <section id="concepts" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">🧩</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">2. 핵심 개념 4가지 (비유로)</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">카드에 마우스를 올리면(또는 탭하면) 뒤집혀 한 줄 정의가 나옵니다.</p>
+
+      <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Repo -->
+        <div class="flip h-44" tabindex="0">
+          <div class="flip-inner">
+            <div class="flip-face panel">
+              <div class="text-3xl">📦</div>
+              <div class="font-bold mt-2">저장소 (Repository)</div>
+              <div class="muted text-sm mt-1">프로젝트 폴더 = 게임 그 자체</div>
+            </div>
+            <div class="flip-face flip-back panel-2 border border-[var(--main)]/40">
+              <div class="text-sm leading-relaxed">프로젝트의 <b>모든 파일 + 모든 변경 역사</b>를 통째로 담는 상자. 줄여서 <b class="mono">repo</b>.</div>
+            </div>
+          </div>
+        </div>
+        <!-- Commit -->
+        <div class="flip h-44" tabindex="0">
+          <div class="flip-inner">
+            <div class="flip-face panel">
+              <div class="text-3xl">💾</div>
+              <div class="font-bold mt-2">커밋 (Commit)</div>
+              <div class="muted text-sm mt-1">게임의 세이브 포인트</div>
+            </div>
+            <div class="flip-face flip-back panel-2 border border-[var(--ok)]/40">
+              <div class="text-sm leading-relaxed">이 순간의 <b>스냅샷(저장점)</b>. "무엇을 했는지" 메모를 붙여 저장해요. 여기로 언제든 되돌아갈 수 있습니다.</div>
+            </div>
+          </div>
+        </div>
+        <!-- Branch -->
+        <div class="flip h-44" tabindex="0">
+          <div class="flip-inner">
+            <div class="flip-face panel">
+              <div class="text-3xl">🌿</div>
+              <div class="font-bold mt-2">브랜치 (Branch)</div>
+              <div class="muted text-sm mt-1">평행우주 / 작업 사본</div>
+            </div>
+            <div class="flip-face flip-back panel-2 border border-[var(--feat)]/40">
+              <div class="text-sm leading-relaxed">원본(main)을 <b>건드리지 않고</b> 갈라낸 작업용 가지. 여기서 마음껏 실험하고, 잘 되면 합칩니다.</div>
+            </div>
+          </div>
+        </div>
+        <!-- Merge -->
+        <div class="flip h-44" tabindex="0">
+          <div class="flip-inner">
+            <div class="flip-face panel">
+              <div class="text-3xl">🔀</div>
+              <div class="font-bold mt-2">머지 (Merge)</div>
+              <div class="muted text-sm mt-1">평행우주를 다시 합치기</div>
+            </div>
+            <div class="flip-face flip-back panel-2 border border-[var(--warn)]/40">
+              <div class="text-sm leading-relaxed">브랜치에서 한 작업을 <b>다시 main에 합치는</b> 일. 두 갈래의 변경을 하나로 모읍니다.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 panel p-4 text-sm muted">
+        🔗 한 문장 정리: <b class="text-white">저장소</b> 안에서 <b class="text-white">커밋</b>으로 저장점을 쌓고,
+        위험한 작업은 <b class="text-white" style="color:var(--feat)">브랜치</b>로 떼어내 한 뒤,
+        다 되면 <b class="text-white" style="color:var(--warn)">머지</b>로 합칩니다.
+        그 "합쳐도 될까요?"라는 요청이 바로 다음에 나올 <b style="color:var(--main)">PR</b>입니다.
+      </div>
+    </section>
+
+    <!-- ===== 3. WORKFLOW (centerpiece) ===== -->
+    <section id="flow" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">🗺️</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">3. 전체 흐름 따라가기 (클릭!)</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">
+        아래 <b class="text-white">다음 →</b> 버튼을 누를 때마다 한 단계씩 진행됩니다.
+        파란 선은 <b style="color:var(--main)">main</b>, 보라 선은 <b style="color:var(--feat)">작업 브랜치</b>예요.
+      </p>
+
+      <div class="mt-6 panel p-5 sm:p-7">
+        <!-- The git graph -->
+        <svg viewBox="0 0 600 230" class="w-full rounded-xl bg-[#0a0d15]">
+          <!-- main line -->
+          <line x1="30" y1="70" x2="575" y2="70" stroke="var(--main)" stroke-width="4" data-step="0"/>
+          <text x="34" y="56" fill="var(--main)" font-size="13" font-weight="700" data-step="0">main (항상 안정)</text>
+
+          <!-- main commits before branch -->
+          <circle cx="80" cy="70" r="10" fill="var(--main)" data-step="0"/>
+          <circle cx="160" cy="70" r="10" fill="var(--main)" data-step="0"/>
+          <circle cx="240" cy="70" r="10" fill="var(--main)" data-step="0"/>
+
+          <!-- branch curve (step 1) -->
+          <path class="feat" data-step="1" d="M240,70 C 280,70 280,165 320,165" fill="none" stroke="var(--feat)" stroke-width="4"/>
+          <line class="feat" data-step="1" x1="320" y1="165" x2="440" y2="165" stroke="var(--feat)" stroke-width="4"/>
+          <text class="feat" data-step="1" x="324" y="200" fill="var(--feat)" font-size="13" font-weight="700">기능추가 (작업 브랜치)</text>
+
+          <!-- feature commits (step 2) -->
+          <circle class="feat" data-step="2" cx="360" cy="165" r="10" fill="var(--feat)"/>
+          <circle class="feat" data-step="2" cx="430" cy="165" r="10" fill="var(--feat)"/>
+
+          <!-- push cloud (step 3) -->
+          <g data-step="3">
+            <text x="395" y="150" fill="#cdd3e0" font-size="13" text-anchor="middle">☁️ push → GitHub</text>
+          </g>
+
+          <!-- PR badge + arrow (step 4) -->
+          <g data-step="4">
+            <path d="M455,150 C 500,120 500,95 480,80" fill="none" stroke="var(--warn)" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+            <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="var(--warn)"/></marker></defs>
+            <rect x="486" y="120" width="96" height="26" rx="13" fill="var(--warn)"/>
+            <text x="534" y="138" fill="#1a1305" font-size="12.5" font-weight="800" text-anchor="middle">PR #1 열림</text>
+          </g>
+
+          <!-- review/CI (step 5) -->
+          <g data-step="5">
+            <text x="534" y="172" fill="var(--ok)" font-size="12" text-anchor="middle">✓ 리뷰  ✓ 테스트(CI)</text>
+          </g>
+
+          <!-- merge curve + merge commit + final (step 6) -->
+          <path data-step="6" d="M430,165 C 470,165 470,70 510,70" fill="none" stroke="var(--ok)" stroke-width="4"/>
+          <circle data-step="6" cx="510" cy="70" r="11" fill="var(--ok)" class="glow" style="color:var(--ok)"/>
+          <text data-step="6" x="510" y="48" fill="var(--ok)" font-size="12" font-weight="700" text-anchor="middle">merge 커밋</text>
+
+          <!-- delete note (step 7) -->
+          <g data-step="7">
+            <text x="324" y="218" fill="#7d8597" font-size="12">🗑️ 브랜치 삭제 (기록은 main에 남음)</text>
+          </g>
+        </svg>
+
+        <!-- controls + explanation -->
+        <div class="mt-5 grid md:grid-cols-[1fr_auto] gap-4 items-center">
+          <div class="panel-2 p-4 min-h-[92px]">
+            <div class="flex items-center gap-2">
+              <span class="chip" id="step-counter" style="border-color:var(--main);color:var(--main)">단계 1 / 8</span>
+              <h3 id="step-title" class="font-bold">시작 — 안정된 main</h3>
+            </div>
+            <p id="step-desc" class="mt-2 text-sm muted leading-relaxed">main 브랜치에는 잘 작동하는 코드가 있습니다. 모두가 믿고 쓰는 진짜 버전이에요.</p>
+          </div>
+          <div class="flex gap-2 justify-end">
+            <button id="prev-btn" class="px-4 py-2.5 rounded-xl panel-2 font-semibold hover:bg-[#1c2230] transition-colors disabled:opacity-40">← 이전</button>
+            <button id="next-btn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--main)] to-[var(--feat)] text-white font-semibold hover:scale-105 transition-transform">다음 →</button>
+          </div>
+        </div>
+
+        <!-- step dots -->
+        <div id="step-dots" class="mt-4 flex flex-wrap gap-1.5 justify-center"></div>
+      </div>
+
+      <!-- GitHub UI mini-steps -->
+      <div class="mt-6 panel p-5">
+        <h3 class="font-semibold mb-1">🖱️ GitHub 화면에서 PR 만드는 법 (3단계)</h3>
+        <p class="muted text-sm mb-4">브랜치를 push하면 GitHub가 보통 노란 배너로 "Compare &amp; pull request" 버튼을 띄워줍니다.</p>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm">
+          <div class="panel-2 p-4"><div class="font-tech text-[var(--main)]">STEP 1</div><div class="font-semibold mt-1">Pull requests 탭 → New</div><div class="muted text-xs mt-1">base: <b class="mono">main</b> ← compare: <b class="mono">내 브랜치</b> 선택</div></div>
+          <div class="panel-2 p-4"><div class="font-tech text-[var(--feat)]">STEP 2</div><div class="font-semibold mt-1">제목·설명 작성 → Create</div><div class="muted text-xs mt-1">무엇을 왜 바꿨는지 적어요. 그러면 리뷰·CI가 돌아갑니다.</div></div>
+          <div class="panel-2 p-4"><div class="font-tech text-[var(--ok)]">STEP 3</div><div class="font-semibold mt-1">Merge 버튼 클릭</div><div class="muted text-xs mt-1">초록 <b>Merge pull request</b> → 끝! 브랜치는 Delete로 정리.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4. HABIT (always merge to main) ===== -->
+    <section id="habit" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">⚖️</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">4. "무조건 main에 merge" 해도 될까?</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">
+        결론부터: <b class="text-white">혼자 쓰는 작은 저장소라면 괜찮습니다.</b> 다만 무엇을 잃고 있는지는 알아두면 좋아요.
+        아래 두 방식을 비교해 보세요.
+      </p>
+
+      <div class="mt-6 grid lg:grid-cols-2 gap-6">
+        <div class="panel p-5 border-l-4" style="border-left-color:var(--warn)">
+          <h3 class="font-semibold text-[var(--warn)] mb-3">🅐 main에 바로 작업/머지</h3>
+          <ul class="space-y-2 text-sm">
+            <li class="flex gap-2"><span class="text-[var(--ok)]">+</span> 빠르고 단순함 — 혼자 메모/문서 저장소엔 충분</li>
+            <li class="flex gap-2"><span class="text-[var(--danger)]">−</span> 작업하다 깨지면 <b>main이 곧바로 깨짐</b> (안전망 없음)</li>
+            <li class="flex gap-2"><span class="text-[var(--danger)]">−</span> 합치기 전 <b>리뷰·자동검사(CI)</b>를 끼울 자리가 없음</li>
+            <li class="flex gap-2"><span class="text-[var(--danger)]">−</span> 여러 명이면 서로 덮어쓰기·충돌 위험 ↑</li>
+          </ul>
+        </div>
+        <div class="panel p-5 border-l-4" style="border-left-color:var(--ok)">
+          <h3 class="font-semibold text-[var(--ok)] mb-3">🅑 브랜치 → PR → 머지</h3>
+          <ul class="space-y-2 text-sm">
+            <li class="flex gap-2"><span class="text-[var(--ok)]">+</span> main은 <b>항상 작동하는 상태</b>로 보호됨</li>
+            <li class="flex gap-2"><span class="text-[var(--ok)]">+</span> 합치기 전에 <b>검토·테스트·토론</b> 가능</li>
+            <li class="flex gap-2"><span class="text-[var(--ok)]">+</span> 문제가 생겨도 <b>그 PR만 되돌리면</b> 끝(롤백 쉬움)</li>
+            <li class="flex gap-2"><span class="text-[var(--warn)]">−</span> 단계가 조금 늘어남 (혼자면 과할 수 있음)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-5 panel p-5">
+        <h3 class="font-semibold mb-3">👉 그래서, 이렇게 쓰면 됩니다</h3>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm">
+          <div class="panel-2 p-4"><div class="text-2xl mb-1">📝</div><b>혼자 메모/문서 저장소</b><div class="muted text-xs mt-1">main 직접도 OK. 대신 <b>커밋 메시지</b>만 잘 남기세요.</div></div>
+          <div class="panel-2 p-4"><div class="text-2xl mb-1">🧪</div><b>큰 실험·위험한 변경</b><div class="muted text-xs mt-1">혼자라도 <b>브랜치</b>로 떼어내면 안전. 망치면 버리면 됨.</div></div>
+          <div class="panel-2 p-4"><div class="text-2xl mb-1">👥</div><b>남과 함께 / 공개 프로젝트</b><div class="muted text-xs mt-1"><b>PR 필수.</b> 리뷰·CI·기록이 협업의 핵심.</div></div>
+        </div>
+        <p class="mt-4 text-xs muted">팁: GitHub 저장소 설정에서 <b class="text-white">Branch protection</b>을 켜면 "main에 직접 push 금지 / PR 필수"를 강제할 수 있어요. 습관을 바꾸고 싶을 때 유용합니다.</p>
+      </div>
+    </section>
+
+    <!-- ===== 5. CHEAT SHEET ===== -->
+    <section id="cheat" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">⌨️</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">5. 명령어 치트시트 (복사해서 쓰세요)</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">브랜치 → PR → 머지 흐름을 그대로 따라가는 순서입니다. <b class="text-white">기능추가</b>는 원하는 브랜치 이름으로 바꾸세요.</p>
+
+      <div class="mt-6 grid md:grid-cols-2 gap-4 text-sm">
+        <div class="cmd"><code class="mono">git checkout -b 기능추가</code><button onclick="copyCmd(this)">복사</button>
+          <p class="muted text-xs mt-1 ml-1">① main에서 새 브랜치를 만들고 그쪽으로 이동</p></div>
+        <div class="cmd"><code class="mono">git add .
+git commit -m "무엇을 했는지 메모"</code><button onclick="copyCmd(this)">복사</button>
+          <p class="muted text-xs mt-1 ml-1">② 변경을 담아 저장점(커밋) 만들기</p></div>
+        <div class="cmd"><code class="mono">git push -u origin 기능추가</code><button onclick="copyCmd(this)">복사</button>
+          <p class="muted text-xs mt-1 ml-1">③ 브랜치를 GitHub에 올리기 (그 뒤 화면에서 PR 생성)</p></div>
+        <div class="cmd"><code class="mono">git checkout main
+git pull origin main</code><button onclick="copyCmd(this)">복사</button>
+          <p class="muted text-xs mt-1 ml-1">④ 머지 후, 내 main을 최신 상태로 당겨오기</p></div>
+        <div class="cmd"><code class="mono">git branch -d 기능추가</code><button onclick="copyCmd(this)">복사</button>
+          <p class="muted text-xs mt-1 ml-1">⑤ 끝난 작업 브랜치 삭제 (로컬)</p></div>
+        <div class="cmd"><code class="mono">git status
+git log --oneline --graph --all</code><button onclick="copyCmd(this)">복사</button>
+          <p class="muted text-xs mt-1 ml-1">🔎 현재 상태 보기 / 커밋 그래프를 터미널에서 그려보기</p></div>
+      </div>
+    </section>
+
+    <!-- ===== 6. GLOSSARY ===== -->
+    <section id="glossary" class="reveal scroll-mt-24">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">📖</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">6. 용어 사전</h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+        <div class="panel p-4"><b class="text-[var(--main)]">Repository (레포)</b><p class="muted mt-1">프로젝트 + 모든 변경 역사를 담는 저장소.</p></div>
+        <div class="panel p-4"><b class="text-[var(--main)]">Commit (커밋)</b><p class="muted mt-1">한 시점의 스냅샷(저장점). 메모를 붙여 저장.</p></div>
+        <div class="panel p-4"><b class="text-[var(--feat)]">Branch (브랜치)</b><p class="muted mt-1">원본을 건드리지 않는 갈래(작업 사본).</p></div>
+        <div class="panel p-4"><b class="text-[var(--warn)]">Merge (머지)</b><p class="muted mt-1">갈라진 작업을 다시 하나로 합치기.</p></div>
+        <div class="panel p-4"><b class="text-[var(--main)]">Pull Request (PR)</b><p class="muted mt-1">"내 브랜치를 합쳐도 될까요?"라는 제안+리뷰 공간.</p></div>
+        <div class="panel p-4"><b class="text-[var(--ok)]">Clone (클론)</b><p class="muted mt-1">원격 저장소를 내 컴퓨터로 통째로 복제.</p></div>
+        <div class="panel p-4"><b class="text-[var(--ok)]">Push / Pull</b><p class="muted mt-1">내 변경을 올리기(push) / 남의 변경 받기(pull).</p></div>
+        <div class="panel p-4"><b class="text-[var(--feat)]">Fork (포크)</b><p class="muted mt-1">남의 저장소를 통째로 내 계정에 복사해 시작.</p></div>
+        <div class="panel p-4"><b class="text-[var(--danger)]">Conflict (충돌)</b><p class="muted mt-1">같은 줄을 둘이 다르게 고쳐 합칠 때 생기는 충돌. 손으로 골라줘야 함.</p></div>
+        <div class="panel p-4"><b class="text-[var(--main)]">CI</b><p class="muted mt-1">올린 코드를 자동으로 빌드·테스트해주는 검사 로봇.</p></div>
+        <div class="panel p-4"><b class="text-[var(--feat)]">Rebase (리베이스)</b><p class="muted mt-1">커밋 역사를 깔끔하게 재정렬하는 고급 머지 방식.</p></div>
+        <div class="panel p-4"><b class="text-[var(--warn)]">Main / Origin</b><p class="muted mt-1">main = 기본(대표) 브랜치 · origin = 기본 원격(GitHub) 별칭.</p></div>
+      </div>
+    </section>
+
+    <!-- summary -->
+    <section class="reveal">
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-[var(--main)]/15 to-[var(--feat)]/15 border border-[var(--line)] text-center">
+        <p class="text-base sm:text-lg leading-relaxed">
+          🌳 핵심 한 줄: <b class="text-white">main은 건드리지 말고, 브랜치에서 일하고, PR로 검토받아, 머지로 합친다.</b><br class="hidden sm:block"/>
+          <span class="muted text-sm">혼자라면 단순하게, 함께라면 PR로 — 상황에 맞게 고르면 됩니다.</span>
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-[var(--line)]">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm muted">
+      <span>⑂ GitHub 버전관리 쉽게 이해하기 · 시각화 답변 아카이브</span>
+      <span class="font-tech text-xs">coding / 003</span>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      /* Reveal on scroll */
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+      /* ---------- Workflow stepper ---------- */
+      var steps = [
+        { t: "시작 — 안정된 main", d: "main 브랜치에는 잘 작동하는 코드가 있습니다. 모두가 믿고 쓰는 진짜 버전이에요." },
+        { t: "① 브랜치 만들기", d: "main을 직접 건드리지 않으려고 작업용 가지(branch)를 새로 칩니다. main의 복사본에서 안전하게 실험해요. (git checkout -b 기능추가)" },
+        { t: "② 커밋 쌓기", d: "브랜치에서 작업하며 변경을 커밋(저장점)으로 쌓습니다. main은 그대로라 망쳐도 안전합니다." },
+        { t: "③ GitHub에 푸시", d: "내 컴퓨터의 브랜치를 GitHub(원격)에 올립니다. 이제 백업도 되고 남들도 볼 수 있어요. (git push)" },
+        { t: "④ PR(풀 리퀘스트) 열기", d: "이 브랜치를 main에 합쳐도 될지 묻는 공식 제안서를 엽니다. 무엇을 왜 바꿨는지 설명과 함께요." },
+        { t: "⑤ 리뷰 & 자동검사(CI)", d: "동료가 리뷰하고 자동 테스트(CI)가 통과하는지 확인합니다. 문제가 있으면 커밋을 더 쌓아 고쳐요." },
+        { t: "⑥ 머지(병합)", d: "승인되면 머지! 브랜치의 작업이 main에 합쳐지고, 합쳐졌다는 머지 커밋이 기록으로 남습니다." },
+        { t: "⑦ 브랜치 정리", d: "역할을 다한 작업 브랜치는 삭제합니다. 작업은 이미 main에 안전하게 들어갔고 기록도 남아요." }
+      ];
+      var MAX = steps.length - 1;
+      var cur = 0;
+      var counter = document.getElementById('step-counter');
+      var title = document.getElementById('step-title');
+      var desc = document.getElementById('step-desc');
+      var prevBtn = document.getElementById('prev-btn');
+      var nextBtn = document.getElementById('next-btn');
+      var dotsWrap = document.getElementById('step-dots');
+
+      // build dots
+      for (var i = 0; i <= MAX; i++) {
+        var dot = document.createElement('button');
+        dot.className = 'w-2.5 h-2.5 rounded-full';
+        dot.setAttribute('data-i', i);
+        dot.setAttribute('aria-label', '단계 ' + (i + 1));
+        dot.addEventListener('click', function () { setStep(+this.getAttribute('data-i')); });
+        dotsWrap.appendChild(dot);
+      }
+      var dots = dotsWrap.querySelectorAll('button');
+
+      function setStep(n) {
+        cur = Math.max(0, Math.min(MAX, n));
+        // graph elements: visible if data-step <= cur
+        document.querySelectorAll('[data-step]').forEach(function (el) {
+          var s = +el.getAttribute('data-step');
+          el.style.opacity = (s <= cur) ? '1' : '0';
+        });
+        // feature branch fades on delete step
+        document.querySelectorAll('.feat').forEach(function (el) {
+          var s = +el.getAttribute('data-step');
+          if (s <= cur) el.style.opacity = (cur >= 7) ? '0.32' : '1';
+        });
+        // text
+        counter.textContent = '단계 ' + (cur + 1) + ' / ' + (MAX + 1);
+        title.textContent = steps[cur].t;
+        desc.textContent = steps[cur].d;
+        // dots
+        dots.forEach(function (d, idx) {
+          d.style.background = (idx <= cur) ? 'var(--main)' : '#2b3242';
+          d.style.transform = (idx === cur) ? 'scale(1.5)' : 'scale(1)';
+        });
+        // buttons
+        prevBtn.disabled = (cur === 0);
+        nextBtn.textContent = (cur === MAX) ? '처음부터 ↺' : '다음 →';
+      }
+      nextBtn.addEventListener('click', function () { setStep(cur === MAX ? 0 : cur + 1); });
+      prevBtn.addEventListener('click', function () { setStep(cur - 1); });
+      setStep(0);
+
+      /* ---------- copy buttons ---------- */
+      window.copyCmd = function (btn) {
+        var code = btn.parentElement.querySelector('code').innerText;
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); btn.textContent = '복사됨!'; }
+        catch (e) { btn.textContent = '실패'; }
+        document.body.removeChild(ta);
+        setTimeout(function () { btn.textContent = '복사'; }, 1500);
+      };
+    });
+  </script>
+</body>
+</html>
