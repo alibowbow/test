@@ -63,6 +63,8 @@
     /* filter seg */
     .seg{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);transition:.2s;}
     .seg.active{background:linear-gradient(90deg,var(--red),var(--red-deep));color:#fff;border-color:transparent;}
+    .seg.dim{opacity:.4;}
+    .seg.sp-on{background:var(--gold);color:#1a1110;border-color:transparent;}
 
     /* range */
     input[type=range]{-webkit-appearance:none;appearance:none;height:8px;border-radius:99px;outline:none;}
@@ -162,9 +164,7 @@
                 <path d="M118,140 C108,118 126,108 140,120 C134,134 130,142 118,140 Z"/>
                 <path d="M548,150 C568,150 574,172 573,198 C572,242 581,270 585,296 C587,310 575,314 569,302 C558,278 556,248 553,208 C551,184 546,168 548,150 Z"/>
               </g>
-              <path d="M138,120 C140,104 151,99 158,101 C152,108 150,116 145,122 Z" fill="#cbb89a" stroke="#0e0a09" stroke-width="1.5"/>
-              <circle cx="92" cy="158" r="4.5" fill="#f5e6d8"/><circle cx="92" cy="159" r="2" fill="#1a1110"/>
-              <ellipse cx="58" cy="186" rx="4" ry="6" fill="#0e0a09"/>
+              <path d="M138,120 C140,104 151,99 158,101 C152,108 150,116 145,122 Z" fill="#1c130f" stroke="#0e0a09" stroke-width="1.5"/>
               <circle cx="580" cy="300" r="9" fill="#120c0b"/>
 
               <!-- body base (fills behind segments) -->
@@ -208,7 +208,14 @@
             <div id="method-filter" class="flex flex-wrap gap-1.5 text-xs"></div>
           </div>
           <!-- cut chips -->
-          <div id="cut-chips" class="mt-4 flex flex-wrap gap-1.5 text-xs"></div>
+          <div class="mt-4">
+            <div class="text-xs muted mb-2">부위 (전체)</div>
+            <div id="cut-chips" class="flex flex-wrap gap-1.5 text-xs"></div>
+          </div>
+          <div class="mt-4">
+            <div class="text-xs muted mb-2">특수부위 <span class="text-[10px] text-[var(--gold)]">(클릭하면 지도에 표시)</span></div>
+            <div id="special-chips" class="flex flex-wrap gap-1.5 text-xs"></div>
+          </div>
         </div>
 
         <!-- Right: detail -->
@@ -599,11 +606,11 @@
       document.querySelectorAll('#method-filter [data-m]').forEach(b=>{
         b.classList.toggle('active', b.getAttribute('data-m')===method);
       });
-      // chips
+      // chips: dim non-matching (keep all visible & clickable)
       document.querySelectorAll('#cut-chips [data-cut]').forEach(c=>{
         const id=c.getAttribute('data-cut');
-        const show = method==='all' || beefData[id].methods.includes(method);
-        c.style.display = show ? '' : 'none';
+        const match = method==='all' || beefData[id].methods.includes(method);
+        c.classList.toggle('dim', !match);
       });
       // dim non-matching cow parts
       Object.entries(beefData).forEach(([id,d])=>{
@@ -634,6 +641,7 @@
         '<div class="text-[11px] muted mt-1">모부위 · <b class="text-white">'+s.from+'</b> <span style="color:var(--gold)">— 지도에서 강조됨</span></div>'+
         '<p class="text-sm muted mt-1.5 leading-relaxed">'+s.desc+'</p>';
       document.querySelectorAll('#special-grid [data-sp]').forEach(c=>c.classList.toggle('sp-card-active', c.getAttribute('data-sp')===id));
+      document.querySelectorAll('#special-chips [data-spchip]').forEach(c=>c.classList.toggle('sp-on', c.getAttribute('data-spchip')===id));
     }
 
     function toggleSpecial(force){
@@ -649,6 +657,7 @@
         document.getElementById('special-info').classList.add('hidden');
         document.querySelectorAll('.sp-marker').forEach(m=>m.classList.remove('active'));
         document.querySelectorAll('#special-grid [data-sp]').forEach(c=>c.classList.remove('sp-card-active'));
+        document.querySelectorAll('#special-chips [data-spchip]').forEach(c=>c.classList.remove('sp-on'));
       }
     }
 
@@ -668,6 +677,12 @@
       cc.innerHTML = Object.entries(beefData).map(([id,d])=>
         `<button class="seg px-3 py-1.5 rounded-full" data-cut="${id}">${d.ko}</button>`).join('');
       cc.querySelectorAll('[data-cut]').forEach(b=>b.addEventListener('click',()=>selectCut(b.getAttribute('data-cut'))));
+
+      /* special-cut chips (all 9, always visible) */
+      const sc=document.getElementById('special-chips');
+      sc.innerHTML = specialCuts.map(s=>
+        `<button class="seg px-3 py-1.5 rounded-full" data-spchip="${s.id}" style="border-color:var(--gold)">${s.no}. ${s.ko}</button>`).join('');
+      sc.querySelectorAll('[data-spchip]').forEach(b=>b.addEventListener('click',()=>{ toggleSpecial(true); selectSpecial(b.getAttribute('data-spchip')); }));
 
       /* tabs */
       document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
