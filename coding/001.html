@@ -42,6 +42,15 @@
     .cow-text{fill:#fff;font-size:14px;font-weight:700;pointer-events:none;text-anchor:middle;dominant-baseline:middle;text-shadow:1px 1px 2px rgba(0,0,0,.85);}
     .cow-head{fill:#150f0e;stroke:#150f0e;}
 
+    /* special-cut markers on map */
+    .sp-marker{cursor:pointer;}
+    .sp-marker circle{transition:filter .2s;}
+    .sp-marker:hover circle{filter:drop-shadow(0 0 7px #f0a830);}
+    .sp-marker.active circle{stroke:#fff;stroke-width:3;filter:drop-shadow(0 0 9px #f0a830);}
+    .sp-num{fill:#1a1110;font-size:11px;font-weight:800;text-anchor:middle;dominant-baseline:central;pointer-events:none;font-family:'Noto Sans KR',sans-serif;}
+    #cow-svg.show-special .cow-text{opacity:.4;}
+    .sp-card-active{outline:2px solid var(--gold);outline-offset:-1px;background:#2a2017 !important;}
+
     .marbling-line{fill:none;stroke:var(--cream);stroke-linecap:round;opacity:.85;stroke-dasharray:1000;stroke-dashoffset:1000;animation:draw 1.3s forwards ease-out;}
     @keyframes draw{to{stroke-dashoffset:0;}}
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
@@ -118,6 +127,10 @@
       <div class="grid lg:grid-cols-2 gap-6 items-start">
         <!-- Left: map + filter -->
         <div class="panel p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs muted">소 그림을 클릭해 부위 탐험</span>
+            <button id="special-toggle" class="seg px-3 py-1.5 rounded-full text-xs" onclick="toggleSpecial()">💎 특수부위 보기</button>
+          </div>
           <div class="w-full aspect-[16/10] flex items-center justify-center">
             <svg viewBox="0 0 640 400" class="w-full h-full" id="cow-svg" role="img" aria-label="소 부위 지도">
               <defs>
@@ -173,8 +186,22 @@
               <g fill="#0c0807"><rect x="230" y="342" width="28" height="12" rx="3"/><rect x="492" y="342" width="28" height="12" rx="3"/></g>
               <!-- spine accent -->
               <path d="M188,136 C260,122 380,118 466,122 C506,126 532,134 546,152" fill="none" stroke="#f5e6d8" stroke-width="1.5" stroke-dasharray="2 7" opacity="0.22" style="pointer-events:none"/>
+
+              <!-- SPECIAL CUTS layer (toggled) -->
+              <g id="special-layer" style="display:none">
+                <g class="sp-marker" data-sp="salchi" onclick="selectSpecial('salchi')"><circle cx="268" cy="138" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="268" y="138" class="sp-num">1</text></g>
+                <g class="sp-marker" data-sp="saeu" onclick="selectSpecial('saeu')"><circle cx="348" cy="168" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="348" y="168" class="sp-num">2</text></g>
+                <g class="sp-marker" data-sp="buchae" onclick="selectSpecial('buchae')"><circle cx="236" cy="216" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="236" y="216" class="sp-num">3</text></g>
+                <g class="sp-marker" data-sp="chadol" onclick="selectSpecial('chadol')"><circle cx="295" cy="250" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="295" y="250" class="sp-num">4</text></g>
+                <g class="sp-marker" data-sp="anchang" onclick="selectSpecial('anchang')"><circle cx="334" cy="240" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="334" y="240" class="sp-num">5</text></g>
+                <g class="sp-marker" data-sp="tosi" onclick="selectSpecial('tosi')"><circle cx="372" cy="202" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="372" y="202" class="sp-num">6</text></g>
+                <g class="sp-marker" data-sp="chima" onclick="selectSpecial('chima')"><circle cx="440" cy="250" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="440" y="250" class="sp-num">7</text></g>
+                <g class="sp-marker" data-sp="jebi" onclick="selectSpecial('jebi')"><circle cx="202" cy="166" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="202" y="166" class="sp-num">8</text></g>
+                <g class="sp-marker" data-sp="arong" onclick="selectSpecial('arong')"><circle cx="245" cy="322" r="10" fill="#f0a830" stroke="#1a1110" stroke-width="2"/><text x="245" y="322" class="sp-num">9</text></g>
+              </g>
             </svg>
           </div>
+          <div id="special-info" class="hidden mt-4 panel-2 p-3" style="border-color:var(--gold)"></div>
           <!-- method filter -->
           <div class="mt-4">
             <div class="text-xs muted mb-2">조리법으로 필터</div>
@@ -433,23 +460,23 @@
     };
 
     const specialCuts = [
-      { ko:'살치살', en:'Chuck Flap', from:'윗등심(목심 인접)', emoji:'🥇',
+      { id:'salchi', no:1, ko:'살치살', en:'Chuck Flap', from:'윗등심(목심 인접)', parent:'ribeye', emoji:'🥇',
         desc:'앞톱니근 부위로 운동량이 적어 매우 부드럽고 마블링이 화려하게 박힙니다. 구이 특수부위의 최고봉.', use:'구이' },
-      { ko:'새우살', en:'Ribeye Cap', from:'등심·갈비 덧살', emoji:'🦐',
+      { id:'saeu', no:2, ko:'새우살', en:'Ribeye Cap', from:'등심·갈비 덧살', parent:'ribeye', emoji:'🦐',
         desc:'새우 모양의 덧살. 마블링이 적은 소에서도 부드러운 식감이 나와 등심의 알짜로 꼽힙니다.', use:'구이' },
-      { ko:'부채살', en:'Top Blade', from:'앞다리', emoji:'🪭',
+      { id:'buchae', no:3, ko:'부채살', en:'Top Blade', from:'앞다리', parent:'blade', emoji:'🪭',
         desc:'가운데 힘줄이 부챗살(낙엽)처럼 뻗은 모양. 연하고 육향이 좋아 구이·스테이크로 인기.', use:'구이·스테이크' },
-      { ko:'차돌박이', en:'Brisket Point', from:'양지(가슴)', emoji:'⚪',
+      { id:'chadol', no:4, ko:'차돌박이', en:'Brisket Point', from:'양지(가슴)', parent:'brisket', emoji:'⚪',
         desc:'단단한 흰 경지방이 차돌처럼 박힌 부위. 아주 얇게 썰어 센 불에 구우면 고소함이 폭발.', use:'구이' },
-      { ko:'안창살', en:'Outer Skirt', from:'갈비(횡격막)', emoji:'🎯',
+      { id:'anchang', no:5, ko:'안창살', en:'Outer Skirt', from:'갈비(횡격막)', parent:'ribs', emoji:'🎯',
         desc:'횡격막 부위로 한 마리에 1.5kg 미만. 진한 육향과 담백한 뒷단맛이 특징인 특수부위 최고봉.', use:'구이' },
-      { ko:'토시살', en:'Hanger', from:'갈비(횡격막)', emoji:'🧵',
+      { id:'tosi', no:6, ko:'토시살', en:'Hanger', from:'갈비(횡격막)', parent:'ribs', emoji:'🧵',
         desc:'횡격막을 움직이는 근육(한 마리 한 쌍). 쫄깃하면서 진한 육향이 일품.', use:'구이' },
-      { ko:'치마살', en:'Flank/Skirt', from:'복부', emoji:'👗',
+      { id:'chima', no:7, ko:'치마살', en:'Flank/Skirt', from:'복부(양지 계열)', parent:'brisket', emoji:'👗',
         desc:'복부의 치마처럼 넓은 부위. 결이 굵지만 마블링과 육향이 좋아 구이로 즐깁니다.', use:'구이' },
-      { ko:'제비추리', en:'Neck Strip', from:'목심 아래 척추', emoji:'🐦',
+      { id:'jebi', no:8, ko:'제비추리', en:'Neck Strip', from:'목심 아래 척추', parent:'chuck', emoji:'🐦',
         desc:'척추를 따라 가늘고 길게 붙은 소량 부위. 쫄깃하고 고소한 풍미로 마니아층이 두텁습니다.', use:'구이' },
-      { ko:'아롱사태', en:'Eye of Shank', from:'사태 중심', emoji:'💠',
+      { id:'arong', no:9, ko:'아롱사태', en:'Eye of Shank', from:'사태 중심', parent:'shank', emoji:'💠',
         desc:'사태 한가운데의 특수부위. 결이 곱고 쫀득해 수육·찜·육회로 최고의 식감을 냅니다.', use:'수육·찜·육회' }
     ];
 
@@ -585,6 +612,46 @@
       });
     }
 
+    /* ----- special cuts: lookup + interactions ----- */
+    const SP = {};
+    specialCuts.forEach(s=>{ SP[s.id]=s; });
+
+    function selectSpecial(id){
+      const s=SP[id]; if(!s) return;
+      document.querySelectorAll('.cow-part').forEach(p=>p.classList.remove('active'));
+      const parent=beefData[s.parent];
+      if(parent) parent.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el) el.classList.add('active'); });
+      document.querySelectorAll('.sp-marker').forEach(m=>m.classList.toggle('active', m.getAttribute('data-sp')===id));
+      const box=document.getElementById('special-info');
+      box.classList.remove('hidden');
+      box.innerHTML =
+        '<div class="flex items-center gap-2 flex-wrap">'+
+          '<span class="grid place-items-center w-6 h-6 rounded-full text-xs font-black shrink-0" style="background:var(--gold);color:#1a1110">'+s.no+'</span>'+
+          '<b class="text-white text-base">'+s.ko+'</b>'+
+          '<span class="text-[11px] text-[var(--rose)] uppercase tracking-wider">'+s.en+'</span>'+
+          '<span class="chip" style="border-color:var(--gold);color:var(--gold)">'+s.use+'</span>'+
+        '</div>'+
+        '<div class="text-[11px] muted mt-1">모부위 · <b class="text-white">'+s.from+'</b> <span style="color:var(--gold)">— 지도에서 강조됨</span></div>'+
+        '<p class="text-sm muted mt-1.5 leading-relaxed">'+s.desc+'</p>';
+      document.querySelectorAll('#special-grid [data-sp]').forEach(c=>c.classList.toggle('sp-card-active', c.getAttribute('data-sp')===id));
+    }
+
+    function toggleSpecial(force){
+      const layer=document.getElementById('special-layer');
+      const svg=document.getElementById('cow-svg');
+      const btn=document.getElementById('special-toggle');
+      const show = (typeof force==='boolean') ? force : (layer.style.display==='none');
+      layer.style.display = show ? '' : 'none';
+      svg.classList.toggle('show-special', show);
+      btn.classList.toggle('active', show);
+      btn.innerText = show ? '💎 특수부위 끄기' : '💎 특수부위 보기';
+      if(!show){
+        document.getElementById('special-info').classList.add('hidden');
+        document.querySelectorAll('.sp-marker').forEach(m=>m.classList.remove('active'));
+        document.querySelectorAll('#special-grid [data-sp]').forEach(c=>c.classList.remove('sp-card-active'));
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function(){
       /* reveal */
       const io=new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);} }),{threshold:0.12});
@@ -612,9 +679,13 @@
 
       /* special cuts */
       document.getElementById('special-grid').innerHTML = specialCuts.map(s=>`
-        <div class="panel-2 p-4">
+        <div class="panel-2 p-4 cursor-pointer transition-colors hover:bg-[#2a2017]" data-sp="${s.id}"
+             onclick="toggleSpecial(true);selectSpecial('${s.id}');document.getElementById('map').scrollIntoView({behavior:'smooth'});">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2"><span class="text-xl">${s.emoji}</span><b class="text-white">${s.ko}</b></div>
+            <div class="flex items-center gap-2">
+              <span class="grid place-items-center w-6 h-6 rounded-full text-xs font-black shrink-0" style="background:var(--gold);color:#1a1110">${s.no}</span>
+              <span class="text-xl">${s.emoji}</span><b class="text-white">${s.ko}</b>
+            </div>
             <span class="chip muted">${s.use}</span>
           </div>
           <div class="text-[11px] text-[var(--rose)] mt-1 tracking-wider uppercase">${s.en}</div>
