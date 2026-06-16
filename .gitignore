@@ -1,0 +1,4 @@
+
+# XPL chart tool outputs
+xpl_chart*.png
+xpl_ohlcv_*.csv
