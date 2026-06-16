@@ -1,463 +1,644 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소고기 부위별 완벽 가이드</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #121212;
-            color: #f3f4f6;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>소고기 부위 대도감 — 부위·등급·굽기·특수부위 인터랙티브 가이드</title>
+  <meta name="description" content="소고기 9대 정육 부위, 한우 등급(BMS), 굽기 정도(내부온도), 특수부위(살치살·차돌박이·안창살 등)를 인터랙티브 다이어그램으로 정리한 종합 가이드. 모든 그래픽은 외부 이미지 없이 코드로 생성." />
 
-        /* SVG Cow Map Styles */
-        .cow-part {
-            fill: #2d3748;
-            stroke: #1a202c;
-            stroke-width: 3;
-            stroke-linejoin: round;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
-        .cow-part:hover {
-            fill: #e53e3e;
-            transform: scale(1.01);
-            transform-origin: center;
-        }
+  <style>
+    :root{
+      --bg:#100c0b; --panel:#1c1614; --panel-2:#241b19;
+      --line:#3a2b27; --txt:#f3ece8; --muted:#b6a59d;
+      --red:#e23b3b; --red-deep:#b91c1c; --red-dark:#7f1d1d;
+      --cream:#f5e6d8; --gold:#f0a830; --rose:#fb7185; --ok:#5bbf6a;
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:'Noto Sans KR',sans-serif;
+      background:radial-gradient(1100px 600px at 50% -8%, #2a1614 0%, var(--bg) 55%) no-repeat, var(--bg);
+      color:var(--txt);
+    }
+    .display{font-family:'Black Han Sans',sans-serif;letter-spacing:-.01em;}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:1.25rem;}
+    .panel-2{background:var(--panel-2);border:1px solid var(--line);border-radius:1rem;}
+    .muted{color:var(--muted);}
+    a:focus-visible,button:focus-visible{outline:3px solid var(--red);outline-offset:2px;border-radius:8px;}
+    .chip{font-size:.7rem;padding:.18rem .6rem;border-radius:99px;border:1px solid var(--line);}
 
-        .cow-part.active {
-            fill: #c53030;
-            stroke: #fc8181;
-            stroke-width: 4;
-            filter: drop-shadow(0 0 8px rgba(229, 62, 62, 0.6));
-        }
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.16,.84,.44,1),transform .7s cubic-bezier(.16,.84,.44,1);}
+    .reveal.visible{opacity:1;transform:none;}
 
-        .cow-text {
-            fill: #ffffff;
-            font-size: 14px;
-            font-weight: 700;
-            pointer-events: none;
-            text-anchor: middle;
-            dominant-baseline: middle;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        }
+    /* Cow map */
+    .cow-part{fill:#3a2b27;stroke:#150f0e;stroke-width:3;stroke-linejoin:round;transition:all .25s cubic-bezier(.4,0,.2,1);cursor:pointer;}
+    .cow-part:hover{fill:var(--red);}
+    .cow-part.active{fill:var(--red-deep);stroke:#fca5a5;stroke-width:4;filter:drop-shadow(0 0 8px rgba(226,59,59,.6));}
+    .cow-part.dimmed{opacity:.18;}
+    .cow-text{fill:#fff;font-size:14px;font-weight:700;pointer-events:none;text-anchor:middle;dominant-baseline:middle;text-shadow:1px 1px 2px rgba(0,0,0,.85);}
+    .cow-head{fill:#150f0e;stroke:#150f0e;}
 
-        .cow-head {
-            fill: #1a202c;
-            stroke: #1a202c;
-        }
+    .marbling-line{fill:none;stroke:var(--cream);stroke-linecap:round;opacity:.85;stroke-dasharray:1000;stroke-dashoffset:1000;animation:draw 1.3s forwards ease-out;}
+    @keyframes draw{to{stroke-dashoffset:0;}}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+    .animate-fade-in{animation:fadeIn .4s ease-out forwards;}
 
-        /* Generated Meat SVG Styles */
-        .meat-base {
-            transition: fill 0.5s ease;
-        }
-        
-        .marbling-line {
-            fill: none;
-            stroke: #fae8e0;
-            stroke-linecap: round;
-            opacity: 0.8;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: drawMarbling 1.5s forwards ease-out;
-        }
+    /* tabs */
+    .tab{border-bottom:2px solid transparent;color:var(--muted);transition:.2s;}
+    .tab.active{color:#fff;border-color:var(--red);}
 
-        @keyframes drawMarbling {
-            to { stroke-dashoffset: 0; }
-        }
+    /* filter seg */
+    .seg{border:1px solid var(--line);background:var(--panel-2);color:var(--muted);transition:.2s;}
+    .seg.active{background:linear-gradient(90deg,var(--red),var(--red-deep));color:#fff;border-color:transparent;}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    /* range */
+    input[type=range]{-webkit-appearance:none;appearance:none;height:8px;border-radius:99px;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid #160f0e;box-shadow:0 0 0 3px rgba(255,255,255,.2),0 5px 14px rgba(0,0,0,.6);cursor:pointer;}
+    input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid #160f0e;cursor:pointer;}
+    .range-done{background:linear-gradient(90deg,#9b1c1c,#e23b3b,#fb7185,#d9a679,#8a6a52);}
+    .range-grade{background:linear-gradient(90deg,#6b3a2a,#b91c1c,#e23b3b,#f0a830,#f5e6d8);}
 
-        .animate-fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1f2937; }
-        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
-    </style>
+    ::-webkit-scrollbar{width:9px;height:9px}
+    ::-webkit-scrollbar-track{background:#160f0e}
+    ::-webkit-scrollbar-thumb{background:#4a3530;border-radius:6px}
+    .bar{height:.6rem;border-radius:99px;background:#160f0e;overflow:hidden;}
+    .bar > span{display:block;height:100%;border-radius:99px;transition:width .6s cubic-bezier(.16,.84,.44,1);}
+  </style>
 </head>
-<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
+<body class="antialiased">
 
-    <!-- Header -->
-    <header class="text-center mb-10 w-full max-w-6xl">
-        <h1 class="text-4xl md:text-5xl font-black mb-4 text-red-500 tracking-tight">🥩 소고기 부위별 도감</h1>
-        <p class="text-gray-400 text-lg">코드로 그려진 부위별 다이어그램과 단면을 통해 소고기의 모든 것을 알아보세요. <br class="hidden md:block">아래 그림에서 원하는 부위를 클릭해보세요!</p>
-    </header>
+  <!-- Nav -->
+  <header class="sticky top-0 z-50 backdrop-blur-lg bg-[#100c0b]/85 border-b border-[var(--line)]">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#top" class="display text-lg text-white flex items-center gap-2"><span>🥩</span> 소고기 대도감</a>
+      <nav class="hidden md:flex items-center gap-5 text-sm">
+        <a href="#map" class="muted hover:text-white transition-colors">부위 지도</a>
+        <a href="#doneness" class="muted hover:text-white transition-colors">굽기</a>
+        <a href="#grade" class="muted hover:text-white transition-colors">등급</a>
+        <a href="#special" class="muted hover:text-white transition-colors">특수부위</a>
+        <a href="#compare" class="muted hover:text-white transition-colors">비교표</a>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Main Content Grid -->
-    <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        
-        <!-- Left: Interactive Cow Diagram -->
-        <section class="bg-gray-800 rounded-3xl p-6 shadow-2xl border border-gray-700 relative overflow-hidden">
-            <h2 class="text-xl font-bold mb-4 text-gray-200">소 부위 지도 (Interactive)</h2>
-            <div class="w-full aspect-video flex items-center justify-center relative">
-                <!-- SVG Cow Map -->
-                <svg viewBox="0 0 600 400" class="w-full h-full drop-shadow-xl" id="cow-svg">
-                    <!-- Head & Tail (Non-interactive) -->
-                    <polygon points="20,100 60,60 110,60 110,140 60,160 20,150" class="cow-head" />
-                    <path d="M 540,110 Q 580,150 590,200" stroke="#1a202c" stroke-width="4" fill="none" />
-                    
-                    <!-- 목심 (Chuck) -->
-                    <g onclick="selectCut('chuck')">
-                        <polygon points="110,60 190,70 190,170 110,150" class="cow-part" id="poly-chuck" />
-                        <text x="150" y="115" class="cow-text">목심</text>
-                    </g>
-                    
-                    <!-- 등심 (Loin/Ribeye) -->
-                    <g onclick="selectCut('ribeye')">
-                        <polygon points="190,70 320,80 320,150 190,170" class="cow-part" id="poly-ribeye" />
-                        <text x="255" y="115" class="cow-text">등심</text>
-                    </g>
-                    
-                    <!-- 채끝 (Striploin) -->
-                    <g onclick="selectCut('striploin')">
-                        <polygon points="320,80 420,80 420,150 320,150" class="cow-part" id="poly-striploin" />
-                        <text x="370" y="110" class="cow-text">채끝</text>
-                    </g>
+  <!-- Hero -->
+  <section id="top" class="relative">
+    <div class="max-w-6xl mx-auto px-4 pt-16 pb-10 sm:pt-24 sm:pb-12 text-center">
+      <span class="chip muted">정육 9부위 · 특수부위 9 · 등급 · 굽기 가이드</span>
+      <h1 class="display mt-5 text-4xl sm:text-6xl lg:text-7xl text-white leading-[1.05]">
+        소고기, <span class="text-[var(--red)]">부위</span>를 알면<br class="hidden sm:block"/>
+        맛이 <span class="text-[var(--gold)]">두 배</span>가 된다
+      </h1>
+      <p class="mt-6 max-w-2xl mx-auto muted text-base sm:text-lg leading-relaxed">
+        어느 부위를 어떻게 구워야 할까? 1++ 등급은 뭐가 다를까? 살치살·차돌박이는 어디서 나올까?
+        클릭과 슬라이더로 직접 탐험하는 <b class="text-white">종합 인터랙티브 도감</b>입니다.
+        모든 그래픽은 외부 이미지 없이 <b class="text-white">코드(SVG)로 생성</b>했어요.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm">
+        <a href="#map" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-[var(--red)] to-[var(--red-deep)] text-white font-semibold shadow-lg shadow-red-900/40 hover:scale-105 transition-transform">부위 지도 열기 ↓</a>
+        <a href="#doneness" class="px-5 py-2.5 rounded-full panel-2 text-white font-semibold hover:bg-[#2c211e] transition-colors">굽기 정도 보기 →</a>
+      </div>
+    </div>
+  </section>
 
-                    <!-- 안심 (Tenderloin - overlapping inside) -->
-                    <g onclick="selectCut('tenderloin')">
-                        <polygon points="330,120 400,120 390,160 320,160" class="cow-part" id="poly-tenderloin" style="stroke: #1a202c; stroke-width: 2;" />
-                        <text x="360" y="145" class="cow-text" style="font-size: 12px; fill: #fbbf24;">안심</text>
-                    </g>
-                    
-                    <!-- 우둔/설도 (Round) -->
-                    <g onclick="selectCut('round')">
-                        <polygon points="420,80 540,110 540,240 420,210" class="cow-part" id="poly-round" />
-                        <text x="480" y="160" class="cow-text">우둔/설도</text>
-                    </g>
-                    
-                    <!-- 갈비 (Ribs) -->
-                    <g onclick="selectCut('ribs')">
-                        <polygon points="190,170 320,150 320,220 190,220" class="cow-part" id="poly-ribs" />
-                        <text x="255" y="190" class="cow-text">갈비</text>
-                    </g>
-                    
-                    <!-- 양지 (Brisket) -->
-                    <g onclick="selectCut('brisket')">
-                        <polygon points="190,220 320,220 420,210 420,250 190,260" class="cow-part" id="poly-brisket" />
-                        <text x="310" y="240" class="cow-text">양지</text>
-                    </g>
-                    
-                    <!-- 앞다리 (Blade/Front Leg) -->
-                    <g onclick="selectCut('blade')">
-                        <polygon points="110,150 190,170 190,260 110,240" class="cow-part" id="poly-blade" />
-                        <text x="150" y="205" class="cow-text">앞다리</text>
-                    </g>
-                    
-                    <!-- 앞사태 (Front Shank) -->
-                    <g onclick="selectCut('shank')">
-                        <polygon points="130,240 170,260 150,340 120,340" class="cow-part" id="poly-shank" />
-                        <text x="145" y="295" class="cow-text" style="font-size: 12px;">사태</text>
-                    </g>
+  <main class="max-w-6xl mx-auto px-4 pb-24 space-y-20 sm:space-y-24">
 
-                    <!-- 뒷사태 (Hind Shank) -->
-                    <g onclick="selectCut('shank')">
-                        <polygon points="440,240 500,240 480,340 440,340" class="cow-part" id="poly-shank-hind" />
-                        <text x="470" y="295" class="cow-text" style="font-size: 12px;">사태</text>
-                    </g>
-                </svg>
+    <!-- ===== MAP + DETAIL ===== -->
+    <section id="map" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🐂</span>
+        <h2 class="display text-2xl sm:text-3xl">부위 지도 — 클릭해서 탐험</h2>
+      </div>
+      <p class="muted mb-6">소 그림에서 부위를 클릭하면 상세 정보·레이더 차트·코드 단면도가 나타납니다. 아래 <b class="text-white">조리법 필터</b>로 원하는 용도의 부위만 골라볼 수도 있어요.</p>
+
+      <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <!-- Left: map + filter -->
+        <div class="panel p-5">
+          <div class="w-full aspect-[3/2] flex items-center justify-center">
+            <svg viewBox="0 0 600 400" class="w-full h-full" id="cow-svg">
+              <polygon points="20,100 60,60 110,60 110,140 60,160 20,150" class="cow-head" />
+              <path d="M 540,110 Q 580,150 590,200" stroke="#150f0e" stroke-width="4" fill="none" />
+              <g onclick="selectCut('chuck')"><polygon points="110,60 190,70 190,170 110,150" class="cow-part" id="poly-chuck"/><text x="150" y="115" class="cow-text">목심</text></g>
+              <g onclick="selectCut('ribeye')"><polygon points="190,70 320,80 320,150 190,170" class="cow-part" id="poly-ribeye"/><text x="255" y="115" class="cow-text">등심</text></g>
+              <g onclick="selectCut('striploin')"><polygon points="320,80 420,80 420,150 320,150" class="cow-part" id="poly-striploin"/><text x="370" y="110" class="cow-text">채끝</text></g>
+              <g onclick="selectCut('tenderloin')"><polygon points="330,120 400,120 390,160 320,160" class="cow-part" id="poly-tenderloin" style="stroke:#150f0e;stroke-width:2;"/><text x="360" y="145" class="cow-text" style="font-size:12px;fill:#fbbf24;">안심</text></g>
+              <g onclick="selectCut('round')"><polygon points="420,80 540,110 540,240 420,210" class="cow-part" id="poly-round"/><text x="480" y="160" class="cow-text">우둔/설도</text></g>
+              <g onclick="selectCut('ribs')"><polygon points="190,170 320,150 320,220 190,220" class="cow-part" id="poly-ribs"/><text x="255" y="190" class="cow-text">갈비</text></g>
+              <g onclick="selectCut('brisket')"><polygon points="190,220 320,220 420,210 420,250 190,260" class="cow-part" id="poly-brisket"/><text x="310" y="240" class="cow-text">양지</text></g>
+              <g onclick="selectCut('blade')"><polygon points="110,150 190,170 190,260 110,240" class="cow-part" id="poly-blade"/><text x="150" y="205" class="cow-text">앞다리</text></g>
+              <g onclick="selectCut('shank')"><polygon points="130,240 170,260 150,340 120,340" class="cow-part" id="poly-shank"/><text x="145" y="295" class="cow-text" style="font-size:12px;">사태</text></g>
+              <g onclick="selectCut('shank')"><polygon points="440,240 500,240 480,340 440,340" class="cow-part" id="poly-shank-hind"/><text x="470" y="295" class="cow-text" style="font-size:12px;">사태</text></g>
+            </svg>
+          </div>
+          <!-- method filter -->
+          <div class="mt-4">
+            <div class="text-xs muted mb-2">조리법으로 필터</div>
+            <div id="method-filter" class="flex flex-wrap gap-1.5 text-xs"></div>
+          </div>
+          <!-- cut chips -->
+          <div id="cut-chips" class="mt-4 flex flex-wrap gap-1.5 text-xs"></div>
+        </div>
+
+        <!-- Right: detail -->
+        <div class="panel p-5 min-h-[520px]" id="detail-panel">
+          <!-- header -->
+          <div class="flex justify-between items-start border-b border-[var(--line)] pb-4 mb-5">
+            <div>
+              <span id="cut-en" class="text-[var(--rose)] font-semibold text-xs tracking-widest uppercase">Loin / Ribeye</span>
+              <h3 id="cut-ko" class="display text-3xl sm:text-4xl text-white mt-1">등심</h3>
+              <div id="cut-price" class="mt-1 text-sm text-[var(--gold)]">★★★★★</div>
             </div>
-            <div class="mt-4 flex flex-wrap gap-2 text-xs text-gray-400 justify-center">
-                <span class="flex items-center gap-1"><div class="w-3 h-3 bg-[#e53e3e] rounded-full"></div> 선택됨</span>
-                <span class="flex items-center gap-1"><div class="w-3 h-3 bg-[#2d3748] rounded-full"></div> 기본</span>
+            <div class="text-right shrink-0">
+              <div class="text-[11px] muted mb-1">대표 요리</div>
+              <div id="cut-usage" class="text-xs font-bold panel-2 px-3 py-1.5 rounded-full">스테이크·구이</div>
             </div>
-        </section>
+          </div>
 
-        <!-- Right: Details Panel -->
-        <section class="bg-gray-800 rounded-3xl p-6 shadow-2xl border border-gray-700 min-h-[500px] flex flex-col">
-            <div id="welcome-message" class="flex-1 flex flex-col items-center justify-center text-center opacity-100 transition-opacity duration-300">
-                <svg class="w-20 h-20 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
-                </svg>
-                <h3 class="text-2xl font-bold text-gray-300">부위를 선택해주세요</h3>
-                <p class="text-gray-500 mt-2">왼쪽 지도에서 알고 싶은 소고기 부위를 클릭하면 상세 정보와 고기 단면 그래픽이 표시됩니다.</p>
+          <!-- cross-section + radar -->
+          <div class="grid grid-cols-2 gap-3 mb-5">
+            <div class="bg-[#140e0d] rounded-2xl border border-[var(--line)] relative h-44 overflow-hidden">
+              <div class="absolute top-2 left-2 text-[10px] font-bold muted bg-black/50 px-2 py-0.5 rounded z-10">코드 생성 단면도</div>
+              <div id="meat-graphic" class="w-full h-full p-3 flex items-center justify-center"></div>
             </div>
-
-            <div id="details-content" class="hidden flex-1 flex-col animate-fade-in">
-                <!-- Header Info -->
-                <div class="flex justify-between items-end border-b border-gray-700 pb-4 mb-6">
-                    <div>
-                        <span id="cut-subtitle" class="text-red-400 font-semibold text-sm tracking-widest uppercase">Tenderloin</span>
-                        <h2 id="cut-title" class="text-4xl font-black text-white mt-1">안심</h2>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-xs text-gray-400 mb-1">추천 요리</div>
-                        <div id="cut-usage" class="text-sm font-bold bg-gray-700 px-3 py-1 rounded-full text-gray-200">스테이크, 구이</div>
-                    </div>
-                </div>
-
-                <!-- Code Generated Meat SVG Visulization -->
-                <div class="w-full h-48 bg-gray-900 rounded-2xl mb-6 relative flex items-center justify-center overflow-hidden border border-gray-700 shadow-inner">
-                    <div class="absolute top-3 left-3 text-xs font-bold text-gray-500 z-10 bg-gray-800/80 px-2 py-1 rounded">코드 생성 단면도</div>
-                    <!-- The SVG will be injected here by JS -->
-                    <div id="meat-graphic-container" class="w-full h-full p-4 flex items-center justify-center"></div>
-                </div>
-
-                <!-- Features Grid -->
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="bg-gray-700/50 p-4 rounded-xl">
-                        <div class="text-xs text-gray-400 mb-1">부드러움 (연도)</div>
-                        <div class="w-full bg-gray-800 rounded-full h-2.5 mt-2">
-                            <div id="bar-tenderness" class="bg-red-500 h-2.5 rounded-full" style="width: 90%"></div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-700/50 p-4 rounded-xl">
-                        <div class="text-xs text-gray-400 mb-1">마블링 (지방량)</div>
-                        <div class="w-full bg-gray-800 rounded-full h-2.5 mt-2">
-                            <div id="bar-marbling" class="bg-white h-2.5 rounded-full" style="width: 30%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Description -->
-                <div>
-                    <h3 class="text-lg font-bold text-gray-200 mb-2">특징 및 설명</h3>
-                    <p id="cut-desc" class="text-gray-400 leading-relaxed text-sm md:text-base">
-                        소 한 마리에서 겨우 2~3%만 나오는 귀한 부위입니다. 근육의 움직임이 거의 없어 가장 부드럽고 지방이 적어 담백한 맛이 일품입니다.
-                    </p>
-                </div>
-                
-                <div class="mt-auto pt-6">
-                    <div class="bg-red-900/20 border border-red-900/50 rounded-lg p-3 flex gap-3 items-start">
-                        <span class="text-xl">💡</span>
-                        <p id="cut-tip" class="text-sm text-red-200 mt-0.5">두툼하게 썰어 미디엄 레어로 구워 드시면 고유의 부드러움을 가장 잘 느낄 수 있습니다.</p>
-                    </div>
-                </div>
+            <div class="bg-[#140e0d] rounded-2xl border border-[var(--line)] relative h-44 overflow-hidden">
+              <div class="absolute top-2 left-2 text-[10px] font-bold muted bg-black/50 px-2 py-0.5 rounded z-10">맛 프로파일</div>
+              <div id="radar-graphic" class="w-full h-full p-1 flex items-center justify-center"></div>
             </div>
-        </section>
-    </main>
+          </div>
 
-    <footer class="mt-12 text-gray-600 text-sm text-center">
-        본 페이지의 모든 다이어그램과 이미지는 외부 파일 없이 HTML, CSS, SVG 코드로만 동적 생성되었습니다.
-    </footer>
+          <!-- key bars -->
+          <div class="grid grid-cols-2 gap-4 mb-5 text-xs">
+            <div><div class="flex justify-between mb-1"><span class="muted">부드러움(연도)</span><span id="val-tender" class="font-bold">80</span></div><div class="bar"><span id="bar-tender" style="width:80%;background:var(--red)"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span class="muted">마블링(지방)</span><span id="val-marb" class="font-bold">90</span></div><div class="bar"><span id="bar-marb" style="width:90%;background:var(--cream)"></span></div></div>
+          </div>
 
-    <script>
-        // Beef Cuts Data
-        const beefData = {
-            tenderloin: {
-                id: 'tenderloin',
-                nameKo: '안심',
-                nameEn: 'Tenderloin',
-                usage: '스테이크, 고급 구이, 전골',
-                desc: '소 한 마리에서 겨우 2~3%만 나오는 최고급 부위입니다. 근육의 움직임이 뼈 안쪽에서 거의 없어 육질이 가장 연하고 부드럽습니다. 지방(마블링)은 적어 담백한 맛이 특징입니다.',
-                tip: '두툼하게 썰어 겉만 바삭하게 익히는 미디엄 레어로 드시면 입에서 녹는 식감을 경험할 수 있습니다.',
-                tenderness: 100,
-                marbling: 20,
-                color: '#b91c1c', // Deep, lean red
-                polyIds: ['poly-tenderloin']
-            },
-            ribeye: {
-                id: 'ribeye',
-                nameKo: '등심',
-                nameEn: 'Loin / Ribeye',
-                usage: '스테이크, 구이, 불고기',
-                desc: '소의 등 쪽에 위치한 부위로, 고기 결이 곱고 근육 속에 지방(마블링)이 예쁘게 분포되어 있습니다. 굽기 시작하면 지방이 녹아내려 풍미와 고소한 맛이 폭발합니다.',
-                tip: '살치살과 새우살이 포함된 윗등심은 구이용으로, 아랫등심은 스테이크용으로 제격입니다.',
-                tenderness: 80,
-                marbling: 90,
-                color: '#dc2626', // Bright fresh red
-                polyIds: ['poly-ribeye']
-            },
-            striploin: {
-                id: 'striploin',
-                nameKo: '채끝',
-                nameEn: 'Striploin',
-                usage: '스테이크, 로스구이, 산적',
-                desc: '등심 뒤쪽에 이어지는 부위로, 소를 몰 때 채찍의 끝이 닿는 부위라 하여 이름 붙여졌습니다. 육질이 균일하고 적당한 마블링이 있어 고기 본연의 씹는 맛과 고소함이 완벽한 밸런스를 이룹니다.',
-                tip: '안심보다 진한 육향과 등심보다 덜 느끼한 맛을 원하실 때 최고의 선택입니다.',
-                tenderness: 75,
-                marbling: 60,
-                color: '#dc2626',
-                polyIds: ['poly-striploin']
-            },
-            chuck: {
-                id: 'chuck',
-                nameKo: '목심',
-                nameEn: 'Chuck',
-                usage: '국거리, 불고기, 다짐육',
-                desc: '소의 목 부분으로 운동량이 많아 근육결이 다소 거칠고 질긴 편입니다. 하지만 단백질 함량이 높고 젤라틴 성분이 풍부해 육향이 아주 진합니다.',
-                tip: '오래 끓이는 국물 요리에 넣으면 진한 감칠맛이 우러나오며, 얇게 썰어 불고기로 활용하기 좋습니다.',
-                tenderness: 40,
-                marbling: 30,
-                color: '#991b1b', // Darker red
-                polyIds: ['poly-chuck']
-            },
-            brisket: {
-                id: 'brisket',
-                nameKo: '양지',
-                nameEn: 'Brisket / Flank',
-                usage: '국거리, 육개장, 장조림',
-                desc: '가슴에서 배 아래쪽으로 이어지는 부위입니다. 육질이 치밀하고 단단하지만, 고기 결이 일정한 방향으로 찢어지는 특징이 있습니다. 지방과 결합조직이 많아 감칠맛이 뛰어납니다.',
-                tip: '찬물에 담가 핏물을 잘 뺀 후 푹 끓여 육수를 내거나 결대로 찢어 장조림을 만들 때 최고의 부위입니다.',
-                tenderness: 35,
-                marbling: 45,
-                color: '#b91c1c',
-                polyIds: ['poly-brisket']
-            },
-            shank: {
-                id: 'shank',
-                nameKo: '사태',
-                nameEn: 'Shank',
-                usage: '찜, 탕, 수육, 장조림',
-                desc: '소의 다리 부위로 근육과 힘줄, 근막이 매우 많아 구워 먹으면 질겨서 먹기 힘듭니다. 하지만 물에 넣고 약한 불에서 오래 가열하면 콜라겐이 젤라틴으로 변해 아주 쫀득쫀득해집니다.',
-                tip: '아롱사태는 소 한 마리에서 소량만 나오는 특수 부위로 수육으로 드시면 최고의 쫀득함을 즐길 수 있습니다.',
-                tenderness: 20,
-                marbling: 15,
-                color: '#7f1d1d', // Very dark red
-                polyIds: ['poly-shank', 'poly-shank-hind']
-            },
-            round: {
-                id: 'round',
-                nameKo: '우둔 / 설도',
-                nameEn: 'Top & Bottom Round',
-                usage: '육회, 산적, 장조림, 육포',
-                desc: '소의 엉덩이(볼기)와 뒷다리 부위로 지방이 거의 없고 살코기 덩어리로 이루어져 있습니다. 단백질 비율이 매우 높아 다이어트용으로도 좋으며 담백한 맛을 냅니다.',
-                tip: '지방이 없어 날로 먹기 좋아 육회로 가장 많이 쓰이며, 얇게 저며 육포나 산적을 만들기 좋습니다.',
-                tenderness: 50,
-                marbling: 10,
-                color: '#a41bfb', // Lean dark red mapped slightly standard
-                color: '#991b1b',
-                polyIds: ['poly-round']
-            },
-            ribs: {
-                id: 'ribs',
-                nameKo: '갈비',
-                nameEn: 'Ribs',
-                usage: '갈비찜, 갈비탕, 양념갈비',
-                desc: '등심과 양지 사이의 갈비뼈와 뼈 사이의 고기입니다. 뼈에서 우러나는 풍미와 근내지방, 그리고 쫄깃한 근육이 어우러져 한국인이 가장 사랑하는 씹는 맛과 고소함을 자랑합니다.',
-                tip: '뼈 쪽에 붙은 근막은 질길 수 있으므로 칼집을 내어 조리하면 양념도 잘 배고 연하게 드실 수 있습니다.',
-                tenderness: 60,
-                marbling: 80,
-                color: '#dc2626',
-                polyIds: ['poly-ribs']
-            },
-            blade: {
-                id: 'blade',
-                nameKo: '앞다리',
-                nameEn: 'Blade / Front Leg',
-                usage: '불고기, 육회, 국거리',
-                desc: '운동량이 많은 앞다리 부위로 육색이 짙고 지방이 적습니다. 중간중간 힘줄이 있어 씹는 식감이 좋으며 육향이 매우 풍부한 것이 특징입니다.',
-                tip: '부채살(특수부위)이 이 앞다리에 포함되어 있으며, 얇게 썰어 불고기로 드시면 가성비와 맛을 모두 챙길 수 있습니다.',
-                tenderness: 45,
-                marbling: 25,
-                color: '#b91c1c',
-                polyIds: ['poly-blade']
-            }
-        };
+          <!-- tabs -->
+          <div class="flex gap-5 border-b border-[var(--line)] mb-4 text-sm font-semibold">
+            <button class="tab active pb-2" data-tab="desc">설명</button>
+            <button class="tab pb-2" data-tab="nutri">영양</button>
+            <button class="tab pb-2" data-tab="cook">조리·손질</button>
+          </div>
 
-        // DOM Elements
-        const welcomeMsg = document.getElementById('welcome-message');
-        const detailsContent = document.getElementById('details-content');
-        const graphicContainer = document.getElementById('meat-graphic-container');
+          <div id="tab-desc" class="tab-body">
+            <p id="cut-desc" class="muted leading-relaxed text-sm"></p>
+          </div>
 
-        // SVG Code Generator for Meat Visualization
-        // 코드로 동적 마블링 고기를 그려내는 핵심 알고리즘
-        function generateMeatGraphic(color, marblingLevel) {
-            // Base organic meat shape using bezier curves
-            const baseShape = `M 40 100 C 30 50, 80 20, 160 30 C 230 40, 270 90, 250 150 C 230 200, 150 220, 80 190 C 20 160, 50 140, 40 100 Z`;
-            
-            // Marbling paths (Squiggly lines to simulate fat)
-            const marblingPaths = [
-                `M 60 80 Q 100 120 180 60 T 230 110`,
-                `M 50 140 Q 120 180 200 120 T 240 160`,
-                `M 80 50 Q 120 90 150 40 T 210 70`,
-                `M 70 110 Q 150 140 220 90`,
-                `M 90 170 Q 160 200 230 140`,
-                `M 110 60 Q 140 100 190 50`,
-                `M 130 150 Q 170 120 210 170`,
-                `M 60 110 Q 90 80 130 130 T 190 100`,
-                `M 100 40 Q 150 80 200 30 T 250 80`,
-                `M 50 160 Q 100 130 150 180 T 220 130`
-            ];
+          <div id="tab-nutri" class="tab-body hidden">
+            <div class="grid grid-cols-3 gap-3 text-center mb-3">
+              <div class="panel-2 p-3"><div class="text-2xl font-black text-[var(--gold)]" id="n-kcal">270</div><div class="text-[11px] muted mt-0.5">kcal</div></div>
+              <div class="panel-2 p-3"><div class="text-2xl font-black text-[var(--rose)]" id="n-prot">17</div><div class="text-[11px] muted mt-0.5">단백질 g</div></div>
+              <div class="panel-2 p-3"><div class="text-2xl font-black text-[var(--cream)]" id="n-fat">22</div><div class="text-[11px] muted mt-0.5">지방 g</div></div>
+            </div>
+            <p class="text-[11px] muted leading-relaxed">※ 100g(생고기) 기준 <b class="text-white">대략값</b>이며, 한우/수입·등급(마블링)에 따라 칼로리·지방은 크게 달라집니다. 1++ 등심은 표기보다 훨씬 높을 수 있어요.</p>
+          </div>
 
-            // Determine how many fat lines to draw based on marbling (0 to 100)
-            const linesToDraw = Math.floor((marblingLevel / 100) * marblingPaths.length);
-            
-            let linesSVG = '';
-            for(let i=0; i<linesToDraw; i++) {
-                // Add slight randomness to stroke width based on index for natural look
-                const width = 2 + (i % 3); 
-                linesSVG += `<path class="marbling-line" d="${marblingPaths[i]}" stroke-width="${width}" />`;
-            }
+          <div id="tab-cook" class="tab-body hidden">
+            <div class="mb-3">
+              <div class="text-xs muted mb-1.5">잘 맞는 조리법</div>
+              <div id="cook-methods" class="flex flex-wrap gap-1.5 text-xs"></div>
+            </div>
+            <div class="bg-[var(--red-dark)]/20 border border-[var(--red-dark)]/50 rounded-lg p-3 flex gap-2.5 items-start mb-3">
+              <span>🔥</span><p id="cut-tip" class="text-sm text-red-100/90"></p>
+            </div>
+            <div class="bg-black/20 border border-[var(--line)] rounded-lg p-3 flex gap-2.5 items-start">
+              <span>🔪</span><p id="cut-prep" class="text-sm muted"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            // Return full SVG string
-            return `
-                <svg viewBox="0 0 300 240" class="w-full h-full drop-shadow-2xl">
-                    <defs>
-                        <!-- Inner shadow for realistic meat volume -->
-                        <filter id="inner-shadow">
-                            <feOffset dx="0" dy="0"/>
-                            <feGaussianBlur stdDeviation="15" result="offset-blur"/>
-                            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
-                            <feFlood flood-color="black" flood-opacity="0.4" result="color"/>
-                            <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
-                            <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
-                        </filter>
-                    </defs>
-                    <g transform="translate(5, 5)">
-                        <!-- Outer darker rim (meat crust/oxidation) -->
-                        <path d="${baseShape}" fill="#450a0a" transform="scale(1.02) translate(-2, -2)" opacity="0.5"/>
-                        <!-- Main Meat Body -->
-                        <path class="meat-base" d="${baseShape}" fill="${color}" filter="url(#inner-shadow)" />
-                        <!-- Generated Marbling -->
-                        ${linesSVG}
-                    </g>
-                </svg>
-            `;
-        }
+    <!-- ===== DONENESS ===== -->
+    <section id="doneness" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🔥</span>
+        <h2 class="display text-2xl sm:text-3xl">굽기 정도 — 내부 온도로 결정된다</h2>
+      </div>
+      <p class="muted mb-6">스테이크의 익힘은 겉이 아니라 <b class="text-white">중심부 온도</b>로 정해집니다. 슬라이더를 움직여 단면 색과 명칭의 변화를 확인하세요.</p>
 
-        // Interaction Logic
-        function selectCut(cutId) {
-            const data = beefData[cutId];
-            if(!data) return;
+      <div class="panel p-5 sm:p-7 grid md:grid-cols-[260px_1fr] gap-6 items-center">
+        <div class="grid place-items-center">
+          <div id="steak-graphic" class="w-56 h-44"></div>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-end gap-x-4 gap-y-1">
+            <span id="done-name" class="display text-3xl text-white">미디엄 레어</span>
+            <span id="done-temp" class="text-2xl font-black text-[var(--red)]">55℃</span>
+            <span id="done-rec" class="chip" style="border-color:var(--ok);color:var(--ok)">추천</span>
+          </div>
+          <p id="done-desc" class="mt-3 text-sm muted leading-relaxed">겉은 바삭하게 시어링하고 속은 따뜻한 선홍빛. 육즙이 가장 풍부해 스테이크에 가장 널리 추천되는 굽기입니다.</p>
+          <input id="done-slider" type="range" min="48" max="75" value="55" class="w-full mt-5 range-done" />
+          <div class="flex justify-between text-[11px] muted mt-2">
+            <span>레어 48℃</span><span>미디엄 60℃</span><span>웰던 75℃</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            // 1. Reset all polygon styles
-            document.querySelectorAll('.cow-part').forEach(poly => {
-                poly.classList.remove('active');
-            });
+    <!-- ===== GRADE ===== -->
+    <section id="grade" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🏅</span>
+        <h2 class="display text-2xl sm:text-3xl">한우 등급 — 1++의 정체</h2>
+      </div>
+      <p class="muted mb-6">한우 <b class="text-white">육질등급</b>은 마블링(근내지방도, BMS 1~9)·육색·지방색·조직감·성숙도로 매기고, <b class="text-white">육량등급</b>(A·B·C)은 살코기 양을 따집니다. 슬라이더로 마블링(BMS)을 바꿔 등급과 단면을 확인하세요.</p>
 
-            // 2. Highlight selected polygon(s)
-            data.polyIds.forEach(polyId => {
-                document.getElementById(polyId).classList.add('active');
-            });
+      <div class="panel p-5 sm:p-7 grid md:grid-cols-[260px_1fr] gap-6 items-center">
+        <div class="grid place-items-center">
+          <div id="grade-graphic" class="w-56 h-44"></div>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-end gap-x-4 gap-y-1">
+            <span id="grade-badge" class="display text-4xl text-[var(--gold)]">1++</span>
+            <span id="grade-bms" class="text-sm muted">BMS No.9</span>
+            <span id="grade-fat" class="chip" style="border-color:var(--cream);color:var(--cream)">근내지방 약 19%+</span>
+          </div>
+          <p id="grade-desc" class="mt-3 text-sm muted leading-relaxed">최고 등급. 지방이 그물처럼 촘촘해 풍미와 부드러움이 극대화됩니다. 다만 지방량이 많아 담백함을 원하면 오히려 부담스러울 수 있어요.</p>
+          <input id="grade-slider" type="range" min="1" max="9" value="9" class="w-full mt-5 range-grade" />
+          <div class="flex justify-between text-[11px] muted mt-2">
+            <span>BMS 1 · 3등급</span><span>BMS 5 · 1등급</span><span>BMS 9 · 1++</span>
+          </div>
+          <div class="mt-4 grid grid-cols-5 gap-1.5 text-center text-[11px]">
+            <div class="panel-2 py-2"><div class="font-bold text-white">1++</div><div class="muted">BMS 7~9</div></div>
+            <div class="panel-2 py-2"><div class="font-bold text-white">1+</div><div class="muted">BMS 6</div></div>
+            <div class="panel-2 py-2"><div class="font-bold text-white">1</div><div class="muted">BMS 4~5</div></div>
+            <div class="panel-2 py-2"><div class="font-bold text-white">2</div><div class="muted">BMS 2~3</div></div>
+            <div class="panel-2 py-2"><div class="font-bold text-white">3</div><div class="muted">BMS 1</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            // 3. Update Text Content
-            document.getElementById('cut-title').innerText = data.nameKo;
-            document.getElementById('cut-subtitle').innerText = data.nameEn;
-            document.getElementById('cut-usage').innerText = data.usage;
-            document.getElementById('cut-desc').innerText = data.desc;
-            document.getElementById('cut-tip').innerText = data.tip;
+    <!-- ===== SPECIAL CUTS ===== -->
+    <section id="special" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">💎</span>
+        <h2 class="display text-2xl sm:text-3xl">특수부위 — 한 마리에 조금씩</h2>
+      </div>
+      <p class="muted mb-6">정육 부위 안에 숨어 있어 소량만 나오는 <b class="text-white">희소부위</b>들. 어느 큰 부위(모부위)에서 나오는지와 특징을 정리했습니다.</p>
+      <div id="special-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      <p class="mt-4 text-[11px] muted">※ 부위 경계와 명칭은 정형 방식·지역·정육점마다 조금씩 다를 수 있습니다.</p>
+    </section>
 
-            // 4. Update Progress Bars
-            document.getElementById('bar-tenderness').style.width = `${data.tenderness}%`;
-            document.getElementById('bar-marbling').style.width = `${data.marbling}%`;
+    <!-- ===== COMPARE TABLE ===== -->
+    <section id="compare" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">📊</span>
+        <h2 class="display text-2xl sm:text-3xl">부위 한눈에 비교</h2>
+      </div>
+      <p class="muted mb-6">행을 클릭하면 위쪽 부위 지도에서 해당 부위가 선택됩니다.</p>
+      <div class="panel overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm min-w-[640px]">
+            <thead>
+              <tr class="border-b border-[var(--line)] text-left muted">
+                <th class="p-3.5 font-semibold">부위</th>
+                <th class="p-3.5 font-semibold">연도</th>
+                <th class="p-3.5 font-semibold">마블링</th>
+                <th class="p-3.5 font-semibold">대표 요리</th>
+                <th class="p-3.5 font-semibold">칼로리</th>
+                <th class="p-3.5 font-semibold">가격대</th>
+              </tr>
+            </thead>
+            <tbody id="compare-body" class="divide-y divide-[var(--line)]"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-            // 5. Generate and inject the Code-Generated Image (SVG)
-            graphicContainer.innerHTML = generateMeatGraphic(data.color, data.marbling);
+    <!-- summary callout -->
+    <section class="reveal">
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-[var(--red)]/15 to-[var(--gold)]/15 border border-[var(--line)] text-center">
+        <p class="text-base sm:text-lg leading-relaxed">
+          🥩 핵심 한 줄: <b class="text-white">연한 부위는 빠르게 굽고(스테이크·구이), 질긴 부위는 오래 끓인다(국·찜).</b><br class="hidden sm:block"/>
+          <span class="muted text-sm">마블링이 전부는 아니에요 — 부위의 쓰임과 굽기를 알면 가성비 부위도 특수부위처럼 즐길 수 있습니다.</span>
+        </p>
+      </div>
+    </section>
+  </main>
 
-            // 6. Toggle UI visibility
-            welcomeMsg.classList.add('hidden');
-            
-            // Re-trigger animation
-            detailsContent.classList.remove('hidden');
-            detailsContent.classList.remove('animate-fade-in');
-            void detailsContent.offsetWidth; // trigger reflow
-            detailsContent.classList.add('animate-fade-in');
-        }
+  <footer class="border-t border-[var(--line)]">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-center text-sm muted">
+      🥩 본 페이지의 모든 다이어그램·단면도·차트는 외부 이미지 파일 없이 <b class="text-white">HTML·CSS·SVG 코드로만 동적 생성</b>되었습니다.
+      <div class="display text-xs mt-2 text-[var(--muted)]">coding / 001</div>
+    </div>
+  </footer>
 
-    </script>
+  <script>
+    /* =========================================================
+       DATA
+       ========================================================= */
+    const METHODS = { steak:'스테이크', grill:'구이', soup:'국·탕', braise:'찜·조림', raw:'회·날것', bulgogi:'불고기' };
+
+    const beefData = {
+      tenderloin:{ ko:'안심', en:'Tenderloin', usage:'스테이크·고급구이', price:5,
+        methods:['steak','grill'], tenderness:100, marbling:20, flavor:55, value:32, versatility:45,
+        kcal:140, protein:21, fat:6, color:'#b91c1c', polyIds:['poly-tenderloin'],
+        desc:'소 한 마리에서 겨우 2~3%만 나오는 최고급 부위. 갈비 안쪽에 숨어 거의 움직이지 않아 육질이 가장 연하고 부드럽습니다. 마블링은 적어 담백하고 깔끔한 맛이 특징.',
+        tip:'두툼하게(3cm+) 썰어 강불에 겉만 시어링하는 미디엄 레어로 구우면 입에서 녹는 식감을 즐길 수 있어요.',
+        prep:'기름이 적어 과조리하면 퍽퍽해집니다. 굽기 직전 실온에 30분 두고, 익힌 뒤 5분 레스팅하세요.' },
+      ribeye:{ ko:'등심', en:'Loin / Ribeye', usage:'스테이크·구이·불고기', price:5,
+        methods:['steak','grill','bulgogi'], tenderness:80, marbling:90, flavor:80, value:45, versatility:78,
+        kcal:270, protein:17, fat:22, color:'#dc2626', polyIds:['poly-ribeye'],
+        desc:'등 쪽의 대표 구이 부위. 결이 곱고 근육 사이 마블링이 풍성해, 구우면 지방이 녹으며 고소한 풍미가 폭발합니다. 살치살·새우살 같은 특수부위도 여기서 나와요.',
+        tip:'윗등심(꽃등심)은 구이용, 아랫등심은 스테이크용으로 제격. 센 불에 빠르게 구워야 마블링 풍미를 살립니다.',
+        prep:'마블링이 많아 도톰해도 빨리 익습니다. 굽다 기름이 많으면 키친타월로 살짝 닦아내면 느끼함이 줄어요.' },
+      striploin:{ ko:'채끝', en:'Striploin', usage:'스테이크·로스구이', price:4,
+        methods:['steak','grill'], tenderness:78, marbling:62, flavor:78, value:50, versatility:62,
+        kcal:230, protein:18, fat:17, color:'#dc2626', polyIds:['poly-striploin'],
+        desc:'등심 뒤 허리 쪽 부위. 소를 몰 때 채찍(채) 끝이 닿는 곳이라 채끝. 한쪽에만 지방이 띠처럼 붙고 살코기는 균일해, 씹는 맛과 고소함의 밸런스가 뛰어납니다.',
+        tip:'가장자리 지방 띠를 먼저 불판에 세워 녹이면 풍미가 좋아집니다. 안심보다 진한 육향을 원할 때 최고.',
+        prep:'지방 띠 쪽이 수축해 휘기 쉬우니, 칼집을 2~3군데 넣어주면 평평하게 구워집니다.' },
+      chuck:{ ko:'목심', en:'Chuck', usage:'국거리·불고기·다짐육', price:2,
+        methods:['soup','bulgogi'], tenderness:42, marbling:32, flavor:85, value:80, versatility:72,
+        kcal:150, protein:20, fat:8, color:'#991b1b', polyIds:['poly-chuck'],
+        desc:'목 부위로 운동량이 많아 결이 다소 거칠지만, 젤라틴과 결합조직이 풍부해 육향이 진합니다. 가성비가 좋아 다양하게 쓰여요.',
+        tip:'오래 끓이면 진한 감칠맛이 우러나고, 얇게 썰면 불고기로도 훌륭합니다.',
+        prep:'질긴 결을 가로질러(결 반대 방향) 썰면 한결 부드럽게 씹힙니다.' },
+      brisket:{ ko:'양지', en:'Brisket', usage:'국·육개장·장조림', price:2,
+        methods:['soup','braise'], tenderness:38, marbling:48, flavor:88, value:72, versatility:60,
+        kcal:210, protein:19, fat:15, color:'#b91c1c', polyIds:['poly-brisket'],
+        desc:'가슴~배 아래로 이어지는 부위. 결이 치밀하고 단단하지만 한 방향으로 잘 찢어지며, 지방·결합조직이 많아 국물 감칠맛이 최고입니다. 차돌박이가 여기서 나와요.',
+        tip:'찬물에 핏물을 충분히 뺀 뒤 푹 끓여 육수를 내거나, 결대로 찢어 장조림으로.',
+        prep:'끓일 때 떠오르는 거품(불순물)을 걷어내야 국물이 맑고 깔끔해집니다.' },
+      shank:{ ko:'사태', en:'Shank', usage:'찜·탕·수육·장조림', price:3,
+        methods:['braise','soup'], tenderness:25, marbling:18, flavor:82, value:75, versatility:48,
+        kcal:140, protein:21, fat:6, color:'#7f1d1d', polyIds:['poly-shank','poly-shank-hind'],
+        desc:'다리 부위로 힘줄·근막이 많아 구이엔 질기지만, 물에 약불로 오래 가열하면 콜라겐이 젤라틴으로 변해 쫀득해집니다. 아롱사태가 대표 특수부위.',
+        tip:'약불에서 1시간 이상 푹 — 힘줄이 투명해지면 완성. 수육·찜에 최적.',
+        prep:'덩어리째 삶아 한 김 식힌 뒤 결 반대로 썰면 모양도 식감도 살아납니다.' },
+      round:{ ko:'우둔 / 설도', en:'Round', usage:'육회·장조림·육포', price:2,
+        methods:['raw','braise'], tenderness:52, marbling:10, flavor:60, value:82, versatility:70,
+        kcal:120, protein:22, fat:4, color:'#991b1b', polyIds:['poly-round'],
+        desc:'엉덩이·뒷다리의 큰 살코기 덩어리. 지방이 거의 없고 단백질 비율이 매우 높아 담백하고 다이어트용으로도 좋습니다.',
+        tip:'지방이 없어 날로 먹기 좋아 육회로 많이 쓰고, 얇게 저며 육포·산적에 제격.',
+        prep:'기름이 없어 구이엔 퍽퍽합니다. 날로 쓰면 신선도가 생명 — 당일 손질한 것을 쓰세요.' },
+      ribs:{ ko:'갈비', en:'Ribs', usage:'갈비찜·갈비탕·양념갈비', price:4,
+        methods:['braise','grill'], tenderness:62, marbling:82, flavor:90, value:42, versatility:55,
+        kcal:290, protein:16, fat:25, color:'#dc2626', polyIds:['poly-ribs'],
+        desc:'갈비뼈 사이의 고기. 뼈에서 우러나는 풍미와 근내지방, 쫄깃한 근육이 어우러져 한국인이 가장 사랑하는 씹는 맛을 냅니다.',
+        tip:'뼈 쪽 질긴 근막에 칼집을 내면 양념이 잘 배고 연해집니다. 양념갈비는 배·키위로 연육.',
+        prep:'양념 전 찬물에 1~2시간 핏물을 빼야 잡내가 없고 색이 곱습니다.' },
+      blade:{ ko:'앞다리', en:'Blade / Foreshank', usage:'불고기·육회·국거리', price:2,
+        methods:['bulgogi','soup','raw'], tenderness:46, marbling:26, flavor:78, value:85, versatility:74,
+        kcal:150, protein:21, fat:7, color:'#b91c1c', polyIds:['poly-blade'],
+        desc:'운동량 많은 앞다리. 육색이 짙고 지방이 적으며 중간중간 힘줄이 있어 씹는 맛이 좋고 육향이 풍부합니다. 특수부위 부채살이 여기 포함.',
+        tip:'얇게 썰어 불고기로 하면 가성비와 맛을 동시에. 부채살은 따로 발라 구이로.',
+        prep:'근막·힘줄을 살짝 제거하고 결 반대로 썰면 질긴 느낌이 줄어듭니다.' }
+    };
+
+    const specialCuts = [
+      { ko:'살치살', en:'Chuck Flap', from:'윗등심(목심 인접)', emoji:'🥇',
+        desc:'앞톱니근 부위로 운동량이 적어 매우 부드럽고 마블링이 화려하게 박힙니다. 구이 특수부위의 최고봉.', use:'구이' },
+      { ko:'새우살', en:'Ribeye Cap', from:'등심·갈비 덧살', emoji:'🦐',
+        desc:'새우 모양의 덧살. 마블링이 적은 소에서도 부드러운 식감이 나와 등심의 알짜로 꼽힙니다.', use:'구이' },
+      { ko:'부채살', en:'Top Blade', from:'앞다리', emoji:'🪭',
+        desc:'가운데 힘줄이 부챗살(낙엽)처럼 뻗은 모양. 연하고 육향이 좋아 구이·스테이크로 인기.', use:'구이·스테이크' },
+      { ko:'차돌박이', en:'Brisket Point', from:'양지(가슴)', emoji:'⚪',
+        desc:'단단한 흰 경지방이 차돌처럼 박힌 부위. 아주 얇게 썰어 센 불에 구우면 고소함이 폭발.', use:'구이' },
+      { ko:'안창살', en:'Outer Skirt', from:'갈비(횡격막)', emoji:'🎯',
+        desc:'횡격막 부위로 한 마리에 1.5kg 미만. 진한 육향과 담백한 뒷단맛이 특징인 특수부위 최고봉.', use:'구이' },
+      { ko:'토시살', en:'Hanger', from:'갈비(횡격막)', emoji:'🧵',
+        desc:'횡격막을 움직이는 근육(한 마리 한 쌍). 쫄깃하면서 진한 육향이 일품.', use:'구이' },
+      { ko:'치마살', en:'Flank/Skirt', from:'복부', emoji:'👗',
+        desc:'복부의 치마처럼 넓은 부위. 결이 굵지만 마블링과 육향이 좋아 구이로 즐깁니다.', use:'구이' },
+      { ko:'제비추리', en:'Neck Strip', from:'목심 아래 척추', emoji:'🐦',
+        desc:'척추를 따라 가늘고 길게 붙은 소량 부위. 쫄깃하고 고소한 풍미로 마니아층이 두텁습니다.', use:'구이' },
+      { ko:'아롱사태', en:'Eye of Shank', from:'사태 중심', emoji:'💠',
+        desc:'사태 한가운데의 특수부위. 결이 곱고 쫀득해 수육·찜·육회로 최고의 식감을 냅니다.', use:'수육·찜·육회' }
+    ];
+
+    /* =========================================================
+       GRAPHICS GENERATORS (SVG by code)
+       ========================================================= */
+    const MARBLING_PATHS = [
+      'M 60 80 Q 100 120 180 60 T 230 110','M 50 140 Q 120 180 200 120 T 240 160',
+      'M 80 50 Q 120 90 150 40 T 210 70','M 70 110 Q 150 140 220 90',
+      'M 90 170 Q 160 200 230 140','M 110 60 Q 140 100 190 50',
+      'M 130 150 Q 170 120 210 170','M 60 110 Q 90 80 130 130 T 190 100',
+      'M 100 40 Q 150 80 200 30 T 250 80','M 50 160 Q 100 130 150 180 T 220 130'
+    ];
+    function meatSVG(color, marblingLevel){
+      const base = 'M 40 100 C 30 50, 80 20, 160 30 C 230 40, 270 90, 250 150 C 230 200, 150 220, 80 190 C 20 160, 50 140, 40 100 Z';
+      const n = Math.round((marblingLevel/100)*MARBLING_PATHS.length);
+      let lines='';
+      for(let i=0;i<n;i++){ lines += `<path class="marbling-line" d="${MARBLING_PATHS[i]}" stroke-width="${2+(i%3)}"/>`; }
+      return `<svg viewBox="0 0 300 240" class="w-full h-full drop-shadow-2xl">
+        <defs>
+          <radialGradient id="mg" cx="42%" cy="38%" r="75%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+            <stop offset="45%" stop-color="${color}"/>
+            <stop offset="100%" stop-color="#3f0d0d"/>
+          </radialGradient>
+        </defs>
+        <g transform="translate(5,5)">
+          <path d="${base}" fill="#3f0a0a" transform="scale(1.03) translate(-3,-3)" opacity="0.55"/>
+          <path d="${base}" fill="url(#mg)"/>
+          ${lines}
+        </g></svg>`;
+    }
+
+    function radarSVG(stats){
+      const axes=[['연도','tenderness'],['마블','marbling'],['육향','flavor'],['가성비','value'],['다용도','versatility']];
+      const cx=110, cy=98, R=66;
+      const ang=i=>(-90 + i*72)*Math.PI/180;
+      let grid='';
+      [0.25,0.5,0.75,1].forEach(f=>{
+        const p=axes.map((_,i)=>`${(cx+Math.cos(ang(i))*R*f).toFixed(1)},${(cy+Math.sin(ang(i))*R*f).toFixed(1)}`).join(' ');
+        grid+=`<polygon points="${p}" fill="none" stroke="#3a2b27" stroke-width="1"/>`;
+      });
+      let spokes='', labels='';
+      axes.forEach((a,i)=>{
+        const x=cx+Math.cos(ang(i))*R, y=cy+Math.sin(ang(i))*R;
+        spokes+=`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#3a2b27" stroke-width="1"/>`;
+        const lx=cx+Math.cos(ang(i))*(R+15), ly=cy+Math.sin(ang(i))*(R+11);
+        labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="#b6a59d" font-size="11" font-weight="700" text-anchor="middle" dominant-baseline="middle">${a[0]}</text>`;
+      });
+      const vp=axes.map((a,i)=>{ const v=(stats[a[1]]||0)/100; return `${(cx+Math.cos(ang(i))*R*v).toFixed(1)},${(cy+Math.sin(ang(i))*R*v).toFixed(1)}`; }).join(' ');
+      return `<svg viewBox="0 0 220 196" class="w-full h-full">${grid}${spokes}
+        <polygon points="${vp}" fill="rgba(226,59,59,0.34)" stroke="#e23b3b" stroke-width="2"/>${labels}</svg>`;
+    }
+
+    function steakSVG(temp){
+      // core fraction shrinks as temp rises (48->1, 75->~0.05)
+      const frac = Math.max(0.05, Math.min(1, (75-temp)/(75-48)));
+      // core color by band
+      let core;
+      if(temp<53) core='#9b1c1c';
+      else if(temp<58) core='#cc2b2b';
+      else if(temp<63) core='#e86a78';
+      else if(temp<69) core='#e0a487';
+      else core='#9c6f57';
+      const rx = 96*frac, ry = 60*frac;
+      return `<svg viewBox="0 0 240 180" class="w-full h-full drop-shadow-2xl">
+        <defs><linearGradient id="sear" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="#5a3320"/><stop offset="100%" stop-color="#3a1d12"/></linearGradient></defs>
+        <ellipse cx="120" cy="92" rx="104" ry="66" fill="#2a140c"/>
+        <ellipse cx="120" cy="90" rx="100" ry="63" fill="url(#sear)"/>
+        <ellipse cx="120" cy="90" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="${core}"/>
+        <g stroke="#1c0e08" stroke-width="6" opacity="0.5" stroke-linecap="round">
+          <line x1="46" y1="44" x2="92" y2="150"/><line x1="96" y1="36" x2="142" y2="150"/><line x1="150" y1="40" x2="196" y2="146"/>
+        </g>
+      </svg>`;
+    }
+
+    /* =========================================================
+       INTERACTIONS
+       ========================================================= */
+    let currentFilter = 'all';
+
+    function selectCut(id){
+      const d = beefData[id];
+      if(!d) return;
+      document.querySelectorAll('.cow-part').forEach(p=>p.classList.remove('active'));
+      d.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el) el.classList.add('active'); });
+
+      document.getElementById('cut-ko').innerText = d.ko;
+      document.getElementById('cut-en').innerText = d.en;
+      document.getElementById('cut-usage').innerText = d.usage;
+      document.getElementById('cut-price').innerText = '★'.repeat(d.price)+'☆'.repeat(5-d.price);
+      document.getElementById('cut-desc').innerText = d.desc;
+      document.getElementById('cut-tip').innerText = d.tip;
+      document.getElementById('cut-prep').innerText = d.prep;
+
+      document.getElementById('val-tender').innerText = d.tenderness;
+      document.getElementById('val-marb').innerText = d.marbling;
+      document.getElementById('bar-tender').style.width = d.tenderness+'%';
+      document.getElementById('bar-marb').style.width = d.marbling+'%';
+
+      document.getElementById('n-kcal').innerText = d.kcal;
+      document.getElementById('n-prot').innerText = d.protein;
+      document.getElementById('n-fat').innerText = d.fat;
+
+      document.getElementById('cook-methods').innerHTML =
+        d.methods.map(m=>`<span class="chip" style="border-color:var(--red-dark);color:#fca5a5">${METHODS[m]}</span>`).join('');
+
+      document.getElementById('meat-graphic').innerHTML = meatSVG(d.color, d.marbling);
+      document.getElementById('radar-graphic').innerHTML = radarSVG(d);
+
+      // sync chip active state
+      document.querySelectorAll('#cut-chips [data-cut]').forEach(c=>{
+        c.classList.toggle('active', c.getAttribute('data-cut')===id);
+      });
+    }
+
+    function applyFilter(method){
+      currentFilter = method;
+      document.querySelectorAll('#method-filter [data-m]').forEach(b=>{
+        b.classList.toggle('active', b.getAttribute('data-m')===method);
+      });
+      // chips
+      document.querySelectorAll('#cut-chips [data-cut]').forEach(c=>{
+        const id=c.getAttribute('data-cut');
+        const show = method==='all' || beefData[id].methods.includes(method);
+        c.style.display = show ? '' : 'none';
+      });
+      // dim non-matching cow parts
+      Object.entries(beefData).forEach(([id,d])=>{
+        const match = method==='all' || d.methods.includes(method);
+        d.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el) el.classList.toggle('dimmed', !match); });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      /* reveal */
+      const io=new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);} }),{threshold:0.12});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+      /* method filter buttons */
+      const mf=document.getElementById('method-filter');
+      mf.innerHTML = `<button class="seg active px-3 py-1.5 rounded-full" data-m="all">전체</button>` +
+        Object.entries(METHODS).map(([k,v])=>`<button class="seg px-3 py-1.5 rounded-full" data-m="${k}">${v}</button>`).join('');
+      mf.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>applyFilter(b.getAttribute('data-m'))));
+
+      /* cut chips */
+      const cc=document.getElementById('cut-chips');
+      cc.innerHTML = Object.entries(beefData).map(([id,d])=>
+        `<button class="seg px-3 py-1.5 rounded-full" data-cut="${id}">${d.ko}</button>`).join('');
+      cc.querySelectorAll('[data-cut]').forEach(b=>b.addEventListener('click',()=>selectCut(b.getAttribute('data-cut'))));
+
+      /* tabs */
+      document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+        const tab=t.getAttribute('data-tab');
+        ['desc','nutri','cook'].forEach(k=>document.getElementById('tab-'+k).classList.toggle('hidden', k!==tab));
+      }));
+
+      /* special cuts */
+      document.getElementById('special-grid').innerHTML = specialCuts.map(s=>`
+        <div class="panel-2 p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2"><span class="text-xl">${s.emoji}</span><b class="text-white">${s.ko}</b></div>
+            <span class="chip muted">${s.use}</span>
+          </div>
+          <div class="text-[11px] text-[var(--rose)] mt-1 tracking-wider uppercase">${s.en}</div>
+          <div class="text-[11px] muted mt-1">모부위 · <b class="text-white">${s.from}</b></div>
+          <p class="text-sm muted mt-2 leading-relaxed">${s.desc}</p>
+        </div>`).join('');
+
+      /* compare table */
+      document.getElementById('compare-body').innerHTML = Object.entries(beefData).map(([id,d])=>`
+        <tr class="hover:bg-[var(--panel-2)] cursor-pointer transition-colors" data-row="${id}">
+          <td class="p-3.5"><b class="text-white">${d.ko}</b> <span class="muted text-xs">${d.en}</span></td>
+          <td class="p-3.5"><div class="bar w-20"><span style="width:${d.tenderness}%;background:var(--red)"></span></div></td>
+          <td class="p-3.5"><div class="bar w-20"><span style="width:${d.marbling}%;background:var(--cream)"></span></div></td>
+          <td class="p-3.5 muted">${d.usage}</td>
+          <td class="p-3.5 muted">${d.kcal} <span class="text-[11px]">kcal</span></td>
+          <td class="p-3.5 text-[var(--gold)]">${'★'.repeat(d.price)}<span class="text-[#5a4a44]">${'★'.repeat(5-d.price)}</span></td>
+        </tr>`).join('');
+      document.querySelectorAll('#compare-body [data-row]').forEach(r=>r.addEventListener('click',()=>{
+        selectCut(r.getAttribute('data-row'));
+        document.getElementById('map').scrollIntoView({behavior:'smooth'});
+      }));
+
+      /* doneness slider */
+      const ds=document.getElementById('done-slider');
+      function updateDone(){
+        const t=+ds.value;
+        let name,rec=false,desc;
+        if(t<53){ name='레어 (Rare)'; desc='겉만 강하게 시어링하고 속은 차갑고 붉은 상태. 진한 육향을 즐기는 사람용.'; }
+        else if(t<58){ name='미디엄 레어'; rec=true; desc='겉은 바삭, 속은 따뜻한 선홍빛. 육즙이 가장 풍부해 스테이크에 가장 널리 추천되는 굽기입니다.'; }
+        else if(t<63){ name='미디엄'; desc='중심까지 분홍빛. 육즙과 익힘의 균형이 좋아 무난하게 즐기기 좋습니다.'; }
+        else if(t<69){ name='미디엄 웰'; desc='분홍빛이 살짝만 남고 대부분 익은 상태. 단단한 식감을 선호할 때.'; }
+        else { name='웰던 (Well Done)'; desc='속까지 완전히 익어 회갈색. 육즙은 적지만 위생적으로 안심되는 굽기.'; }
+        document.getElementById('done-name').innerText=name;
+        document.getElementById('done-temp').innerText=t+'℃';
+        document.getElementById('done-rec').style.display = rec?'':'none';
+        document.getElementById('done-desc').innerText=desc;
+        document.getElementById('steak-graphic').innerHTML=steakSVG(t);
+      }
+      ds.addEventListener('input',updateDone);
+      updateDone();
+
+      /* grade slider */
+      const gs=document.getElementById('grade-slider');
+      const FAT={1:'1~5%',2:'4~6%',3:'6~8%',4:'8~11%',5:'11~13%',6:'13~16%',7:'15~17%',8:'17~19%',9:'19% 이상'};
+      function updateGrade(){
+        const b=+gs.value;
+        let grade, gdesc;
+        if(b>=7){ grade='1++'; gdesc='최고 등급. 지방이 그물처럼 촘촘해 풍미·부드러움이 극대화됩니다. 다만 지방량이 많아 담백함을 원하면 부담스러울 수 있어요.'; }
+        else if(b===6){ grade='1+'; gdesc='상위 등급. 풍부한 마블링으로 부드럽고 고소하면서 1++보다는 약간 가벼운 느낌.'; }
+        else if(b>=4){ grade='1'; gdesc='대중적으로 가장 무난한 고급 등급. 적당한 마블링과 육향의 균형이 좋습니다.'; }
+        else if(b>=2){ grade='2'; gdesc='마블링은 적지만 살코기 본연의 맛이 또렷하고 담백합니다. 가성비가 좋아요.'; }
+        else { grade='3'; gdesc='지방이 매우 적은 살코기 위주. 담백함을 원하거나 조림·국 용도로 적합합니다.'; }
+        document.getElementById('grade-badge').innerText=grade;
+        document.getElementById('grade-bms').innerText='BMS No.'+b;
+        document.getElementById('grade-fat').innerText='근내지방 약 '+FAT[b];
+        document.getElementById('grade-desc').innerText=gdesc;
+        document.getElementById('grade-graphic').innerHTML=meatSVG('#cc2b2b', (b/9)*100);
+      }
+      gs.addEventListener('input',updateGrade);
+      updateGrade();
+
+      /* initial selection */
+      selectCut('ribeye');
+      applyFilter('all');
+    });
+  </script>
 </body>
 </html>
