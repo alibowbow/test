@@ -566,10 +566,13 @@
        INTERACTIONS
        ========================================================= */
     let currentFilter = 'all';
+    let selectedCut = 'ribeye';
 
     function selectCut(id){
       const d = beefData[id];
       if(!d) return;
+      selectedCut = id;
+      exitMethodMode();
       clearSpecial();
       document.querySelectorAll('.cow-part').forEach(p=>p.classList.remove('active'));
       d.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el) el.classList.add('active'); });
@@ -603,21 +606,34 @@
       });
     }
 
+    function exitMethodMode(){
+      currentFilter = 'all';
+      document.querySelectorAll('#method-filter [data-m]').forEach(b=>b.classList.toggle('active', b.getAttribute('data-m')==='all'));
+      document.querySelectorAll('.cow-part').forEach(p=>p.classList.remove('dimmed'));
+      document.querySelectorAll('#cut-chips [data-cut]').forEach(c=>c.classList.remove('dim'));
+    }
+
     function applyFilter(method){
       currentFilter = method;
-      document.querySelectorAll('#method-filter [data-m]').forEach(b=>{
-        b.classList.toggle('active', b.getAttribute('data-m')===method);
-      });
-      // chips: dim non-matching (keep all visible & clickable)
-      document.querySelectorAll('#cut-chips [data-cut]').forEach(c=>{
-        const id=c.getAttribute('data-cut');
-        const match = method==='all' || beefData[id].methods.includes(method);
-        c.classList.toggle('dim', !match);
-      });
-      // dim non-matching cow parts
+      clearSpecial();
+      document.querySelectorAll('#method-filter [data-m]').forEach(b=>b.classList.toggle('active', b.getAttribute('data-m')===method));
+      if(method==='all'){
+        // 단일 선택 모드로 복귀: 선택한 부위 하나만 강조
+        document.querySelectorAll('.cow-part').forEach(p=>p.classList.remove('active','dimmed'));
+        const sd=beefData[selectedCut];
+        if(sd) sd.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el) el.classList.add('active'); });
+        document.querySelectorAll('#cut-chips [data-cut]').forEach(c=>{ c.classList.remove('dim'); c.classList.toggle('active', c.getAttribute('data-cut')===selectedCut); });
+        return;
+      }
+      // 조리법 모드: 매칭되는 부위만 독립적으로 강조, 나머지는 흐리게
       Object.entries(beefData).forEach(([id,d])=>{
-        const match = method==='all' || d.methods.includes(method);
-        d.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el) el.classList.toggle('dimmed', !match); });
+        const match = d.methods.includes(method);
+        d.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el){ el.classList.toggle('active', match); el.classList.toggle('dimmed', !match); } });
+      });
+      document.querySelectorAll('#cut-chips [data-cut]').forEach(c=>{
+        const match = beefData[c.getAttribute('data-cut')].methods.includes(method);
+        c.classList.toggle('active', match);
+        c.classList.toggle('dim', !match);
       });
     }
 
@@ -627,6 +643,7 @@
 
     function selectSpecial(id){
       const s=SP[id]; if(!s) return;
+      exitMethodMode();
       document.querySelectorAll('.cow-part').forEach(p=>p.classList.remove('active'));
       const parent=beefData[s.parent];
       if(parent) parent.polyIds.forEach(pid=>{ const el=document.getElementById(pid); if(el) el.classList.add('active'); });
