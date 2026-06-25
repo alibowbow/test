@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>서울경제TV는 어떻게 돈을 버나? — 수익구조 분석</title>
+  <meta name="description" content="서울경제TV(SEN)의 수익구조를 분석한 인터랙티브 자료. 유튜브 누적 3억 뷰로는 왜 턱없이 모자란지, 실제 돈은 어디서 나오는지(수신료·광고·협찬·증권 유료서비스)를 시각화." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#07090e; --panel:#10141d; --panel-2:#161b26;
+      --line:#26303f; --txt:#e8edf5; --muted:#94a1b6;
+      --money:#34d399; --gold:#f5c542; --blue:#4f9cf9; --red:#f4626f; --violet:#a78bfa;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:'Noto Sans KR',sans-serif;background:radial-gradient(1100px 600px at 50% -10%, #122033 0%, var(--bg) 55%) no-repeat, var(--bg);color:var(--txt);}
+    .tech{font-family:'Orbitron',sans-serif;letter-spacing:.02em;}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:1.25rem;}
+    .panel-2{background:var(--panel-2);border:1px solid var(--line);border-radius:1rem;}
+    .muted{color:var(--muted);}
+    a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px;}
+    .chip{font-size:.7rem;padding:.18rem .6rem;border-radius:99px;border:1px solid var(--line);}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.16,.84,.44,1),transform .7s cubic-bezier(.16,.84,.44,1);}
+    .reveal.visible{opacity:1;transform:none;}
+    .bar{height:.7rem;border-radius:99px;background:#0b0f17;overflow:hidden;}
+    .bar>span{display:block;height:100%;width:0;border-radius:99px;transition:width 1.2s cubic-bezier(.16,.84,.44,1);}
+    .badge-fact{background:rgba(52,211,153,.14);color:#5fe6b3;border:1px solid rgba(52,211,153,.35);}
+    .badge-est{background:rgba(245,197,66,.14);color:#f5c542;border:1px solid rgba(245,197,66,.35);}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:8px;border-radius:99px;background:linear-gradient(90deg,#1f2a3a,var(--red));outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid #0a0e15;box-shadow:0 0 0 3px rgba(255,255,255,.2),0 5px 14px rgba(0,0,0,.6);cursor:pointer;}
+    input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid #0a0e15;cursor:pointer;}
+    ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-track{background:#0b0f17}::-webkit-scrollbar-thumb{background:#33404f;border-radius:6px}
+  </style>
+</head>
+<body class="antialiased">
+
+  <header class="sticky top-0 z-50 backdrop-blur-lg bg-[#07090e]/85 border-b border-[var(--line)]">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#top" class="tech text-sm sm:text-base text-white flex items-center gap-2"><span class="text-[var(--money)]">₩</span> SEN REVENUE</a>
+      <nav class="hidden md:flex items-center gap-5 text-sm">
+        <a href="#youtube" class="muted hover:text-white transition-colors">유튜브의 함정</a>
+        <a href="#sources" class="muted hover:text-white transition-colors">5대 수익원</a>
+        <a href="#flow" class="muted hover:text-white transition-colors">돈의 흐름</a>
+        <a href="#cost" class="muted hover:text-white transition-colors">비용</a>
+        <a href="#summary" class="muted hover:text-white transition-colors">요약</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="top" class="max-w-6xl mx-auto px-4 pt-16 pb-10 sm:pt-24 sm:pb-12 text-center">
+    <span class="chip muted">수익구조 분석 · 서울경제TV(SEN)</span>
+    <h1 class="mt-5 text-3xl sm:text-5xl lg:text-6xl font-black leading-tight">
+      서울경제TV는<br class="hidden sm:block"/>
+      <span class="text-[var(--money)]">어떻게 돈을 벌까?</span>
+    </h1>
+    <p class="mt-6 max-w-2xl mx-auto muted text-base sm:text-lg leading-relaxed">
+      유튜브 누적 조회수는 <b class="text-white">3억 뷰 남짓</b>. 직관적으로도 그것만으론
+      방송국을 굴리기엔 턱없이 모자랍니다. 그럼 <b class="text-white">진짜 돈</b>은 어디서 날까요?
+      공개 데이터로 수익 구조를 뜯어봤습니다.
+    </p>
+    <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-center">
+      <div class="panel-2 p-4"><div class="tech text-2xl font-extrabold text-[var(--money)]">~125억</div><div class="text-[11px] muted mt-1">연 매출(추정)</div></div>
+      <div class="panel-2 p-4"><div class="tech text-2xl font-extrabold text-[var(--blue)]">87명</div><div class="text-[11px] muted mt-1">임직원</div></div>
+      <div class="panel-2 p-4"><div class="tech text-2xl font-extrabold text-[var(--gold)]">2008</div><div class="text-[11px] muted mt-1">개국(케이블)</div></div>
+      <div class="panel-2 p-4"><div class="tech text-2xl font-extrabold text-[var(--red)]">3억뷰</div><div class="text-[11px] muted mt-1">유튜브 누적</div></div>
+    </div>
+    <p class="mt-3 text-[11px] muted">출처: 기업정보(잡코리아) · 회사 공개정보 — 자세한 부문별 매출은 비공개</p>
+  </section>
+
+  <main class="max-w-6xl mx-auto px-4 pb-24 space-y-20 sm:space-y-24">
+
+    <!-- ===== YOUTUBE TRAP ===== -->
+    <section id="youtube" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">📉</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">1. 유튜브의 함정 — 3억 뷰 ≠ 큰 돈</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">유튜브 광고 단가(RPM, 1,000뷰당 채널 수익)를 직접 바꿔보세요. 후하게 잡아도 누적 수익은 <b class="text-white">수억 원대</b>에 그칩니다.</p>
+
+      <div class="mt-6 panel p-5 sm:p-7 grid lg:grid-cols-2 gap-6 items-center">
+        <div>
+          <div class="text-sm muted mb-1">가정: RPM (1,000뷰당 채널 수익)</div>
+          <div class="flex items-end gap-3">
+            <span id="rpm-val" class="tech text-3xl font-extrabold text-[var(--red)]">₩1,000</span>
+            <span class="muted text-xs mb-1">/ 1,000뷰</span>
+          </div>
+          <input id="rpm-slider" type="range" min="300" max="3000" step="100" value="1000" class="w-full mt-3" />
+          <div class="flex justify-between text-[11px] muted mt-1"><span>박함 ₩300</span><span>후함 ₩3,000</span></div>
+
+          <div class="mt-5 grid grid-cols-3 gap-3 text-center">
+            <div class="panel-2 p-3"><div id="yt-cum" class="tech text-xl font-extrabold text-[var(--gold)]">3.0억</div><div class="text-[10px] muted mt-0.5">누적 추정수익</div></div>
+            <div class="panel-2 p-3"><div id="yt-annual" class="tech text-xl font-extrabold text-[var(--blue)]">0.5억</div><div class="text-[10px] muted mt-0.5">연 환산(÷6년)</div></div>
+            <div class="panel-2 p-3"><div id="yt-pct" class="tech text-xl font-extrabold text-[var(--red)]">0.4%</div><div class="text-[10px] muted mt-0.5">연매출 대비</div></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-sm muted mb-2">연 매출 대비 유튜브 연 환산 수익</div>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span>회사 연매출</span><span class="text-[var(--money)] font-bold">~125억</span></div>
+              <div class="bar"><span style="width:100%;background:linear-gradient(90deg,#1c8f66,var(--money))"></span></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span>유튜브(연 환산, 추정)</span><span id="yt-bar-label" class="text-[var(--red)] font-bold">~0.5억</span></div>
+              <div class="bar"><span id="yt-bar" style="width:0.4%;background:var(--red)"></span></div>
+            </div>
+          </div>
+          <p class="mt-4 text-xs muted leading-relaxed">
+            💡 3억 뷰는 <b class="text-white">누적</b> 수치이고, 채널 운영 기간(약 6년)으로 나누면 연 환산은 더 작아집니다.
+            게다가 조회수에는 단가가 낮은 <b class="text-white">쇼츠·뉴스 클립</b>이 다수라 실제 RPM은 더 내려가기 쉽습니다.
+            결론: 유튜브는 <b class="text-[var(--red)]">전체 매출의 1% 안팎</b>의 보조 수단일 뿐입니다.
+          </p>
+        </div>
+      </div>
+      <p class="mt-3 text-[11px] muted">※ 유튜브 수익은 RPM·기간 가정에 따른 <b>추정</b>입니다(공식 비공개). 자릿수 감을 잡기 위한 계산입니다.</p>
+    </section>
+
+    <!-- ===== 5 REVENUE SOURCES ===== -->
+    <section id="sources" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">💰</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">2. 진짜 수익은 어디서? — 5대 수익원</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">경제·증권 전문 방송채널사용사업자(PP)의 돈줄은 보통 이렇게 구성됩니다. 막대는 <b class="text-white">상대적 비중(추정)</b>이며, 정확한 부문별 매출은 공개되지 않았습니다.</p>
+
+      <div class="mt-6 grid lg:grid-cols-2 gap-6">
+        <!-- weighted bars -->
+        <div class="panel p-5 rev-chart">
+          <h3 class="font-semibold mb-4">상대적 비중 <span class="badge-est chip">추정</span></h3>
+          <div class="space-y-4 text-sm">
+            <div><div class="flex justify-between mb-1"><span>💹 증권·투자정보 유료서비스</span><span class="muted">높음</span></div><div class="bar"><span class="rev-bar" data-w="92" style="background:var(--money)"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>🤝 협찬·제작지원</span><span class="muted">높음</span></div><div class="bar"><span class="rev-bar" data-w="74" style="background:var(--gold)"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>📺 방송 광고</span><span class="muted">중간</span></div><div class="bar"><span class="rev-bar" data-w="55" style="background:var(--blue)"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>🔌 유료방송 수신료(프로그램사용료)</span><span class="muted">중간</span></div><div class="bar"><span class="rev-bar" data-w="48" style="background:var(--violet)"></span></div></div>
+            <div><div class="flex justify-between mb-1"><span>🎪 행사·콘텐츠·디지털(유튜브 포함)</span><span class="muted">낮음</span></div><div class="bar"><span class="rev-bar" data-w="24" style="background:var(--red)"></span></div></div>
+          </div>
+          <p class="mt-4 text-[11px] muted">서울경제TV는 사업영역에 <b class="text-white">'증권정보제공'</b>이 명시돼 있어, 전문가 종목방송과 연계된 유료 서비스가 핵심 캐시카우로 추정됩니다.</p>
+        </div>
+
+        <!-- explanation cards -->
+        <div class="space-y-3">
+          <div class="panel-2 p-4"><div class="flex items-center gap-2 mb-1"><span>💹</span><b>증권·투자정보 유료서비스</b></div><p class="muted text-sm">"주식! 대박의 정수" 같은 전문가 종목방송 → <b class="text-white">유료회원·유사투자자문·정보이용료</b>로 연결. 경제방송의 대표 수익화 경로.</p></div>
+          <div class="panel-2 p-4"><div class="flex items-center gap-2 mb-1"><span>🤝</span><b>협찬·제작지원</b></div><p class="muted text-sm">기업·기관이 프로그램/캠페인을 <b class="text-white">협찬·제작지원</b>. 시청률이 낮아도 'B2B 홍보 채널' 가치로 판매. 경제방송에서 비중 큼.</p></div>
+          <div class="panel-2 p-4"><div class="flex items-center gap-2 mb-1"><span>📺</span><b>방송 광고</b></div><p class="muted text-sm">시간광고·자막·간접광고(PPL). 단, 경제채널은 시청률이 낮아 광고 단가·물량에 한계.</p></div>
+          <div class="panel-2 p-4"><div class="flex items-center gap-2 mb-1"><span>🔌</span><b>수신료(프로그램 사용료)</b></div><p class="muted text-sm">IPTV·케이블(SO)·위성이 가입자 수신료의 일부를 PP에 배분. 안정적이지만 한국은 <b class="text-white">배분율이 낮은</b> 구조.</p></div>
+          <div class="panel-2 p-4"><div class="flex items-center gap-2 mb-1"><span>🎪</span><b>행사·콘텐츠·디지털</b></div><p class="muted text-sm">포럼·시상식·박람회, VOD·콘텐츠 판매, 그리고 <b class="text-white">유튜브 등 디지털 광고</b>(소액).</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MONEY FLOW ===== -->
+    <section id="flow" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🔀</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">3. 돈의 흐름 한눈에</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">선의 굵기 = 상대적 규모(추정). 유튜브 시청자가 내는 돈은 가장 가는 선입니다.</p>
+
+      <div class="mt-6 panel p-4 sm:p-6">
+        <svg viewBox="0 0 720 360" class="w-full">
+          <defs>
+            <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7d8aa0"/></marker>
+          </defs>
+          <!-- left sources -->
+          <g font-size="13" fill="#e8edf5">
+            <rect x="20" y="42" width="150" height="52" rx="10" fill="#161b26" stroke="#26303f"/><text x="95" y="66" text-anchor="middle">투자자·개인</text><text x="95" y="84" text-anchor="middle" font-size="11" fill="#94a1b6">유료 증권정보</text>
+            <rect x="20" y="116" width="150" height="48" rx="10" fill="#161b26" stroke="#26303f"/><text x="95" y="145" text-anchor="middle">광고주·기업</text>
+            <rect x="20" y="186" width="150" height="48" rx="10" fill="#161b26" stroke="#26303f"/><text x="95" y="215" text-anchor="middle">가입자(시청자)</text>
+            <rect x="20" y="256" width="150" height="48" rx="10" fill="#161b26" stroke="#26303f"/><text x="95" y="285" text-anchor="middle">유튜브 시청자</text>
+          </g>
+          <!-- platform middle -->
+          <rect x="300" y="186" width="120" height="48" rx="10" fill="#0f1722" stroke="#3a4658"/><text x="360" y="210" text-anchor="middle" font-size="12" fill="#cdd7e6">IPTV·케이블</text><text x="360" y="226" text-anchor="middle" font-size="10" fill="#94a1b6">(플랫폼)</text>
+          <!-- right: SEN -->
+          <rect x="556" y="120" width="150" height="120" rx="14" fill="#10141d" stroke="#34d399" stroke-width="2"/><text x="631" y="172" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">서울경제TV</text><text x="631" y="194" text-anchor="middle" font-size="11" fill="#5fe6b3">SEN</text>
+
+          <!-- flows (width = relative size) -->
+          <!-- 투자자 -> SEN (thick, cash cow) -->
+          <path d="M170,68 C 360,70 420,150 556,158" fill="none" stroke="#34d399" stroke-width="11" opacity="0.85" marker-end="url(#ah)"/>
+          <text x="360" y="108" text-anchor="middle" font-size="11" fill="#5fe6b3">유료 증권·투자정보 (가장 큼)</text>
+          <!-- 광고주 -> SEN (medium) -->
+          <path d="M170,140 C 360,140 430,170 556,178" fill="none" stroke="#f5c542" stroke-width="7" opacity="0.8" marker-end="url(#ah)"/>
+          <text x="350" y="150" text-anchor="middle" font-size="11" fill="#f5c542">광고·협찬</text>
+          <!-- 가입자 -> 플랫폼 -> SEN (medium-thin) -->
+          <path d="M170,210 L300,210" fill="none" stroke="#a78bfa" stroke-width="6" opacity="0.7" marker-end="url(#ah)"/>
+          <text x="235" y="202" text-anchor="middle" font-size="10" fill="#a78bfa">수신료</text>
+          <path d="M420,206 C 480,200 510,196 556,200" fill="none" stroke="#a78bfa" stroke-width="5" opacity="0.7" marker-end="url(#ah)"/>
+          <text x="488" y="190" text-anchor="middle" font-size="10" fill="#a78bfa">프로그램사용료(배분)</text>
+          <!-- 유튜브 -> SEN (very thin) -->
+          <path d="M170,280 C 360,300 430,250 556,224" fill="none" stroke="#f4626f" stroke-width="2" opacity="0.9" marker-end="url(#ah)"/>
+          <text x="360" y="312" text-anchor="middle" font-size="11" fill="#f4626f">유튜브 광고 (가장 가늚 · ~1%)</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ===== COST ===== -->
+    <section id="cost" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🧾</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">4. 왜 유튜브만으론 안 되나 — 비용의 규모</h2>
+      </div>
+      <p class="muted max-w-3xl leading-relaxed">방송국은 사람·스튜디오·송출·콘텐츠에 돈이 많이 듭니다. 유튜브로 버는 '수억 원'과는 자릿수가 다릅니다.</p>
+
+      <div class="mt-6 grid sm:grid-cols-3 gap-4">
+        <div class="panel p-5"><div class="text-3xl mb-2">👥</div><h4 class="font-semibold">인건비(급여)</h4><div class="tech text-2xl font-extrabold text-[var(--blue)] mt-1">~32.5억<span class="text-sm muted">/년</span></div><p class="muted text-xs mt-1">87명 × 평균연봉 3,737만 (추정 · 4대보험·퇴직급여 제외 시 더 큼)</p></div>
+        <div class="panel p-5"><div class="text-3xl mb-2">🏢</div><h4 class="font-semibold">제작·송출·운영</h4><div class="tech text-2xl font-extrabold text-[var(--gold)] mt-1">상당액</div><p class="muted text-xs mt-1">스튜디오·장비·송출망·콘텐츠 구매(블룸버그 등) 비용</p></div>
+        <div class="panel p-5"><div class="text-3xl mb-2">📊</div><h4 class="font-semibold">PP 매출원가율</h4><div class="tech text-2xl font-extrabold text-[var(--red)] mt-1">~80%</div><p class="muted text-xs mt-1">업계 평균(2024). 100원 벌어 80원이 원가 — 마진이 얇음</p></div>
+      </div>
+      <div class="mt-4 panel-2 p-4 text-sm muted leading-relaxed">
+        연매출 <b class="text-white">~125억</b> 규모에서 인건비만 <b class="text-white">~30억+</b>. 여기에 제작·송출·콘텐츠 원가가 더해지면
+        유튜브로 버는 <b class="text-[var(--red)]">연 수천만~1억 원</b>은 회사를 굴리는 데 사실상 보탬이 안 됩니다.
+        그래서 <b class="text-white">증권 유료서비스·협찬·수신료</b>로 다각화하는 것이 생존 공식입니다.
+      </div>
+    </section>
+
+    <!-- ===== INDUSTRY CONTEXT ===== -->
+    <section class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🏭</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">5. 업계 맥락 — PP는 구조적으로 박하다</h2>
+      </div>
+      <div class="mt-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-center text-sm">
+        <div class="panel p-4"><div class="tech text-2xl font-extrabold text-[var(--red)]">~35%</div><div class="muted mt-1 text-xs">콘텐츠 투자 회수율<br>(100원 투자→35원)</div></div>
+        <div class="panel p-4"><div class="tech text-2xl font-extrabold text-[var(--gold)]">41.4%</div><div class="muted mt-1 text-xs">방송 콘텐츠제작자<br>수익배분율</div></div>
+        <div class="panel p-4"><div class="tech text-2xl font-extrabold text-[var(--blue)]">73 vs 29</div><div class="muted mt-1 text-xs">수신료 100원당 프로그램사용료<br>(SO vs IPTV)</div></div>
+        <div class="panel p-4"><div class="tech text-2xl font-extrabold text-[var(--violet)]">~80%</div><div class="muted mt-1 text-xs">PP 매출원가율<br>(2024)</div></div>
+      </div>
+      <p class="mt-4 panel-2 p-4 text-sm muted leading-relaxed">
+        한국 유료방송은 수신료 자체가 낮고, 그중 PP에 돌아가는 배분도 박합니다(웹툰 70%, 음원 65~70%에 비해 방송 콘텐츠는 41.4%).
+        그래서 작은 경제 PP일수록 <b class="text-white">방송 본업(수신료·광고) 밖의 수익</b> — 특히 <b class="text-[var(--money)]">증권 유료서비스·협찬·행사</b> — 의존도가 커집니다.
+      </p>
+    </section>
+
+    <!-- ===== SUMMARY ===== -->
+    <section id="summary" class="reveal scroll-mt-20">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-2xl">🎯</span>
+        <h2 class="text-2xl sm:text-3xl font-bold">한눈에 정리</h2>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="panel p-5"><div class="text-3xl mb-2">📉</div><h4 class="font-semibold">유튜브는 곁가지</h4><p class="muted text-sm mt-1">누적 3억 뷰 → 추정 누적 <b class="text-white">수억 원</b>. 연 환산 시 전체의 <b class="text-white">1% 안팎</b>.</p></div>
+        <div class="panel p-5"><div class="text-3xl mb-2">💹</div><h4 class="font-semibold">본진은 '증권 유료'</h4><p class="muted text-sm mt-1">전문가 종목방송 → <b class="text-white">유료회원·정보서비스</b>가 핵심 캐시카우(추정).</p></div>
+        <div class="panel p-5"><div class="text-3xl mb-2">🧩</div><h4 class="font-semibold">+협찬·수신료·광고</h4><p class="muted text-sm mt-1">협찬·제작지원, 플랫폼 수신료 배분, 방송 광고로 <b class="text-white">다각화</b>해 버팁니다.</p></div>
+      </div>
+      <div class="mt-6 p-6 rounded-2xl bg-gradient-to-r from-[var(--money)]/15 to-[var(--gold)]/15 border border-[var(--line)] text-center">
+        <p class="text-base sm:text-lg leading-relaxed">
+          📌 한 줄 요약: <b class="text-white">유튜브 조회수는 '간판'일 뿐, 돈은 증권 유료서비스·협찬·수신료에서 난다.</b><br class="hidden sm:block"/>
+          <span class="muted text-sm">3억 뷰가 모자라 보이는 건 착각이 아니라 사실 — 방송국의 진짜 매출은 화면 밖에 있습니다.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- sources -->
+    <section class="reveal">
+      <details class="panel p-5">
+        <summary class="cursor-pointer font-semibold">📚 출처 · 데이터 한계</summary>
+        <ul class="mt-3 space-y-1.5 text-sm muted list-disc list-inside">
+          <li><span class="badge-fact chip">확인</span> 서울경제티브이 매출 ~125억·직원 87명·평균연봉 3,737만·사업영역(증권정보제공): <a class="text-[var(--blue)] hover:underline" href="https://www.jobkorea.co.kr/company/43182038" target="_blank" rel="noopener">잡코리아 기업정보</a>, <a class="text-[var(--blue)] hover:underline" href="https://www.saramin.co.kr/zf_user/company-info/view/csn/ajdCWFU0eTNEeUZzOStocnNQbWFUUT09" target="_blank" rel="noopener">사람인</a></li>
+          <li><span class="badge-fact chip">확인</span> 회사 개요(2008 개국·증권/재테크 전문): <a class="text-[var(--blue)] hover:underline" href="https://ko.wikipedia.org/wiki/%EC%84%9C%EC%9A%B8%EA%B2%BD%EC%A0%9CTV" target="_blank" rel="noopener">위키백과</a>, <a class="text-[var(--blue)] hover:underline" href="https://www.sentv.co.kr/" target="_blank" rel="noopener">SEN 공식</a></li>
+          <li><span class="badge-fact chip">확인</span> PP 수익구조·배분율·원가율: <a class="text-[var(--blue)] hover:underline" href="https://www.netmanias.com/ko/post/blog/13303" target="_blank" rel="noopener">NETMANIAS</a>, <a class="text-[var(--blue)] hover:underline" href="https://www.ddaily.co.kr/page/view/2026052816114481636" target="_blank" rel="noopener">디지털데일리</a></li>
+          <li><span class="badge-est chip">추정</span> 부문별 비중·유튜브 수익·인건비: 공식 비공개. 업계 구조와 공개 지표에 기반한 추정/계산입니다.</li>
+        </ul>
+        <p class="mt-3 text-xs muted">※ 매출 등 일부 수치는 출처·연도에 따라 차이가 있을 수 있습니다(예: 과거 기준 76억). 부문별 매출 상세는 비공개라 막대·흐름은 상대적 추정입니다.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="border-t border-[var(--line)]">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm muted">
+      <span>₩ 서울경제TV 수익구조 분석 · 시각화 답변 아카이브</span>
+      <span class="tech text-xs">coding / 004</span>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); if(e.target.querySelector('.rev-bar')) e.target.querySelectorAll('.rev-bar').forEach(function(b){ requestAnimationFrame(function(){ b.style.width=b.getAttribute('data-w')+'%'; }); }); io.unobserve(e.target);} }); },{threshold:0.15});
+      document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+      /* YouTube estimator */
+      var VIEWS_K = 300000;   // 3억 뷰 = 300,000 천뷰
+      var YEARS = 6;
+      var ANNUAL = 125;       // 억원
+      var slider=document.getElementById('rpm-slider');
+      function eok(won){ return won/1e8; }
+      function fmtEok(v){ return (v>=10? v.toFixed(0) : v.toFixed(1))+'억'; }
+      function update(){
+        var rpm=+slider.value;                 // 원 / 1,000뷰
+        var cumWon = VIEWS_K * rpm;            // 누적 원
+        var cum = eok(cumWon);                 // 억원
+        var annual = cum / YEARS;
+        var pct = annual / ANNUAL * 100;
+        document.getElementById('rpm-val').textContent = '₩'+rpm.toLocaleString();
+        document.getElementById('yt-cum').textContent = fmtEok(cum);
+        document.getElementById('yt-annual').textContent = fmtEok(annual);
+        document.getElementById('yt-pct').textContent = pct.toFixed(1)+'%';
+        document.getElementById('yt-bar').style.width = Math.max(0.4, pct)+'%';
+        document.getElementById('yt-bar-label').textContent = '~'+fmtEok(annual);
+      }
+      slider.addEventListener('input',update);
+      update();
+    });
+  </script>
+</body>
+</html>
