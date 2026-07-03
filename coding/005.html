@@ -1421,15 +1421,24 @@ footer a{color:var(--gold)}
   }
   document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
+  var nav=document.querySelector('nav.toc');
   var links=[].slice.call(document.querySelectorAll('.toc-link'));
   var map={}; links.forEach(function(a){map[a.getAttribute('data-target')]=a;});
   var secs=[].slice.call(document.querySelectorAll('.lecture'));
+  // reveal the active link INSIDE the toc container only — never scroll the page
+  function revealInNav(a){
+    if(!nav) return;
+    var nr=nav.getBoundingClientRect(), lr=a.getBoundingClientRect();
+    if(lr.top<nr.top) nav.scrollTop-=(nr.top-lr.top)+8;
+    else if(lr.bottom>nr.bottom) nav.scrollTop+=(lr.bottom-nr.bottom)+8;
+    if(lr.left<nr.left) nav.scrollLeft-=(nr.left-lr.left)+8;
+    else if(lr.right>nr.right) nav.scrollLeft+=(lr.right-nr.right)+8;
+  }
   var io=new IntersectionObserver(function(es){
     es.forEach(function(e){
       if(e.isIntersecting){
         links.forEach(function(a){a.classList.remove('active');});
-        var a=map[e.target.id]; if(a){a.classList.add('active');
-          a.scrollIntoView({block:'nearest',inline:'nearest'});}
+        var a=map[e.target.id]; if(a){a.classList.add('active'); revealInNav(a);}
       }
     });
   },{rootMargin:'-45% 0px -50% 0px',threshold:0});
