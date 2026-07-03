@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>또히오빠의 풍신류 강의 — 김도희 풍신류 메뉴얼 (철권 태그)</title>
+<meta name="description" content="김도희(또히오빠)의 전설적인 철권 태그 풍신류 강의 전문. 초풍·웨이브대쉬·웨초/대초·풍캔기어·진/헤이하치/카즈야 공중콤보·광대쉬·패턴모음까지 원문 그대로 보존."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#100c0b; --panel:#1a1413; --panel-2:#221a18; --line:#382a26;
+  --txt:#f1eae6; --muted:#b3a29a; --red:#e23b3b; --red-deep:#b91c1c;
+  --gold:#f0a830; --cream:#f5e6d8; --rose:#fb7185; --mono:#f6c667;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  background:radial-gradient(1200px 620px at 50% -10%, #2a1614 0%, var(--bg) 55%) no-repeat, var(--bg);
+  color:var(--txt); line-height:1.9; -webkit-font-smoothing:antialiased;
+}
+.display{font-family:'Black Han Sans','Noto Sans KR',sans-serif;letter-spacing:-.01em;font-weight:400}
+a{color:inherit}
+code{font-family:'D2Coding','Consolas',ui-monospace,monospace}
+
+/* progress bar */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+  background:linear-gradient(90deg,var(--red),var(--gold));box-shadow:0 0 10px rgba(240,168,48,.6)}
+
+/* top bar */
+header.bar{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
+  background:rgba(16,12,11,.82);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1160px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;color:#fff;text-decoration:none;white-space:nowrap}
+.brand .zap{color:var(--gold)}
+.brand small{color:var(--muted);font-weight:400;font-size:.78rem}
+.bar-src{font-size:.74rem;color:var(--muted);text-decoration:none;border:1px solid var(--line);
+  padding:5px 11px;border-radius:99px;white-space:nowrap}
+.bar-src:hover{color:#fff;border-color:var(--gold)}
+
+/* hero */
+.hero{max-width:1160px;margin:0 auto;padding:54px 20px 26px;text-align:center}
+.hero .kicker{font-size:.72rem;letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
+.hero h1{font-family:'Black Han Sans','Noto Sans KR',sans-serif;font-weight:400;
+  font-size:clamp(2.1rem,6vw,4rem);line-height:1.08;margin:.5em 0 .2em;color:#fff}
+.hero h1 .accent{color:var(--red)}
+.hero .note{max-width:640px;margin:.4em auto 0;color:var(--cream);font-size:1.02rem}
+.hero .prov{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;font-size:.76rem}
+.hero .prov .chip{border:1px solid var(--line);border-radius:99px;padding:5px 12px;color:var(--muted)}
+.hero .prov .chip b{color:var(--cream);font-weight:600}
+.metabox{max-width:640px;margin:14px auto 0;text-align:left;font-size:.75rem;color:var(--muted);
+  border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}
+.metabox summary{cursor:pointer;padding:8px 14px;color:var(--muted);user-select:none}
+.metabox .metabody{padding:0 14px 12px;line-height:1.7;word-break:break-all;color:#8f8079}
+
+/* layout */
+.wrap{max-width:1160px;margin:0 auto;padding:20px 20px 80px;
+  display:grid;grid-template-columns:230px minmax(0,1fr);gap:30px;align-items:start}
+nav.toc{position:sticky;top:74px;max-height:calc(100vh - 92px);overflow:auto;
+  padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:16px}
+.toc-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  padding:2px 8px 10px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.toc-link{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:10px;
+  text-decoration:none;color:var(--muted);font-size:.86rem;transition:.15s}
+.toc-link .toc-badge{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;
+  background:var(--panel-2);color:var(--gold);font-size:.72rem;font-weight:700;flex:none}
+.toc-link:hover{background:var(--panel-2);color:#fff}
+.toc-link.active{background:linear-gradient(90deg,rgba(226,59,59,.18),transparent);color:#fff}
+.toc-link.active .toc-badge{background:var(--red);color:#fff}
+
+/* lecture sections */
+main{min-width:0}
+.lecture{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:20px;
+  padding:26px clamp(18px,3vw,34px) 30px;margin-bottom:26px;scroll-margin-top:74px;overflow:hidden}
+.lecture::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;
+  background:linear-gradient(180deg,var(--red),var(--gold))}
+.lec-head{display:flex;align-items:center;gap:14px;padding-bottom:16px;margin-bottom:18px;
+  border-bottom:1px solid var(--line)}
+.lec-badge{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;flex:none;
+  background:radial-gradient(circle at 30% 25%,#3a201c,#160f0e);border:1px solid var(--line);
+  color:var(--gold);font-size:1.3rem;font-weight:700;box-shadow:inset 0 0 12px rgba(240,168,48,.12)}
+.lec-title{font-family:'Black Han Sans','Noto Sans KR',sans-serif;font-weight:400;
+  font-size:clamp(1.2rem,2.6vw,1.7rem);color:#fff;margin:0;line-height:1.25}
+.lec-title .dim{color:var(--muted);font-size:.72em}
+.lec-body{font-size:.97rem;color:#e7ded9}
+.lec-body p{margin:.55em 0}
+.lec-body h3.topic{font-family:'Noto Sans KR',sans-serif;font-weight:700;color:var(--gold);
+  font-size:1.06rem;margin:1.5em 0 .5em;padding-left:14px;border-left:3px solid var(--gold);line-height:1.4}
+.lec-body h3.subhead{font-weight:700;color:var(--rose);font-size:.86rem;letter-spacing:.02em;
+  margin:1.4em 0 .3em;opacity:.9}
+.lec-body hr.dash{border:none;border-top:1px dashed var(--line);margin:1.4em 0}
+.stepnum{display:inline-grid;place-items:center;min-width:30px;height:30px;padding:0 8px;margin:1.1em 0 .2em;
+  border-radius:9px;background:var(--panel-2);border:1px solid var(--line);color:var(--gold);font-weight:700;font-size:.9rem}
+.numitem,.combo{display:flex;gap:11px;align-items:flex-start;margin:.4em 0;padding:9px 13px;border-radius:11px}
+.numitem{background:var(--panel-2);border:1px solid var(--line)}
+.combo{background:#140e0d;border:1px solid var(--line);border-left:3px solid var(--gold);overflow-x:auto}
+.numitem .bullet,.combo .bullet{display:grid;place-items:center;width:22px;height:22px;border-radius:6px;flex:none;
+  font-size:.74rem;font-weight:700;margin-top:2px}
+.numitem .bullet{background:var(--red-deep);color:#fff}
+.combo .bullet{background:var(--gold);color:#160f0e}
+.combo .ctext{white-space:nowrap}
+code.cmd{background:rgba(240,168,48,.12);color:var(--mono);padding:1px 6px;border-radius:6px;
+  font-size:.9em;border:1px solid rgba(240,168,48,.22)}
+
+/* comments */
+.comments{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.comment{background:var(--panel-2);border:1px solid var(--line);border-radius:13px;padding:12px 14px;font-size:.85rem;
+  display:flex;flex-direction:column}
+.c-nick{color:var(--gold);font-weight:700;word-break:break-all;margin-right:3px}
+.c-date{color:var(--muted);font-size:.72rem;text-align:right;margin-top:7px;opacity:.85}
+.c-body{color:#d8cec8;line-height:1.65;word-break:break-word}
+
+/* footer + back-to-top */
+footer{max-width:1160px;margin:0 auto;padding:26px 20px 60px;text-align:center;color:var(--muted);font-size:.82rem}
+footer .disp{font-family:'Black Han Sans',sans-serif;font-size:.72rem;margin-top:8px;opacity:.7}
+footer a{color:var(--gold)}
+#top{position:fixed;right:18px;bottom:18px;z-index:40;width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;background:var(--red);color:#fff;text-decoration:none;font-size:1.1rem;
+  box-shadow:0 6px 18px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s}
+#top.show{opacity:1;pointer-events:auto}
+#top:hover{background:var(--red-deep)}
+
+@media(max-width:860px){
+  .wrap{grid-template-columns:1fr;gap:14px}
+  nav.toc{position:static;max-height:none;display:flex;gap:6px;overflow-x:auto;padding:10px}
+  .toc-title{display:none}
+  .toc-link{flex:none;white-space:nowrap}
+  .toc-link .toc-text{display:inline}
+}
+</style>
+</head>
+<body id="pagetop">
+<div id="progress"></div>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="#pagetop"><span class="zap">⚡</span> 풍신류 강의 <small>by 또히오빠</small></a>
+    <a class="bar-src" href="https://cafe.daum.net/chonanTekken/I7Gn/44" target="_blank" rel="noopener">원문: Daum 카페 ↗</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="kicker">TEKKEN TAG · MISHIMA / 風神流 LECTURE</div>
+  <h1>김도희님의 풍신류 메뉴얼</h1>
+  <p class="note">옛날에 있었던 또히님의 풍신류 메뉴얼 입니다.</p>
+  <div class="prov"><span class="chip">🥊 철권 태그 · 풍신류</span><span class="chip"><b>프롤로그 + 강의 9편</b></span><span class="chip">작성 · <b>김도희(또히오빠)</b></span></div>
+  <details class="metabox"><summary>원문 메타데이터 (스크랩 원본)</summary><div class="metabody">석이추천 0조회 2,34903.11.20 10:47댓글 0<br>북마크공유하기기능 더보기<br>게시글 본문내용</div></details>
+</div>
+
+<div class="wrap">
+  <nav class="toc">
+    <div class="toc-title">목차</div>
+    <a class="toc-link" href="#sec-0" data-target="sec-0"><span class="toc-badge">프</span><span class="toc-text">프롤로그</span></a>
+    <a class="toc-link" href="#sec-1" data-target="sec-1"><span class="toc-badge">①</span><span class="toc-text">초풍</span></a>
+    <a class="toc-link" href="#sec-2" data-target="sec-2"><span class="toc-badge">②</span><span class="toc-text">웨이브 대쉬</span></a>
+    <a class="toc-link" href="#sec-3" data-target="sec-3"><span class="toc-badge">③</span><span class="toc-text">웨초·대초</span></a>
+    <a class="toc-link" href="#sec-4" data-target="sec-4"><span class="toc-badge">④</span><span class="toc-text">풍캔기어</span></a>
+    <a class="toc-link" href="#sec-5" data-target="sec-5"><span class="toc-badge">⑤</span><span class="toc-text">진 공중콤보</span></a>
+    <a class="toc-link" href="#sec-6" data-target="sec-6"><span class="toc-badge">⑥</span><span class="toc-text">헤이하치 공콤</span></a>
+    <a class="toc-link" href="#sec-7" data-target="sec-7"><span class="toc-badge">⑦</span><span class="toc-text">카즈야·데빌 공콤</span></a>
+    <a class="toc-link" href="#sec-8" data-target="sec-8"><span class="toc-badge">⑧</span><span class="toc-text">광대쉬</span></a>
+    <a class="toc-link" href="#sec-9" data-target="sec-9"><span class="toc-badge">⑨</span><span class="toc-text">또히류 패턴모음</span></a>
+    <a class="toc-link" href="#sec-comments" data-target="sec-comments"><span class="toc-badge">💬</span><span class="toc-text">댓글</span></a>
+  </nav>
+  <main>
+<section class="lecture" id="sec-0">
+  <div class="lec-head">
+    <span class="lec-badge">프</span>
+    <h2 class="lec-title">프롤로그 -</h2>
+  </div>
+  <div class="lec-body">
+<h3 class="subhead">또히오빠의 풍신류 강의 - 프롤로그 -</h3>
+<p>제가 풍신류 메뉴얼을 한 번 써볼까 합니다.</p>
+<p>매뉴얼이라 하긴 좀 그렇구...</p>
+<p>풍신류 강좌라 하는게 더 어울릴 것 같습니다.</p>
+<p>지금까지 메뉴얼은 많았지만 강좌는 없었던것 같습니다.</p>
+<p>제가 군대가기전에 완성시켜 놓고 싶은 풍신류 메뉴얼의 밑거름이 될 글들이죠.</p>
+<p>하나 하나...</p>
+<p>자세하게 설명을 하구.. 기존의 메뉴얼들과는 차이점을 둔..</p>
+<p>저의 개인적 생각이 많이 들어가구..</p>
+<p>초보부터 중수,고수들이 두루 볼 수 있는 그런 글을 적구 싶습니다.</p>
+<p>물론 고수 분들이야 다 알겠지만..</p>
+<p>저의 비기가 하나씩 하나씩 담겨 있을테니.. 한 번 보시면 손해는 없을거에요.</p>
+<p>사람들이 저의 실력을 궁금해 합니다.</p>
+<p>저는 그리 잘하지 못합니다. 왜냐하면 경험이 부족하기 때문입니다.</p>
+<p>저의 3때 주캐러는 로우 였습니다.</p>
+<p>태그 들어와서 로우가 너무 후져졌더군요. 엄청나게 실망할 정도로..</p>
+<p>제가 오락실에서 지금까지 로우를 10판 정도 밖에 안 골라 봤습니다.</p>
+<p>너무 실망이 커.. 충격이 큰 나머지... 로우를 아예 쳐다 보지도 않았었죠.</p>
+<p>어쩔 수 없이 주캐러를 진으로 바꾸었습니다.</p>
+<p>제가 지금 생각해 보니 진을 시작한지 반년이 되었군요.</p>
+<p>그런데 그가 전화위복이였다니..^^</p>
+<p>그리 잘하지는 못하지만.. 제가 진을 주캐러로 바꾼지 반년이 되었다고 하면..</p>
+<p>모두 놀라더군요... 어느새 초보,중수 분들을 가르칠 실력을 저도 모르게</p>
+<p>가지게 되었던 것입니당..^^</p>
+<p>3때 풍신류를 전혀 못한건 아니였구요.</p>
+<p>제가 3때 로우를 고르면 사람들이 짜증을 내서 왠만하면.. 고수가 아니면</p>
+<p>미안해서 로우를 하지 않았었습니다. (제가 너무 사파여서리..^^)그러다 보니..</p>
+<p>저도 모르게 올캐러를 키웠구.. 그 와중에 풍신류도 종종 했었죠.</p>
+<p>대초,웨초 정도는 익혀 놨던게 지금으로선 정말 잘한 일이였던것 같습니다.</p>
+<p>........</p>
+<p>.......</p>
+<p>이런 저런 의도들로...</p>
+<p>저보다 못하시는..</p>
+<p>초보...후배? 분들을 위해서 미약하나마 제가 정성을 들여서..</p>
+<p>장기간에 걸쳐 강좌를 할테니... 많은 호응 부탁드립니다.</p>
+<p>그리구 많은 분들이 저의 프로필을 궁금해 하던데..(이거 묻는 메일이 넘 많아유..T.T)</p>
+<p>저의 프로필을 밝히도록 하겠습니다^^ 에구 부끄~</p>
+<p>이름 : 김도희</p>
+<p>성... : 남자(이것두 밝혀야 하남...)</p>
+<p>직업 &amp; 하는 일 : 대학생(휴학중) , Tekken Zone 총운영자 , V.S 배틀팀 팀장</p>
+<p>나이 : 22살 , 태어난 날 : 1979/10/11 (기억해 놨따가 맛있는거 사주셔요^^)</p>
+<p>대회 경력 : 전국 듀얼 대회 4위 ,4회 부산 솔로몬 대회 1위, 2회 부산 솔로몬 대회 3위(많은 유명한 분들에 비하면..</p>
+<p>많이 꿀립니다..^^)</p>
+<p>V.S 배틀팀 프로필</p>
+<p>현 팀원 : 8명(군 복무중 : 4명)</p>
+<p>지역 : 부산 배틀팀</p>
+<p>배틀 전적 : 116전 89승 17패 ( 전국에서 배틀 가장 많이한 팀이죠)</p>
+<p>팀장 : 김도희(또히오빠)</p>
+  </div>
+</section>
+<section class="lecture" id="sec-1">
+  <div class="lec-head">
+    <span class="lec-badge">①</span>
+    <h2 class="lec-title">또히의 풍신류 강의 첫번째 - 초풍편 -</h2>
+  </div>
+  <div class="lec-body">
+<p>제가 미리 말했듯이..<br>그리 길지도 않고 어렵지도 않은 메뉴얼을 만들려구 합니다.<br>비록 지금 읽으시는 글들이 내용이 짧더라도..<br>이해해 주시기 바랍니다.<br>단기간에 메뉴얼을 쓰자고 하는게 아니라..<br>말 그대로 기술 하나 하나 강의를 하려고 하는 것이기 때문입니다.</p>
+<h3 class="subhead">또히오빠의 풍신류 강의 첫번째 고개</h3>
+<h3 class="topic">* 초풍에 관하여....</h3>
+<p>초풍이란 무엇인가?</p>
+<p>6 n 23 + rp 로 나가는 풍신류가 가지고 있는 대표적 기술이다.<br>커맨드는 위와 같지만 초보라면 조금은 어려운 훈련을 해야<br>이 기술을 마스터 할 수 있다.</p>
+<p>필자 같은 경우 초풍 초보 단계 때는 레버를 돌려서(23) 대각선과 rp가 일치되게<br>눌러서 쓰는 방법으로 초풍을 연습하였다.<br>초풍을 잘 쓰지 못한다면 한 번 이렇게 해보길 권한다.<br>6 n 3 +rp 흔히들 말하는 단축 커맨드이다.<br>자세하게 설명을 하자면..</p>
+<p>필자는 6 n 하구 2를 입력할때 레버를 밑으로 조금만 입력 한다음에..<br>3+rp 를 동시에 누른다. 레버를 밑으로 해서 벽에 닿이지 않아도<br>입력이 되기 때문이다.</p>
+<p>초풍의 발동 프레임은 11프레임이다.<br>11프레임이라 함은..<br>줄랴의 통천포 첫타가 8프레임이다.<br>철권에서 1초가 60프레임으로 이루어져 있는데..<br>11프레임이라 함은 엄청난 속도 인것이다.<br>거기다가 상당한 파워와 엄청난 판정.. 적은 딜레이..<br>막히면 상대방을 튕겨 버리고..공중 연계까지 먹일 수 있는 뛰우기 이므로..<br>가히 초풍은 철권 최고의 기술이라 불릴 수 있는 것이다.</p>
+<p>초풍을 마스터 하지 못한다면 풍신류를 그만 둬도 된다고 말할 수 있다.<br>초풍은 풍신류가 주캐러라면 꼭 마스터 해야 된다.</p>
+  </div>
+</section>
+<section class="lecture" id="sec-2">
+  <div class="lec-head">
+    <span class="lec-badge">②</span>
+    <h2 class="lec-title">또히의 풍신류 강의 2번째 - 웨이브대쉬편 -</h2>
+  </div>
+  <div class="lec-body">
+<p>안녕하세요.</p>
+<p>겜방 알바하는데..</p>
+<p>지금 손님들이 꽉차서.. 컴 앉을곳이 없어서 할 짓이 없는 나머지..^^</p>
+<p>이렇게 2번째 강의를 시작할려구 합니다.</p>
+<p>강의는 초보 위주로 쓰며...강좌가 시작한지 얼마 안되었기에...</p>
+<p>풍신류의 기본 기술들을 초보 위주로 자세하게 설명하도록 하겠습니다.</p>
+<p>(풍신류 고수님들 제가 다 까발린다고 미워하지 말아용..^^)</p>
+<hr class="dash">
+<h3 class="subhead">또히왕자의 두번째 풍신류 강의!</h3>
+<p>웨이브 대쉬 편!</p>
+<h3 class="topic">* 웨이브 대쉬의 커맨드~!</h3>
+<p>풍신류에게만 있는 가장 큰 특권중의 하나가 바로 웨이브 대쉬이다.</p>
+<p>풍신류라면 마스터 안하고는 못 배기게 하는 정말 멋있는 기술이기두 하다.</p>
+<p>웨이브 대쉬는 풍신 대쉬를 여러번 하게 함으로서 나간다.</p>
+<p>풍신 대쉬는 6 n 23 의 커맨드를 입력함으로서 나가게 되고,</p>
+<p>풍신 대쉬 - 풍신 대쉬 - 풍신 대쉬 ...</p>
+<p>이런 식으로 반복을 하게 되면 웨이브가 나가게 되는 것이다.</p>
+<p>커맨드는 여러가지가 알려져 있는데 대부분 정확히 따지면 틀린 커맨드 들이다.</p>
+<p>일단 커맨드를 보자. 정확히 따지면 웨이브에는 두가지의 커맨드만이 존재한다.</p>
+<p>(기존에 알려진 웨이브 커맨드는 거의다 틀렸습니다)</p>
+<div class="combo"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 6 N 236 6 N 236 6 N 236....</span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 6 N 23 N 6 N 23 N 6 N 23 N.......</span></div>
+<p>이다. 1번과 2번은 쓰는 방법이 다를뿐..알고보면 의미는 같다.</p>
+<p>1번에서 쓰인 커맨드가 보편적으로 쓰이는 커맨드이다.</p>
+<p>필자도 편하게 쓸때는 1번 커맨드를 쓴다.</p>
+<p>2번은 흔히들 광대쉬 커맨드로 사용을 한다.</p>
+<p>흔히 알려진 6 N 3 N 6 N 3 N 커맨드는 엄밀히 따지면 사실 틀린 커맨드이다.</p>
+<p>저 입력만으로는 절대 풍신 대쉬 조차 나가지 않는다.</p>
+<p>3N 을 입력할때 보통 저절로 2가 입력이 되서 ( 6 N [2]3 )풍신 대쉬가 나가게</p>
+<p>되는 것 뿐이다. 보통 2가 저절로 입력이 되지만..</p>
+<p>좋지 않은 레버에서는 2가 입력이 잘 안되서 6 N 3 이 입력 되어 풍신 대쉬가</p>
+<p>안 나가는 경우를 볼 수 있을 것이다.</p>
+<p>그리고 많은 사람들이 궁금해 하는 광대쉬는 강의를 따로 마련하도록 하겠다.</p>
+<h3 class="topic">* 풍신 대쉬(웨이브)를 사용한 또히님 패턴이 뭐..뭐가 있어유? --;</h3>
+<p>(웨이브에서 파생되는 기술들이 너무 많기에..</p>
+<p>일단은 순전히 웨이브(풍신대쉬)를 이용한 패턴들만 소개하겠다.</p>
+<p>웨이브에서 파생되는 기술들은 강좌가 따로 만들어질 것이다)</p>
+<p>첫번째!</p>
+<p>진의 경우 상단을 회피하며 파고든다.</p>
+<p>그외의 풍신류(헤이,데빌,카즈야,엔젤)의 풍신 대쉬는 상단 계열을 회피하지 못한다</p>
+<p>이를 이용한 기술로 3때 전법으로 진대 진이 싸울때 라운드가 시작하자 마자..</p>
+<p>진이 풍신 대쉬를 쓰고 파고 들어가면 상대방 진은 전혀 때릴께 없다.</p>
+<p>물론 몇 가지 있긴 하다(귀팔문,대종등등 중단...)</p>
+<p>첨 시작 하자마자 저 기술들 쓰다가 초풍 맞고 뜨는 경우가 허다 하므로..</p>
+<p>사람들은 위 기술들을 거의 쓰지 않는 경우가 대부분이다.</p>
+<p>지금은 진의 초풍을 중단으로 바꿀 수 있기 때문에...</p>
+<p>요즘은 잘 쓰이지 않구 있다.(이게 3때 저의 독특한 패턴중 하나 였습니다...T.T)</p>
+<p>그러나 가끔 중단 초풍을 전혀 쓰지 않는 진에게 잘 활용하면..</p>
+<p>정말 괜찮은 효과를 볼 수 있기도 하다.</p>
+<p>두번째!</p>
+<p>풍신 대쉬를 뒤로 캔슬해 보자.</p>
+<p>커맨드는 6 n 23 4 이다.</p>
+<p>6n 23 4 4 를 하면 풍신 대쉬 캔슬 백대쉬가 나가게 되는데..</p>
+<p>상대방의 공중 콤보나 타격기 등으로 넘어트린 다음..</p>
+<p>6 n 23 44 6 n 23 44 같은 방법으로 웨이브 하는 척하면서..</p>
+<p>뒤로 빠지면서 상대방 공격을 유도하는 것도 좋은 방법이다.</p>
+<p>가드가 쎈 고수를 만났을때 웨이브 초풍,대쉬 초풍이 잘 안 먹히면..</p>
+<p>필자도 이 패턴을 종종 쓴다.</p>
+<p>첨 당하는 상대는 분명 혼란에 빠지게 될것이다.</p>
+<p>안정빵을 잡을때도 좋은 패턴이기도 하다. 안정빵은 먼저 공격을 안하고</p>
+<p>상대방의 공격만을 기다리고 있기에..</p>
+<p>훼이크를 위해 만들어진 이 대쉬를 잘만 사용 한다면 안정빵들은..</p>
+<p>스스로 무너지게 될 것이다.</p>
+<p>물론 중요한건 6 n 23 44 로 캔슬한 다음에 암때나 초풍을 잘 쓰는게 더욱 중요하다</p>
+<p>대쉬 만으로는 아무것도 할 수가 없다. 상대의 공격을 유도했으면..</p>
+<p>초풍을 날려서 데미지를 꼭 줘야 한다.</p>
+<p>이것을 응용해서 6 n 23 4 6 n 23 4 6 n 23 4 하면...</p>
+<p>웨이브가 뒤로 끊기면서 앞으로 전진을 한다.</p>
+<p>이것도 가끔 쓰면 상당한 위력을 발휘하므로.. 연습해 두는 것이 좋을 것이다.</p>
+<p>세번째!</p>
+<p>풍신 대쉬 캔슬 횡신 풍신 대쉬 캔슬 횡신..</p>
+<p>일명 스네이크 대쉬이다.</p>
+<p>커맨드는 6 N 23 6 횡신 6 N 23 6 횡신 .... 반복이다.</p>
+<p>필자가 이 대쉬를 알게 된것은 2년전 창원에 갔을때 였다.</p>
+<p>창원의 유명한 고수인 병민이한테서 첨 보았다.(부산 TOD 병민이랑 다른 인물)</p>
+<p>잘만 쓰면 정말 화려한 대쉬가 되지만..</p>
+<p>못 쓰면 찌끄래기 대쉬가 되어버린다.(이거 쓸려다가 별구경 한 사람 많죠?^^)</p>
+<p>흔히 용도는 이것 역시 상대방 교란에 있다.</p>
+<p>웨이브 초풍이 마스터 되는 순간 부터 이 기술로 상대방을 혼란 시킬 수가 있다</p>
+<p>필자도 이 스네이크 대쉬를 아주 많이 사용한다.</p>
+<p>잘만 쓴다면 상대가 고수일때 효과가 두드러지는 대쉬이기도 하다.</p>
+<p>고수를 상대로 바로 앞에 놔두고 이 기술을 자유 자재로 쓴다면..</p>
+<p>그 사람은 고수라고 불러도 손색이 없을 것이다.</p>
+  </div>
+</section>
+<section class="lecture" id="sec-3">
+  <div class="lec-head">
+    <span class="lec-badge">③</span>
+    <h2 class="lec-title">또히의 풍신류 강좌 세번째~! - 웨이브초풍, 대쉬초풍 -</h2>
+  </div>
+  <div class="lec-body">
+<p>지금 시각이 아침 5시 20분..</p>
+<p>오늘의 알바가 끝날 때가 다 됐네요.</p>
+<p>알바 끝나구 나가기 전에 이 글 다 쓰구 갈렵니다^^</p>
+<p>오늘은 멀 쓸까 고민하다가..</p>
+<p>이거 쓰기루 결정했어요^^</p>
+<hr class="dash">
+<h3 class="subhead">또히의 풍신류 강좌 3번째 - 대쉬초풍 , 웨이브 초풍 -</h3>
+<p>대쉬초풍 - 대총 , 웨이브 초풍 - 웨초</p>
+<p>오늘은 풍신류의 중수로 가는 길인 대초,웨초에 대해서 알아 보겠다.</p>
+<p>대초와 웨초..</p>
+<p>초풍을 익혔으면..</p>
+<p>이젠 무엇을 해야 될까..</p>
+<p>그럼 대초와 웨초에 도전을 해보아라.</p>
+<p>대초와 웨초는 풍신류에게 있어서 가장 좋은 대 횡신기 기술이기도 하다.</p>
+<p>3때에는 엄청난 판정을 지닌 두 기술이 태그에 들어와서 좀 약해졌긴 하지만..</p>
+<p>아직도 풍신류에겐 정말 쓸만한 기술임에는 틀림 없다.</p>
+<p>사실 초풍이 횡신을 잘 잡는데는 이유가 있다.</p>
+<p>대쉬 초풍의 커맨드는..</p>
+<p>66 n 23 + rp 이다</p>
+<p>6이 뭘 뜻하는가.. 앞으로 걸어가는걸 의미한다.</p>
+<p>앞으로 걸어가는 동안에는 상대방의 어떤 횡신도 쫓아간다.</p>
+<p>고로 횡신하고 있는 상대방을 정면으로 볼 수 있는 방법은 6을 입력하면 되는것이다</p>
+<p>그런데 초풍은 일단 커맨드가 6 n 23 + rp 인데다가..</p>
+<p>6(횡신보정) 을 한다음 엄청나게 빠르게 풍신이 들어가니..</p>
+<p>횡신을 잘잡는 것이다</p>
+<p>그러나 초풍은 리치가 짧기에.. 횡신을 잘 못잡게 된다.</p>
+<p>그래서 나온것이 대초와 웨초이다.</p>
+<h3 class="topic">* 대초 웨초 좀 잘 쓰는 법 갈쳐 줘잉~</h3>
+<p>대초를 쓰는 비결..</p>
+<p>3때 초창기때 이건 울팀의 팀내 기밀이였다.</p>
+<p>(지금은 이 방법으로 안 해도 사람들이 정말 잘 쓴다..^^ 요즘은 기본이니깐^^)</p>
+<p>대쉬 초풍 커맨드가 66 n 23 +rp 인데..</p>
+<p>울팀 에이스인 성우가 필자한테 가르쳐 준 비법이고 아직 까지도 이렇게 쓰구 있다</p>
+<p>아마 이 대초를 익히면서 3때 풍신류에 빠지게 된거 같다. 물론 취미로 키웠지만^^</p>
+<p>잡설은 그만하구...</p>
+<p>쓰는 방법을 보자!</p>
+<p>방법은 아주 간단하다.</p>
+<p>66을 입력 한 다음..</p>
+<p>레버를 밑으로 내리다가 대각선으로 찍으면서 rp를 누르는 것이다.</p>
+<p>이 얼마나 간단한가... ㅇ.ㅇ</p>
+<p>그리구 웨초...</p>
+<p>웨초는 특별히 쓰는 방법이 따로 없다.</p>
+<p>처음부터 안된다구 하시는 분들이 있는데..</p>
+<p>대초부터 마스터 한다음에 연습하도록 하자.</p>
+<p>일단 커맨드는 6n236 6n23+rp 이다.</p>
+<p>느린 웨초는 필요가 없다고 봐도 된다.</p>
+<p>어느정도 실력이 쌓이면 연습하고 실전에 활용을 하자.</p>
+<p>커맨드는 그리 중요하지 않다고 생각 되기에..(노력이 중요하다)</p>
+<p>담 장으로 바로 넘어가겠다.</p>
+<p>(그래도 도대체 어캐 쓰냐고 물어보시는 분들 있는데..</p>
+<p>자신이 얼마나 연습을 했는지 한 번 생각해 보시고 질문해 주시길..)</p>
+<h3 class="topic">* 대초의 종류는? 패턴있으면 것두 좀...^^;</h3>
+<p>대쉬 초풍에는 느린 것과 빠른 것이 있다.</p>
+<p>느린것은 한마디로 안 좋으므로.. 설명을 생략하겠다.</p>
+<p>빠른 대쉬 초풍에는 짧은 대쉬 초풍과 긴 대쉬 초풍이 있는데..</p>
+<p>두가지 다 능숙하게 사용하게 된다면 고수의 문앞에 선것이라고 말할 수 있다.</p>
+<p>짧은 대쉬 초풍은 사용하기가 좀 힘든데..</p>
+<p>3때 공참각 가드를 시킨다음 아주 짧은 대초가 가드 불능으로 들어갔었다.</p>
+<p>이 기술을 넣을 정도의 짧은 대초를 익힌다면...</p>
+<p>상대방의 허를 찌를 수 있는 능력 중 하나를 갖추게 된다.</p>
+<p>짧은 대초는 다른 초풍들과는 달리 상당한 판정을 가지고 있다.</p>
+<p>주로 초고수들을 보면 짧은 대초로 무식하게 상대방의 기술을 씹고 들어간다.</p>
+<p>(대부분 거의다 무슨 초풍인지 모르고 걍 맞는다...ㅇ.ㅇ)</p>
+<p>물론 일부러 한다기 보다는 거리상 짧은 대초가 필요하여 쓰는 것인데..</p>
+<p>그것이 그러한 결과를 부르게 되는 것이다.</p>
+<p>긴대쉬 초풍은 말그대로 아주 길다. 3때 상대방을 어퍼로 때린 다음..</p>
+<p>그 먼거리를 대쉬 초풍으로 쫓아가서 때릴 수가 있었다.</p>
+<p>긴대초를 능숙하게 쓰게 되면..</p>
+<p>상대방이 초풍을 가드해서 튕겨 났을 경우...</p>
+<p>노 딜레이로 아주 빠르게 긴 대초를 날려보자.</p>
+<p>상대방이 백대쉬,횡신 외의 행동을 취했을 경우 90%는 별구경하러 간게 된다.</p>
+<p>상대방이 몇번 맞다보면 아주 빠른 기술로 반항을 하게 되는데..</p>
+<p>이때는 초풍다음에 긴대초 말고... 2번째 초풍을 노멀 초풍으로 넣어보자..</p>
+<p>대초인지 알고 반항하다가 별구경하러 또 가게 된다.</p>
+<h3 class="topic">* 웨초는 머에용...? ........ 먹는건가..ㅇ.ㅇ ^^ ?</h3>
+<p>웨이브 초풍(풍신대쉬 한번 초풍)는 대초랑 같은 원리 이지만..</p>
+<p>대초보다는 발동이 느리지만 대초보다 길고 특히 웨이브 대쉬중에 초풍을 날릴 수</p>
+<p>있다는 뛰어난 장점이 있다.</p>
+<p>태그에 들어와 점점 풍신류 수준이 올라가게 됨에 따라..</p>
+<p>대초보다는 웨초를 즐겨 사용하게 되고 있다.</p>
+<p>(정말 비풍은 이럴때 서럽다...)</p>
+<p>웨초의 스피드가 최고 수준에 이르게 되면..</p>
+<p>초고수들이 빠른 웨초로 상대방을 2~3번 연속 튕구는 화려한 장면을 볼 수 있다</p>
+<p>정말 비풍은 당할때 쪼린다.... (같은 풍신류도 손 떨리는뎅..^^)</p>
+<p>발동 빠르구 파워센 기술로 대처해야 되는데 그런 기술이 적으니.. ^^</p>
+<p>뭐 설명할 필요성을 그리 느끼지 못하는 기술이기두 하다. 워낙 좋으니..^^</p>
+<p>단점은 대초보다 발동이 느리다는 점이구..</p>
+<p>장점은 대초보다 길구 횡신을 더 잘 잡는다.</p>
+<hr class="dash">
+<p>오늘의 강좌는 여기 까지 입니다^^</p>
+<p>담에는 백대쉬 초풍 , 횡신 초풍 ... 각종 심리전이 들어간 초풍에 대해서</p>
+<p>알아 보겠습니다.</p>
+<p>모두 안녀엉~~~~~~~~~~~~~~~~~~~~~~~~~~~ ㅇ,.ㅇ;;</p>
+<p>잘자 개꿈꿔~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^.^γ</p>
+  </div>
+</section>
+<section class="lecture" id="sec-4">
+  <div class="lec-head">
+    <span class="lec-badge">④</span>
+    <h2 class="lec-title">또히의 풍신류강의 4번째 - 풍캔기어 , 풍캔더블어퍼 -</h2>
+  </div>
+  <div class="lec-body">
+<p>요즘 컴퓨터가 완전 박살이 난 관계로..</p>
+<p>업데이트를 잘 안하다 보니 점점 게을러 지는 제가 보이는군요.</p>
+<p>이러면 안되겠죠? ^^</p>
+<p>알바시작하자마자 손님들 눈치를 보며 또 한번 위험한 강좌 작성에 나섭니다.</p>
+<p>쿄쿄쿄...</p>
+<p>근데 전 풍캔 기어를 그리 힘들지 않게 터득한 편이라...(자랑x)</p>
+<p>남들처럼 고생을 못해봐서 글을 쓰기가 많이 힘들것 같네요..(진짜루..)</p>
+<hr class="dash">
+<h3 class="subhead">또히의 풍신류 강좌 4번째 - 풍캔기어 , 풍캔더블어퍼 -</h3>
+<h3 class="topic">* 풍캔기어(더블어퍼)란 무엇인가...? ㅇ.ㅇ</h3>
+<p>풍캔기어(풍신대쉬캔슬기상어퍼)의 줄임말이다.</p>
+<p>흔히 풍캔추돌이라고 말하기도 하는데,</p>
+<p>풍캔추돌보다는 발음상 풍캔기어가 더 듣기 좋다.</p>
+<p>영어로는 CDCRUC(Crounch Dash Cancel Rising Upper Cut) 라고 부른다.</p>
+<p>(제가 지었음..--; 외국인들한테 가르쳐 주는데 이름이 좀 길어야징..^^)</p>
+<p>풍신대쉬중 나가는 중단인 이 기술은 하단 기술과 섞어 쓸때 큰힘을 발휘한다.</p>
+<p>풍캔기어는 진의 기술이고, 풍캔더블어퍼는 카즈야 최고의 기술이다.</p>
+<p>두 기술을 비교해 볼때 카즈야의 것이 필자가 보기엔 월등히 앞선다고 생각한다</p>
+<p>일단 비교를 해보자</p>
+<p>파워 - 카즈야 win</p>
+<p>발동시간 - 카즈야 win</p>
+<p>횡신추적률 - 카즈야 win</p>
+<p>후속타(공콤) - 진 win</p>
+<p>딜레이 - 카즈야 win</p>
+<p>이걸로 봐서도 알 수 있듯이 카즈야의 더블어퍼가 앞승이다.</p>
+<p>하지만 한방을 생각할때 그래도 진의 추돌이 더블어퍼에 결코 뒤지진 않는다.</p>
+<h3 class="topic">*풍캔기어(더블어퍼)가 왜 좋은가!! (몰라 알수가 엄떠...--)</h3>
+<p>풍캔 기어(이하 더블어퍼 포함)는 풍신대쉬중 중단 판정을 가진 기술이다.</p>
+<p>하단인 나락과 거의 같은 타이밍이 풍캔기어가 나간다고 생각을 해 보자..</p>
+<p>이건.. 사기다 사기~</p>
+<p>상대방은 자신이 어딜 맞을지 찍어야 되기 때문이다.</p>
+<p>앉으면 풍캔기어 서있으면 나락... 풍신류가 가지고 있는 최고의 장점이</p>
+<p>바로 이 완벽한 이지선다 인것이다.</p>
+<p>필자는... 평소에 한가지만 죽도록? 쓴다. 상대방이 나락을 좀 못 막는다 싶으면</p>
+<p>끝까지 나락을 쓴다. 그러다가 상대방이 한 번 막으면 그 다음부턴 끝까지 풍캔기어</p>
+<p>를 쓴다. 안맞아도 장땡이다.. 정말 좋지 않은가? ㅇ.ㅇ;</p>
+<p>물론 아무한테나 통하는게 아니지만 가끔 쓰면 짭짭한 승률을 올릴 수 있다.</p>
+<p>필자는 나락 35% 풍캔기어 65%의 비율로 섞어 쓴다.</p>
+<p>이유는 나락 잘못 쓰면 필자도 별구경하러 가야 되기 때문이다.</p>
+<p>광대쉬 도중에 풍캔 기어를 익히면 상당한 효과를 노릴 수 있지만..</p>
+<p>이 외에도 현란한 스텝과 기술로 상대방을 어지럽게 할 수 있으므로..</p>
+<p>고수의 필수 조건은 아니라고 본다. 초고수라고 불리는 사람중에도..</p>
+<p>못 쓰는 사람이 상당히 많다. 그러므로 이 고난이도 기술에 너무 집착하지 말자.</p>
+<p>(흔히 광대쉬 쓰면 고수인지 아는데.. 광대쉬 쓰는 중수도 많다..--;</p>
+<p>활용을 못하기 때문이다)</p>
+<p>개요는 이정도로 하고 어떻게 쓰는 건지 알아보도록 하장...ㅇ.ㅇ</p>
+<p>(겁나게 어려워.. 애들은 가....애들은 가...단돈,만원에 모셔~)</p>
+<h3 class="topic">* 풍캔기어(더블어퍼)는 어캐 쓰는건감...?</h3>
+<p>위에서 잠깐 겁을 주었는데.. 알고보면 누구나 쉽게 쓸수 있다.</p>
+<p>커맨드는 6n23 4+rp 이다.</p>
+<p>어떤 이들이 6n23 214+rp 라고도 하는데..</p>
+<p>이건 풍신대쉬를 캔슬한다음 앉어서 쳐올리는 기상어퍼이므로...</p>
+<p>풍신 대쉬중에 바로 나가는 기상어퍼 와는 많은 차이가 있다.</p>
+<p>Top Manual 란에 가보면 찌끌 ruri~ruri의 기상어퍼 강좌가 있긴 한데...</p>
+<p>필자는 그게 몬말인지 모르겠다. (이집트어로 썼나보다...--;)</p>
+<p>심심하면 한번 읽어보자. (먼말인지 모르겠다고 필자한테 질문하지 말장..ㅇ.ㅇ)</p>
+<p>풍캔기어는 커맨드보단 타이밍이 중요하다.</p>
+<p>일단은 먼저 필자가 만든 풍캔기어 동영상이 있으니 Tekken Movie에 가서</p>
+<p>얼른 받아서 보자. 일부러 타이밍을 익히라고 여러번 썼으니 도움이 될 것이다.</p>
+<p>이번엔 본격적으로 타이밍과 여러 방법을 익혀보자.</p>
+<div class="stepnum">1.</div>
+<p>풍신 대쉬가 반쯤 들어 갔을때 레버를 뒤로 입력하면..</p>
+<p>캔슬되면서 일어나게 되는데!!!</p>
+<p>그때 rp만 눌러주면 기상어퍼가 들어가게 되는 것이다.</p>
+<p>흔히 4 와 rp 이 두개를 동시에 눌러줘야 된다고 알고 있는데..</p>
+<p>실상은 그렇지 않다. 알고 보면 기상어퍼는 일어나는 동안 rp를 누르면 나가는</p>
+<p>기술인 것이다. 그러므로 초보자들은 풍캔기어가 잘 나가지 않으면..</p>
+<p>4를 아주 쪼금 더 먼저 입력하고 rp를 입력해 보자.</p>
+<p>조금 더 수월해 질 것이다.</p>
+<p>(빠른 풍캔기어와 느린 풍캔기어가 이런 이유땜시 나가는 겁니다)</p>
+<p>필자는 rp를 4보단 쪼금 느리게 입력 하기 땜시... 카즈야의 경우 삑살 나면 뇌신은 거의 안나가고</p>
+<p>원투가 나간다. 이 얼마나 좋은가 ... 풍신 대쉬 원투! 빈틈도 전혀 없다..ㅇ.ㅇ;</p>
+<div class="stepnum">2.</div>
+<p>흔히 풍캔기어가 잘 안나간다고 필자에게 하소연 하는 사람들에게 이 방법으로</p>
+<p>자주 크리닉을 해준다. 필자도 무의식중에 익힌 방법인데..</p>
+<p>잘 안나가는 사람들에겐 괜찮은 효과를 안겨주기도 한다.</p>
+<p>6n23 까지만 입력하고 3을 아주 잠시 유지한다. 그리고 나서 4+rp를 해보자</p>
+<p>좀 더 수월하게 잘 나갈 것이다.</p>
+<div class="stepnum">3.</div>
+<p>그리고 4를 입력할때 중립을 하지 말아야 된다고 하는 설이 있는데..</p>
+<p>필자가 보기엔 그렇지 않다. 필자는 레버를 뒤로 할때 중립을 거쳐서 입력한다</p>
+<p>필자는 고로 6n23n4+rp 로 쓴다. 잘 안나가면 필자처럼 써보장...ㅇ,.ㅇ;</p>
+<div class="stepnum">4.</div>
+<p>카즈야의 더블 어퍼는 풍캔기어와 타이밍이 쬐금 다른데...</p>
+<p>거의 차이가 없다고 보면 된다 . 필자는 풍캔 기어보다 더블 어퍼가 삑사리가 더 안난다.</p>
+<p>어떤 이는 더블 어퍼가 더 어렵다고 하는데..</p>
+<p>필자한텐 더블어퍼가 더 쉽다. 이건 어디까지나 느낌 차이니.. 걍 넘어 가자.</p>
+<div class="stepnum">5.</div>
+<p>가장 중요한건 초풍보다 쓰기 어려운 이 기술을 얼마나 많이 연습하느냐가 중요하다</p>
+<p>쓰다보면 어느새 타이밍을 익히게 되고 절로 기술이 필요할 때 나가게 된다.</p>
+<p>사람들한테 하소연하기 전에 자신이 얼마나 연습을 했는지 한 번 생각해보길 바란다</p>
+<div class="stepnum">6.</div>
+<p>진의 경우 삑사리가 나면 4+rp가 나간다.</p>
+<p>삑사리가 낫다! 하는 느낌이 오면 4+rp,rk,rp,lp,rp 를 입력해줘서..</p>
+<p>최대한 딜레이를 없애주자. 아주 잘 맞는다. (우와 삑사리로도 때린다..)</p>
+<p>고수들한테는 딜레이가 없는..4+rp,lk를 써주는 것도 상당히 좋다.</p>
+<hr class="dash">
+<p>오늘은 풍캔기어에 대해 알아봤습니다.</p>
+<p>그런데 이렇게 자세하게 하나씩 하나씩 다 쓰다가..</p>
+<p>풍신류 고수님들한테 다구리 당하는거 아녀...ㅇ.ㅇ?</p>
+<p>그래도 풍신류의 비밀을 낱낱히 폭로하겠습니다.</p>
+<p>쿄쿄쿄..</p>
+<p>ps. 난 다구리 당할때!!</p>
+<p>...<br>...<br>...<br>...<br>...<br>한놈만 팬다!<br>...<br>...<br>..<br>...</p>
+<p>쿄쿄쿄쿄쿄쿄쿄~~~~~~~^^</p>
+  </div>
+</section>
+<section class="lecture" id="sec-5">
+  <div class="lec-head">
+    <span class="lec-badge">⑤</span>
+    <h2 class="lec-title">또히의 풍신류강좌 다섯번째 - 진 공중콤보편 -</h2>
+  </div>
+  <div class="lec-body">
+<p>이번엔 뭘 강의 할까? 하고 고민을 많이 했습니다.</p>
+<p>이번엔 고급 기술이 아닌.. 아주 쉬운..^^</p>
+<p>초,중수들을 위해 진의 콤보에 대해 설명할까 합니다.</p>
+<p>물론 콤보 메뉴얼이 아닌..강의라...^^</p>
+<p>쓰기 쉽구.. 데미지도 괜찮은.. 종류들로 설명할까 합니다.</p>
+<p>겜방에서 쓰는 마지막 글이 될것 같네요(이제 그만두거든요)</p>
+<hr class="dash">
+<h3 class="subhead">또히의 풍신류 강좌 5번째 - 진 공중콤포편 -</h3>
+<h3 class="topic">* 공중콤보가 과연 중요할까?</h3>
+<p>물론 상당히 중요 하다.</p>
+<p>풍신류가 강한 이유는 풍신이라는 초사기 뛰우기가 있기에 강한 것이다.</p>
+<p>그러나 이걸 뒷받침해주는 공중 연계기가 없다면..</p>
+<p>차라리 붕권 한방을 때리는게 낳을 것이다.</p>
+<p>그정도로 공중 콤보는 중요하다. 그런데 보통 쉽게 간과하고 넘어간다.</p>
+<p>철권인이라면 누구나 공중콤보 삑사리땜시 못끝내고 역전패 당한 경험을 가지고 있을것이다.</p>
+<p>오늘은 풍신류 가문의 콤보에 대해 알아보자.</p>
+<h3 class="topic">* 거 말 많네.. 어서 콤보나 가르쳐 주슈..-.+;</h3>
+<p>오늘의 토픽인 진의 콤보..</p>
+<p>과연 어느것이 좋을까??</p>
+<p>공콤을 전부다 적지 않고....</p>
+<p>국민콤보와 개인적으로 판단했을때 상당히 괜찮은 콤보들로 설명을 해나가겠다.</p>
+<h3 class="topic">* 초풍편(밑에 써놓은 콤보들은 기상어퍼로 대채해도 된다)</h3>
+<div class="combo"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 초풍-나살문1-통발<code class="cmd">(6N23+RP - 46+RP,LP,RP - 66+RP)</code></span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 초풍-나살문2-통발<code class="cmd">(6N23+RP - 46+RP,LP,2+RP - 66+RP)</code></span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 초풍-나살문1-대종1타<code class="cmd">(6N23+RP - 46+RP,LP,RP - 3+RK)</code></span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4. 초풍-나살문1-백로2타<code class="cmd">(6N23+RP - 46+RP,LP,RP - LP+RK)</code></span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 초풍-초풍-초풍 (필자는 초풍-초풍-원-초풍은 별로 안 좋아한다. 개인적으로 별로 멋이 엄다)</span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">6</span><span class="ctext">6. 초풍-초풍-백로2타-귀팔문-나락 <code class="cmd">(6N23+RP - 6N23+RP - LP+RK - 3+LP,RP - 6N23+RK)</code></span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">7</span><span class="ctext">7. 초풍-뇌신중단각 <code class="cmd">(6N23+RP - 6N23+LP,LK)</code></span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">8</span><span class="ctext">8. 초풍-나살문1-나살문1 (또는 나살문2-나살문1-나살문1)</span></div>
+<div class="stepnum">1.</div>
+<p>초풍-나살문1-통발은 태그들어와서 국민 콤보라 하기에는..</p>
+<p>조금 어려운 타이밍을 가지고 있다.</p>
+<p>초풍을 넣고 나살문을 발끝 조금 위에 첫타를 맞춘다.</p>
+<p>그다음 딜레이를 가능한 많이 주고 기술 딜레이가 끝나기전에 2,3타를</p>
+<p>딜레이 없이 넣어준다.</p>
+<p>첫타를 얼마나 정확하게 잘 넣느냐가 키포인트!</p>
+<p>그 다음에 통발.. 쓰기가 그리 고난이도도 아니면서 상당한 데미지를 입히는 이 콤보를..</p>
+<p>마스터 한다면 정말 마음이 든든해질것이다.</p>
+<div class="stepnum">2.</div>
+<p>초풍-나살문2-통발은...</p>
+<p>초풍-나살문1-통발을 쓸려다가..</p>
+<p>첫타를 맞추고 여의치 않을경우 목적을 바꿔 나살문2를 쓰는 경우가 대부분이다.</p>
+<p>하지만 데미지가 그래도 통발로 끝나기에 짭짤하다.</p>
+<p>진 유저가 가장 많이 쓰는 공중 콤보가 아닌가 싶다. (어쩔수 없이...쓰는 콤보)</p>
+<div class="stepnum">3.</div>
+<p>초풍-나살문1-대종...</p>
+<p>설명이 필요 없는 초절정 저난이도 국민콤보..</p>
+<p>나살문 대충 대충 맞춰도 대종은 들어간다.</p>
+<p>데미지는 필자가 써논 연계기중 최하이다.</p>
+<div class="stepnum">4.</div>
+<p>초풍-나살문1-백로2타...</p>
+<p>이 콤보는 쓰는 사람이 그리 많지 않다.</p>
+<p>하지만 써본 사람은 백로 2타의 유용성을 알것이다.</p>
+<p>백로 2타를 넣은 후에 웨이브 초풍으로 낙법 캐취가 가능하다.</p>
+<p>그리고 거리가 멀어지지 않으므로 금새 쫓아가서 이지가 가능하다.</p>
+<p>필자는 얼마전까지만 해도 이 콤보 외에 다른것은 전혀 넣지 않았다.</p>
+<p>지금은 많이 쓰지는 않지만..</p>
+<p>상당히 좋은 콤보가 아닌가 싶다.</p>
+<p>초풍-나살문1-대종보다는 좀 더 많이 나간다.</p>
+<div class="stepnum">5.</div>
+<p>초풍-초풍-초풍.</p>
+<p>태그 들어와서 상당히 넣기 쉬워진 초풍 트리플.</p>
+<p>3때 대초로 마지막을 마무리 했던거에 비해 이번작에서는 그냥 제자리 초풍으로...</p>
+<p>빨리만 입력하면 초풍*3 가 가능하다.</p>
+<p>데미지는 초풍-나살문2-대종보다도 못하므로 멋으로 걍 쓰쟈..^^</p>
+<div class="stepnum">6.</div>
+<p>그리구 필자가 개발하고 퍼트린... V.S 초풍 SPECIAL COMBO..^^</p>
+<p>초풍-초풍-백로2타-귀팔문<code class="cmd">(3+LP,RP)</code>-나락.</p>
+<p>위 콤보는 최강 콤보중 하나이고..</p>
+<p>전캐러 다 맞고 초풍을 밀착카운터가 아니더라도..</p>
+<p>빨리만 쓰면 언제라도 쓸수 있다.</p>
+<p>초풍-초풍(대쉬초풍도 가능) 백로 2타는 대쉬를 해서 쓰자.</p>
+<p>초풍과 초풍사이는 최대한 빨리 써야 한다.</p>
+<p>다 잘 입력했다면 귀팔문은 그냥 들어간다.</p>
+<p>주의할점이 귀팔문을 쓸때 대쉬(66)를 넣어주자.</p>
+<p>그러면 귀팔문이 끝나고 자동 대쉬가 나가는데..</p>
+<p>이때 23+RK 만 해주면 저절로 대쉬 나락이 나가서 누워 있는 상대방을 히트 시킬수 있다.</p>
+<p>이걸 빨리쓰면 절대 일어나면서 막을 수 없다.</p>
+<p>괜히 일어나다가 크린히트 맞고 또 넘어지거나..</p>
+<p>아님 두대 맞고 튕겨 나가게 된다.</p>
+<p>나락2타까지 쓸껀지 안쓸건지는 알아서 결정하자.</p>
+<p>조금만 늦게써도 일어나서 막을 수 있으므로.. 연습을 많이 하자.</p>
+<p>종종 일어나서 막는 사람이 있는데.. 한 번 막혔으면 그때부터 풍캔기어를 넣어주자.</p>
+<p>타이밍이 딱 맞아 떨어지기 때문에 상대방이 일어나서 앉기로 결정을 했다면..</p>
+<p>절대 막을수 없다.</p>
+<div class="stepnum">7.</div>
+<p>초풍 뇌신 중단각은..</p>
+<p>쓸일이 거의 없다. 무조건 맞출 수도 없거니와..</p>
+<p>못 맞추면 기상킥을 맞아야 하기 땜시 위험 부담이 크기 때문이다.</p>
+<p>주로 쓰는건 시간이 없을때..</p>
+<p>한방으로 역전을 노려야 할때.. 쓰이게 된다.</p>
+<p>시간나면 연습하자...^^ 그리 필요한 콤보는 아니다.</p>
+<div class="stepnum">8.</div>
+<p>초풍-나살문1-나살문1 (나살문2-나살문1-나살문1)</p>
+<p>뚱땡이용 콤보 이다. 노멀캐러에게도 되긴 되나 극악 난이도로 맞추기가 상당히 어렵다.</p>
+<p>노멀 캐러는 측면에서 맞춰야만 한다.</p>
+<p>뚱땡이한테는 그냥 들어가는데..</p>
+<p>초풍을 맞춘다음.. 나살문1 3타를 모두 딜레이 없이 써주고.. 나살문 1을 또한번 딜레이 없이 쓰면..</p>
+<p>된다. 첫타 타점은 발목으로 잡아주자.</p>
+<p>데미지는 V.S SPECIAL COMBO 와 데미지가 비슷하다.</p>
+<h3 class="topic">* 나락편</h3>
+<p>나락의 공중 콤보가 콤보에서 차지하는 비율이 얼마 되진 않지만..</p>
+<p>한번 설명해 볼까 한다.</p>
+<p>일단 목록을 보자.</p>
+<div class="combo"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 나락-백로3타-통발 <code class="cmd">(6N23+RK - LP+RK,RP - 66+RP)</code></span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 나락-백로3타-대쉬초풍 <code class="cmd">(6N23+RK - LP+RK,RP - 66N23+RP)</code></span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 나락-백로2타-귀팔문-나락 <code class="cmd">(6N23+RK - LP+RK - 3+LP,RP - 6N23+RK)</code></span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4. 나락-대종-귀팔문-나락 <code class="cmd">(6N23+RK - 3+RK - 3+LP,RP - 6N23+RK)</code></span></div>
+<p>이 외에도 적자고 하면 정말 많은데..</p>
+<p>어짜피 쓰는건 위 4개로 끝이므로 더 이상 적지 않겠다.</p>
+<div class="stepnum">1.</div>
+<p>나락-백로3타-통발</p>
+<p>진의 대표적인 국민 콤보. 쓰기 쉽고 데미지도 짭잘~ 정말 좋은 콤보이다.</p>
+<p>말이 필요 없으므로 설명은 생략하겠다.</p>
+<div class="stepnum">2.</div>
+<p>나락-백로3타-대쉬초풍</p>
+<p>백로3타 다음 초풍에서 애를 먹는 사람들이 있는데..</p>
+<p>대쉬초풍으로 쓰지 않아서 그렇다. 혹은 짧은 대초를 모 써서 그런것이다.</p>
+<p>가끔 그냥 초풍을 써도 들어갈때가 종종 있지만..</p>
+<p>그냥 초풍을 쓰면 헛치는 일이 자주 발생하게 되므로 대초로 넣는것을 연습하자.</p>
+<p>정말 멋있는 콤보이다.</p>
+<div class="stepnum">3.</div>
+<p>나락-백로2타-귀팔문-나락 (V.S 나락 SPECIAL !)</p>
+<p>이것이야 말로 나락 최강의 공중 콤보!</p>
+<p>필자가 개발한 것으로.. 필자는 50% 정도 나락 공콤을 이걸로 처리한다.</p>
+<p>이상하게도 아무도 따라하지 않는 콤보이기도 하다.(세휘가 각 통신사에 몇번 적었는데두...)</p>
+<p>(V.S 초풍 SPECIAL 은 서울에 갔다가 시도 하는걸 본적이 있네요.. 부산에선 옥탱이가 쓰는것 외에는 본적이 엄음..--</p>
+<p>V.S 나락 SPECIAL 을 또 한번 이번 서울대회때 볼 수 있을지..^^ )</p>
+<p>사실 필자만 알고 있던 콤보로... 3때도 되었다^^ (이 공콤을 이제서야 공개하네요^^)</p>
+<p>3때는 나락을 카운터로만 맞아야 되기 때문에 아무때나 쓸수가 없었지만..</p>
+<p>태그들어와서는 무조건 맞는다.</p>
+<p>이 홈피의 부 운영자인 세휘도 이것이 된다는건 알지만 마음대로 못 쓰는 이유가 있다.</p>
+<p>키포인트는 나락다음 약간의 안보이는 앞대쉬를 해준다음 백로!</p>
+<p>대쉬를 거의 안했음에도 불구하고..(대쉬하는 포즈가 안 보여도 된다는 말..보여도 됨)</p>
+<p>백로 후의 판정이 바껴 다음 귀팔문이 들어간다.</p>
+<p>귀팔문이 들어가면 뭐가 ??? 바로 나락이 들어간다!</p>
+<p>어정쩡 일어나다가는 나락에 맞고 다시 넘어지므로..</p>
+<p>잘만 맞추면 이 나락만 가지고 데미지 반을 끝짱낼 수 있다.</p>
+<p>그런데 문제는 많이 맞아본 사람들은...(옥탱이...성우...기타 부산 배틀인...)</p>
+<p>나락 한대 맞고 튕겨 나간다는 것이다.</p>
+<p>이러면 후속타를 노리기에 좀 불리해진다.</p>
+<p>사실 이 콤보가 데미지는 최강이지만..</p>
+<p>필자가 아직도 나락-백로3타-통발을 더 많이 쓰는 데는 이유가 있다.</p>
+<p>통발후에 웨이브로 쫓아가서 이지를 걸 수 있기 때문이다.</p>
+<p>반면에 이 콤보는 쫓아가서 이지를 걸 수가 없다.</p>
+<p>적당히 잘 알아서 섞어서 쓰도록 하자.</p>
+<div class="stepnum">4.</div>
+<p>나락-대종-귀팔문-나락</p>
+<p>사실 위 V.S 나락 SPECIAL 의 원조인 콤보이다.</p>
+<p>(준오와 제가 싸운 동영상에도 나오죠?^^)</p>
+<p>나락은 느린 나락을 써야만 한다. (느린 나락이란 긴 풍신대쉬 후의 나락입니다^^)</p>
+<p>태그 들어와서 나락이 막히면 죽음인 반면..</p>
+<p>3때의 느린 나락은 막혀도 딜레이가 전혀 없었다. 그걸 이용한 콤보로..</p>
+<p>이 콤보는 나의 영원한 파트너인 성우군이 개발하였다.</p>
+<p>사실 우연찬게도.. V.S스페셜 콤보는 귀캔 때문에 만들어지게 되었다.</p>
+<p>느린나락이 태그에선 막히면 끝장이지만.. 아직도 그 위력은 여전하다.</p>
+<p>오히려 느린 나락을 고수들이 훨씬 더 잘맞아 준다.</p>
+<p>나락후의 대종은 반드시 풍신대쉬 대종을 써야만 한다.</p>
+<p>(풍신대쉬대종인지 모르기때문에 사람들이 봐도 못따라했죠..^^)</p>
+<p>정확하게 적자면..</p>
+<p>느린 나락-풍신대쉬 대종-귀팔문-나락 인것이다.</p>
+<p>귀팔문후의 나락은 저 위에 초풍편에 써놓은 것처럼 쓰면 된다.</p>
+<hr class="dash">
+<p>오늘은 이정도만 적을께요.</p>
+<p>원래 각풍신 캐러 공콤을 전부다 적을려고 했는데....</p>
+<p>쓰다 보니 진의 콤보 설명만 해도 이렇게나 많이 나오네요.</p>
+<p>정말 많이 빼서 필요한 콤보만 넣었는데..--;</p>
+<p>오늘 13시간 밤샘 근무인데.. 정말 피곤하네요..T.T</p>
+<p>대회 연습도 전혀 못하고 있고 정말 큰일이군요.(나보다 연습 안한 사람있음 손~ ^^)</p>
+<p>어서 하루 빨리 그만둬야지.</p>
+<p>그럼 모두 안농~~~~~~~~~~~~~~</p>
+  </div>
+</section>
+<section class="lecture" id="sec-6">
+  <div class="lec-head">
+    <span class="lec-badge">⑥</span>
+    <h2 class="lec-title">또히의 풍신류 강좌 6번째 - 헤이하치 공중콤보 편 -</h2>
+  </div>
+  <div class="lec-body">
+<p>정말 오랫만에 다시 강의를 하기 위해 제가 돌아왔습니다.</p>
+<p>이왕 시작된 연재 언제 끝날지 모르지만..</p>
+<p>끝을 내야 되겠다는 생각에 다시 키보드를 잡습니다.(예전에는 펜을 잡습니다라고 적은것 같은데..^^)</p>
+<p>이전에 강의를 할땐 겜방 알바였기에 시간이 밤에 남아 돌았지만..</p>
+<p>지금은 여건이 그렇지 않기때문에 너무 자세한 설명(커맨드) 같은건</p>
+<p>적지 않도록 하겠습니다.</p>
+<p>쓰잘때기 없는건 다 빼버리고.. 초특급 난이도도 거의 다 제외..</p>
+<p>초보용 중급용 고급용 몇개만 간략하게! 필요한것들만 적겠습니다.</p>
+<p>오히려 이렇게 적는게 더 도움될것 같아서 이거든요.^^</p>
+<p>다 적자면 끝도 없겠죠? ^^</p>
+<hr class="dash">
+<h3 class="subhead">또히의 풍신류 강좌 6번재</h3>
+<p>-헤이하치 공중콤보 편-</p>
+<p>헤이하치의 공콤을 다른캐러와 비교해 보자.</p>
+<p>헤이하치의 공콤은 좋은 편인가?</p>
+<p>필자의 생각엔 철권에선 중상위권이라는 생각이 든다.</p>
+<p>풍신류 계열에선 진보다 떨어지지만 다른 캐러보단 좋고 전체적으로 따져볼땐 중위권에 머물고 있다.</p>
+<p>바로 콤보 설명으로 들어가자.</p>
+<h3 class="topic">**초풍 다음에 이어지는 콤보들~!</h3>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 초풍-초풍-초풍 (이하 초풍 -&gt; 초)</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 초-초-원-원-초</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 초-왼어퍼 or 원쨉 -나투뇌 (이하 원쨉(lp)-&gt; 원)</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4. 초-원-원-나투뇌</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 초-나투뇌-기와</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">6</span><span class="ctext">6. 초-나삼뇌</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">7</span><span class="ctext">7. 초-뇌신</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">8</span><span class="ctext">8. 초-초-나투뇌</span></div>
+<h3 class="topic">**설명편</h3>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 초풍-초풍-초풍 (이하 초풍 -&gt; 초)</span></div>
+<p>: 초풍*3 이건 풍신류 유저라면 이젠 기본이 되어버린 콤보이다.</p>
+<p>제자리에서 쓸 수도 있고 마지막 제자리 초풍이 맞지 않을것 같으면 대쉬 풍신을 해버리자.</p>
+<p>설명을 별로 할 필요가 없는 너무나도 잘 알려진 콤보..^^</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 초-초-원-원-풍</span></div>
+<p>: 보통 멋내기용 기술이다. 별로 좋지도 않은 기술..^^</p>
+<p>보통 초초초가 지겨울때 사용되며 초초원초를 능숙하게 쓰는 사람들은 초초원원풍 사용한다.</p>
+<p>그럼 이건 어떤가?</p>
+<p>차라리 필자는 초원초초를 쓴다. 색다른게 오히려 더 멋있다.</p>
+<p>어쩌면 초원원초초가 될지도..</p>
+<p>암튼 밀착 카운터가 문제..</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 초-왼어퍼 or 원쨉 -나투뇌 (이하 원쨉(lp)-&gt; 원)</span></div>
+<p>: 일반적 철권 3때 시절의 기본적인 콤보. 필자는 항상 원쨉대신 왼어퍼를 쓴다. 이유는 상대방을 원쨉보다 더 높이 뛰우기에 후속타 넣기가 더 편리하고 데미지가 더 좋기 높기때문이다. 왼어퍼를 원쨉대신 집어넣는 버릇을 넣으면 어떤 캐러를 하더라도 도움이 될것이다.</p>
+<p>하지만 사실 필자가 왼어퍼를 쓴 경우! 이땐 이유가 있다.(패턴 공개가 여기서 이루어지는군.. 이거 봐도 낙법 좀 해줘요잉~^^)</p>
+<p>왼어퍼를 쓴다음 나투뇌를 째빨리 집어 넣으면 상대랑 그리 멀리 떨어지지 않는다.</p>
+<p>나투뇌를 쓴다음 재빨리 다가가서 초풍으로 낙법 캐취를 해주자.</p>
+<p>(낙법 캐취는 다음에 전용강의를 개설할 예정이므로 자세한건 여기서 생략)</p>
+<p>와우 이얼마나 좋은가!! 낙법 캐취 안되도 데미지도 좋아! 낙캣취도 노릴 수 있어~ 와우~ 정말 좋은 콤보이다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4. 초-원-원-나투뇌</span></div>
+<p>: 초원원나투뇌 이건 보통 중수용 콤보이다.</p>
+<p>단점도 있고 장점도 있다. 여기서 알아보자~</p>
+<p>데미지도 별로 안 좋고(차라리 원쨉2번빼고 나투뇌를 그냥 넣어라 . 그것이 훨씬 좋다)<br>하지만 초원원 타투뇌를 꼭 써야 되는 경우가 있다.</p>
+<p>미쉘이나 샤오랑 붙으면 초 - 원(왼어퍼) - 나투뇌 or 초 - 나투뇌..</p>
+<p>종종 나투뇌를 헛 칠때까 있다. 그때의 안전하게 집어 넣을 수 있는 확실 콤보가..</p>
+<p>바로 초 원 원 나투뇌 인것이다. 절대 헛칠일 없으니 창집안 아줌마들 만났을때 안전하게 데미지를 주고 싶으면 이 콤보를 쓰자.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 초-나투뇌-기와</span></div>
+<p>: 이번 강의에서 가장 말하고 싶었던 콤보.</p>
+<p>헤이하치의 초풍 후 가장 무난하고 상대적,개인적으로 판단할때 헤이하치의 최고 공중 콤보가 아닌가 싶다.<br>데미지는 60. 기본적으로 초풍후 콤보들은 초-초-나투뇌를 제외하곤 거의다가 60이하이다. (초풍*3도 57밖에 안된다) (초-원-나투뇌는 52~54일 것이다)</p>
+<p>그리고 상대방을 마지막에 상대방을 찍어버리므로 상대방은 낙법을 할 수가 없다.</p>
+<p>태그들어와서 부턴 뒤로 굴러 일어나는 낙법도 가능하기에 이 공중콤보가 더욱이 위력을 발휘한다.</p>
+<p>상대방을 찍어버리므로 더쉽게 상대방을 쫓아가서 추격타를 노릴 수 있다.</p>
+<p>어정짱하게 일어나다간 다시 풍신 맞고 넘어지기 일상이고 가만히 있자니 나락맞을것 같고.. 상대적으로 상대방의 심리는 다른 공콤보다 더 짜증이 날것이다.</p>
+<p>필자는 이 콤보를 주력으로 쓰고 가끔 낙법캐취용으로 초-왼어퍼-나투뇌를 쓴다.</p>
+<p>무조건 이것만 쓰지 말고 이런 방식으로 섞어써주자.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">6</span><span class="ctext">6. 초-나삼뇌</span></div>
+<p>: 뚱캐러는 기본으로 그냥 들어가는 콤보이지만..</p>
+<p>노멀캐러에게 의외로 못 맞추시는 분들이 있다. 비결은 무엇일까.</p>
+<p>초풍은 상대방의 횡신을 잘잡는다. 상대방이 횡신하다가 맞으면 ..</p>
+<p>축이 엇갈려서 공중에 뜰때가 있는데.. 이때 자세를 보고 좀 비틀어져 있다면..</p>
+<p>나삼뇌를 넣어보자. 맞을듯 안 맞을듯 하면서 쉽게 들어갓것이다.</p>
+<p>데미지는 59..--; 차라리 그냥 초-나투뇌-기와를 쓰자..^^</p>
+<p>하지만 꽤 멋은 있다. 초-원-나삼뇌도 들어가지만..</p>
+<p>낙법불능으로 안들어갈때가 종종 있으므로 피보지 말고 그냥 초-나삼뇌를 쓰자^^</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">7</span><span class="ctext">7. 초-뇌신</span></div>
+<p>: 태그에 들어와서 헤이 뇌신의 데미지 약화로 조금은 필요가 없어진 공중 콤보..</p>
+<p>하지만 초-뇌신 역시 낙법캐취를 노리기에 좋은 콤보이다.</p>
+<p>초-뇌신 만의 특유 납법 캐취 전용기까 따로 있다.</p>
+<p>그것은 바로 남자의 기술! '뇌신!'이다.</p>
+<p>초뇌를 쓴다음 낙법을 예상하고 뇌신을 잽싸게 날려보자~</p>
+<p>3때는 정말 무서운 공중 콤보였다. 초풍으로도 잘 안잡아지는 낙법이..</p>
+<p>느린 뇌신한테 그냥 잡혔다..</p>
+<p>가끔써주면 상당히 괜찮은 콤보이다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">8</span><span class="ctext">8. 초-초-나투뇌</span></div>
+<p>: 초풍에 자신 있는 사람들의 콤보!</p>
+<p>초풍쓰는 스피드가 빠르면 빠를 수록 나투뇌를 넣은 기회가 많아진다.</p>
+<p>나투뇌는 낙법 불능으로 들어가며 헤이하치의 노멀캐러 정면용 콤보로는 최강을 자랑한다.</p>
+<p>어려워 보이지만 그리 어렵지 않고, 의외로 쓸 기회가 상당히 많은 콤보이다.</p>
+<p>익혀두면 두고 두고 유용하다.</p>
+<p>초초나투뇌를 맞추면 상대방은 담부터는 낙법할려고 발악을 하는데..</p>
+<p>그럼 초초-초필살기 를 써주자.거의 70% 이상의 히트율을 자랑하는 이지선다이다.</p>
+<p>(물론 초초나투뇌를 잘 쓴다는 전제하에..)</p>
+<h3 class="topic">** 귀신권후의 공중콤보</h3>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 귀신권 - 초풍 - 돌려차기 (이하 귀신권-&gt;귀 , 초풍 - &gt;초)</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 귀-초-나투뇌(안뒤집어졌을때)</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 귀-초-나삼뇌(뒤집어졌을때)</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4. 귀-초-초</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 귀-초-원-대쉬풍신-파쇄축 or 지참각</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 귀-초초-나투뇌</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 귀-초-돌려차기</span></div>
+<p>: 귀신권 후 빠르게 초풍을 넣어주면 상대방이 뒤로 넘어가는 경우를 종종 볼 수 있다<br>그때 돌려차기가 무조건 들어가는데..</p>
+<p>3땐 돌려차기후 낙법이 안되었기에 파쇄축이나 지참각이 무조건 들어갔지만 이젠 아니다. 그러므로 의외로 별로 필요가 없어진 콤보..--;</p>
+<p>하지만 낙법 불능으로 정 맞추고 싶다면 돌려차기 대신 돌면서 하단킥(짠발)을 써주자</p>
+<p>낙불로 히트시킨 다음 파쇄축이 들어갈것이다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 귀-초-나투뇌</span></div>
+<p>: 귀신권후 초풍을 넣고 안뒤집어지고 정면으로 떨어졋을때..</p>
+<p>가장 무난한 콤보가 바로 이 귀초나투뇌이다.</p>
+<p>데미지도 그럭저럭 괜찮은 기술.</p>
+<p>귀-초후 다른 기술 넣을게 없으면 이기술을 써주자.</p>
+<p>낙법 안되게 써주는것이 중요하다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 귀-초-나삼뇌</span></div>
+<p>: 귀신권 초풍후 상대방이 뒤집어졋을때 쓰는 대중적 콤보.</p>
+<p>대게 귀신권후 잽싸게 초풍을 넣으면 뒤집어져서 앞으로 떨어진다.</p>
+<p>3때부터 헤이하치의 최강 콤보중 하나로 자리 잡혀온 이 기술은 데미지도 괜찮고..</p>
+<p>꽤나 멋있다. 뒤집어 떨어지면서 상대방이 땅바닥에 바운드 된다음..</p>
+<p>나락 3방을 차례로 맞게 되는데..정말 쾌감?을 느끼게 해주는 콤보이다^^</p>
+<p>귀-초-원-나삼뇌도 낙불로 들어가니 여유가 있으면 이걸로 써주자..</p>
+<p>(낙법도 잘 되니 자신 없는 사람은 쓰지 말자^^)</p>
+<p>귀-초-나삼뇌 후 파쇄축은 잽싸게 일어나면 막아지므로 알아서 잘쓰자.</p>
+<p>가만히 있는 경우가 많으므로 파쇄축 써도 좋다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4. 귀-초-초</span></div>
+<p>: 귀신권후 초-초.</p>
+<p>사실 귀신권 다음에 뒤집어 지지도 않고..</p>
+<p>나투뇌 넣기도 어정쩡하고 정말 별로 맘에 안드는 콤보이다.</p>
+<p>하지만?? 멋은 그럭저럭 있다. ...그러나!!</p>
+<p>정말 좋은 비기를 하나 공개하고자 한다.(물론 요즘은 누구나 알지만 그래도 초보분들을 위해..^^)</p>
+<p>귀-초-초는 다른 콤보에 비해 널리 대중적으로 쓰여지는 콤보가 아니기에..</p>
+<p>여타 고수들도 처음에는 이 패턴에 걸리게 되어 있다.</p>
+<p>귀-초-초-초필살기를 써보자.</p>
+<p>장담하는데 히트율 80% 이상 보장한다^^</p>
+<p>철권 유저들 대부분(초고수 포함) 자신이 첨보는 콤보를 맞게 된다면??</p>
+<p>공콤으로 맞았다면? 낙법할려고 보통 무의식중에 버튼을 누르며..</p>
+<p>지상에서 맞았다면? 일단은 후속타를 서서 막을려고 한다.</p>
+<p>초고수를 불문하고 모두 이 조건에 걸리게 되어있다.</p>
+<p>단 몇번 맞아본다면 그때부턴 안 통한다.</p>
+<p>귀-초-초를 빨리 쓰면 상대방이 뒤로 굴러 일어나도 초필살기에 맞게 되어 있기 때문에 가끔 쓰면 상당한 효과를 본다.</p>
+<p>(사실 필자는 이 콤보에 상당한 정신적,물리적 충격을 꽤나 많이 받았다.</p>
+<p>으~~~~~~옥씨!!! ^^)</p>
+<p>당연 남발하면 안통하니 알아서 가끔 잘 써주도록 하자.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 귀-초-원-대쉬풍신-파쇄축 or 지참각</span></div>
+<p>: 귀신권-초풍-원쨉-대쉬퐁신 or 초풍 - 파쇄축 or 지참각</p>
+<p>길어서 한번 풀어서 적어 보았다. 데미지는 거의 최강급에 속하는 공콤이다.</p>
+<p>귀신권 초풍후 상대방이 뒤집어 질때..</p>
+<p>원을 맞추고 다시 초풍을 때리면 낙법 불능으로 들어간다.</p>
+<p>아니 이럴수가 정말 좋지 않은가!! 거기다가 파쇄축까지 들어가니..</p>
+<p>특별한 타이밍도 필요 없고 기술만 깨끗하게 잘 넣는 분이라면 누구나 쉽게 쓸 수 있을것이다.</p>
+<p>필자는 분노 모드때 이 콤보로 한방에 ko시킨적이 있다.</p>
+<p>헤이하치의 분노 모드때 최강 콤보가 아닌가 싶다.</p>
+<p>(다른 콤보들은 튕겨 나가기 때문에 중간에 끊긴다)</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 귀-초초-나투뇌</span></div>
+<p>: 헤이하치 콤보 액트.2 마지막에 나온 이 콤보..</p>
+<p>귀신권후 초풍 두번을 노딜레이로 엄청 빨리 써주면..</p>
+<p>들어간다. 귀신권을 정면에서 맞춰도 들어가며 노멀캐러들(진,화랑,요시등등)</p>
+<p>다 들어간다. 중요한건 마지막 나투뇌가 아닌 초초를 얼마나 빨리 쓰느냐이다.</p>
+<p>가끔 기회가 오니 초풍에 자신있는 분들은 한번 노려 보도록 하자.</p>
+<p>초풍에 정말 자신이 있다! 그러면 귀-초초초를 써보자.</p>
+<p>빨리 쓰면 들어간다. 단 귀신권을 약간 측면에서 맞춰야 한다.</p>
+<p>(상대방이 횡신하다가 밀착되서 맞으면 쓸기회가 올 것이다)</p>
+<hr class="dash">
+<p>오랫만에 강의를 했군요.</p>
+<p>여타 공콤들도 많지만...(정말 많음..^^)</p>
+<p>간단하게 도움이 될만한 ...그러한 콤보들을 알아봤습니다.</p>
+<p>아 ~ 머리가 지근 지근~ 머리가 아파옵니다.</p>
+<p>몇시간동안 집중을 해서 썼더니.. 으그그~</p>
+<p>하지만 정말 기분은 좋군요.</p>
+<p>앞으로도 시간이 나는대로 강의를 올리도록 하겠습니다.</p>
+<p>하지만 과연 또 그날은 언제 올지..^^</p>
+<p>암튼 기다려 주세요~</p>
+<p>이 강의는 제가 책임지고 끝맴음 할테니..</p>
+<p>아직도 많이 남았답니다~^^</p>
+<p>그럼 여러분 안농~</p>
+  </div>
+</section>
+<section class="lecture" id="sec-7">
+  <div class="lec-head">
+    <span class="lec-badge">⑦</span>
+    <h2 class="lec-title">또히의 풍신류 강의 7번째 - 카즈야 &amp; 데빌 공중콤보 정리-</h2>
+  </div>
+  <div class="lec-body">
+<p>안녕하세요.</p>
+<p>카즈야와 데빌의 공중 콤보를 정리해 보겠습니다.</p>
+<p>카즈야와 데빌은 아주 비슷한 공콤을 가지고 있으므로..</p>
+<p>비교 대조를 통해 함께 분석을 해 나가겠습니다.</p>
+<p>아마 초급 강의는 이것으로 정리가 되지 않을까 싶군요.</p>
+<p>역시나 초보분들을 고려해서 쓴 글이므로 고수분들에게는 큰 도움이 되지 않을것 같군요^^(하지만 저만의 비기 몇 개씩은 들어갑니다..잘 안보여서 그렇징^^)</p>
+<p>그렇기에.. 콤보 쓰잘때기 없는거 다 빼고 꼭 필요한 공콤들로만 채워 봤습니다.</p>
+<p>아참..^^ 편의상 존댓말은 안 쓰는건..아시죠?^^ 이해해 주시리라 믿습니다^^</p>
+<p>참고로 카즈야의 공중 콤보중 70% 이상이 저희팀 성우에 의해 개발됐답니다.</p>
+<p>(객관적으로 70%지만.. 거의 90% 이상이라고 봐도....무방..</p>
+<p>동영상에 있는건 제가 개발한 것도 있지만^^)</p>
+<p>정말 놀라울 따름..이죠.^^</p>
+<hr class="dash">
+<h3 class="subhead">또히의 풍신류 강의 7번째 - 카즈야 &amp; 데빌 공중콤보 정리 -</h3>
+<p>카즈야의 공콤?</p>
+<p>카즈야의 공콤에 관해서 어떻게 생각할 수 있을까..</p>
+<p>카즈야와 데빌의 공콤의 데미지는 풍신류중 최하위권이다.</p>
+<p>진의 초급 국민콤보인 초풍-나살문2-통발 의 데미지에도 미치지 못하고..</p>
+<p>그보다 낮은 헤이하치의 국민콤보 초풍-나투뇌-기와만큼의 데미지 조차도 줄수가 없다. (물론 노멀 풍신 히트시..)</p>
+<p>카운터 히트시에는 상황이 다르지만 언제나 카운터로 맞출수는 없는 법...</p>
+<p>카즈야의 장점을 살릴 수 있는 콤보들을 살펴보자..</p>
+<p>데빌이나 카즈야 콤보나 비슷비슷하므로..</p>
+<p>공통적으로 분류되는 콤보들로 써나가겠다.(데빌의 말이 거론되지 않더라도</p>
+<p>거의 다 데빌도 포함된다)</p>
+<hr class="dash">
+<p>카즈야나 데빌이나 공중 콤보는 거의 같다.</p>
+<p>데빌은 공중에서 더블어퍼를 넣을 수 있다는 장점이 있지만..(카즈야도 못 넣는건 아님^^)</p>
+<p>어짜피 쓰이는 콤보는 일맥 상통한다.</p>
+<p>한가지 다른 점이 있다면..</p>
+<p>카즈야는 콤보로 들어가는 대종을 그냥 써줘도 되지만..</p>
+<p>데빌은 풍신대쉬로 들어가서 대종을 써줘야 한다는게 좀 다르다.</p>
+<p><code class="cmd">(데빌의 그냥 서서 3+rk는 중단 차기 입니다^^)</code></p>
+<p>노멀히트시.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 풍신-돌려차기</span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 풍신-원투(lp,rp)-대종<code class="cmd">(3+rk,rk)</code> or 풍신</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 풍신-원투-원-풍신 or 대종</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4. 풍신-풍신-풍신</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 풍신-풍신-대종2타</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">6</span><span class="ctext">6. 풍신-왼어퍼-대종2타</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">7</span><span class="ctext">7. 풍신-뇌신중단각</span></div>
+<p>콤보 설명</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 풍신-돌려차기</span></div>
+<p>: 풍신-돌려차기는 카즈야 공콤이 개발되기전 태그초창기때의 국민 콤보이다.</p>
+<p>데미지도 커맨드에 비하면 간단하므로..순간적으로 풍신을 히트시켰는지..</p>
+<p>못시켰는지..판단이 안갈때나..(이런 경우는 거의 없겠지만..^^) 급한 상황에서</p>
+<p>써주면 꽤나 효과를 볼 수 있는 공콤이다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 풍신-원투-대종2타 or 풍신</span></div>
+<p>: 풍신-돌려차기나 이 콤보나 비슷 비슷한 데미지를 주지만..</p>
+<p>뭐랄까..조금더 고수틱하다고나 할까?^^ 하하~ 그냥 심심할때 써주자..</p>
+<p>축이 이상하게 어긋나서 원투후 원쨉-대쉬풍신을 넣기 어려울때 써주도록 하자.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 풍신-원투-원-풍신 or 대종.</span></div>
+<p>: 이젠 카즈야와 데빌의 기본 공콤이 되어 버린것.</p>
+<p>데미지도 가장 괜찮고..말이 필요없는 공콤이다. 참고로 데미지는 52이다.(마지막타가 대종시..)</p>
+<p>헤이의 나투뇌 기와가 60인점을 감안할때.. 아주 약한 공콤이지만..</p>
+<p>카즈야한테는 빛의 콤보이다^^</p>
+<p>풍신-원투-풍신과 마찬가지로..</p>
+<p>마지막 풍신을 넣고 태그이지를 걸 수 있다.</p>
+<p>풍신-원투-풍신후의 태그이지는 무조건 걸리게 되지만..</p>
+<p>풍신-원투-원-풍신후의 태그이지에서.. 슬라이딩은 뒤로 구르기로 피할 수 있다.</p>
+<p>(이말은? 풍신-원투-풍신후의 태그이지에서 슬라이딩은 뒤로 굴러 일어나도 캐취당한다는 말..^^)</p>
+<p>물론 양쪽 콤보 다 낙법을 하면 슬라이딩에 캐취 당한다.</p>
+<p>하지만 태그이지 논란이 일고 있는 요즘 조금은 자제하도록 하자.(전 괜찮은뎅^^)</p>
+<p>풍신-원투-원-풍신대쉬 대종1타만 때린후 그 후 상대에게 압박해 가는것도 괜찮은 전술이다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4. 풍신-풍신-풍신</span></div>
+<p>풍신류의 전유물 풍신3방..</p>
+<p>초풍이 아니지만 풍신 3방을 노딜레이로 써주면..</p>
+<p>그리 어렵지 않게 맞는다. 키포인트는 빠른 풍신을 노딜레이로 넣는 것이다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">5</span><span class="ctext">5. 풍신-풍신-대종 2타</span></div>
+<p>풍신 노멀 히트시 카즈야의 최강 공콤. 데미지는 57이다. (이것도 헤이의 나투뇌 기와에 비하면..영..별로..^^)</p>
+<p>풍신3방에 비해 그리 고난이도도 아니고 쓸만한 공콤이다.</p>
+<p>만약 풍신-풍신을 맞추고 너무 멀어져서 대종 2타가 안 맞을것 같으면..</p>
+<p>대부분 그냥 떨어 트리는데.. 아쉬워 하지 말고..대종 1타를 넣어주자..</p>
+<p>왠만하면 거의 히트 된다.</p>
+<p>그 다음에 기상하는 상대에게 이지를 노려도 꽤 괜찮다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">6</span><span class="ctext">6. 풍신-왼어퍼-대종2타</span></div>
+<p>잠시 거론됐었떤 풍신 왼어퍼 대종2타..</p>
+<p>영 필요 없는 콤보이지만..(정면 히트시의 전용 콤보이다)</p>
+<p>데미지가 52라는 점에서는 쓸만한 콤보이다.</p>
+<p>하지만 공콤에 카즈야의 느린 왼어퍼를 넣는 버릇이 생기면..</p>
+<p>곤란해 지므로 쓰지 말자(이 말이 하고 싶었다^^)</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">7</span><span class="ctext">7. 풍신-뇌신중단각</span></div>
+<p>플스2에선 카즈야 최고의 고난이도 공중콤보.</p>
+<p>이거 한번 맞추기가 얼마나 어려웠는지..</p>
+<p>기원권(카운터)-풍신 보다 훨씬 어렵게 느껴짐..(이건 후에 자세히 설명)</p>
+<h3 class="topic">* 풍신 카운터 히트시의 공콤.</h3>
+<p>풍신이 카운터 히트하게 되면..상대방은 뒤집어 지게 된다.</p>
+<p>그러므로 다른 콤보가 나오게 되는데.. 일단 콤보들을 살펴보자.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 풍신-원-풍신-파쇄축</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 풍신-풍신-나락1타 or 풍신대쉬 lk</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 풍신-원투-풍신-풍신대쉬 lk</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1.풍신-원-풍신-파쇄축</span></div>
+<p>카즈야 최고의 파워를 자랑하는 공중콤보.</p>
+<p>파쇄축으로 끝나기에 데미지가 짭짭하다.</p>
+<p>풍신다음 엎어진 상대를 원펀치를 한대 툭 친후..</p>
+<p>살짝 떠 있는 상대에게 안전하게 풍신을 날리면..</p>
+<p>낙법 불능 상태가 되는데.. 이때 파쇄축이 들어간다.</p>
+<p>파쇄축이 피하고 싶으면 lp버튼을 연타하도록 하자.</p>
+<p>어설프게 풍신을 쓰는 상대를 만났을때..</p>
+<p>lp를 연타하면 낙법 불능 상태인데..가까스로 파쇄축을 피해 옆으로 굴러 일어난다</p>
+<p>파쇄축으로 끝나므로 데미지는 좋지만..</p>
+<p>단점..계속적인 상대 압박으로 인한 추가 공격을 노릴 수 없다는 크나큰 약점이 있다.</p>
+<p>필자는 이 콤보는 거의 쓰지 않는다. 마무리 용으로는 좋다^^</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 풍신-풍신-나락1타 or 풍</span></div>
+<p>풍신 히트 후에 원펀치를 빼고 2번째 풍신의 타점을 아주 낮게 해서 히트시키면..</p>
+<p>낙법 불능 상태가 나오게 된다. 이때는 파쇄축이 들어가지 않는다.</p>
+<p>그냥 일어나서 피해질 정도이다.</p>
+<p>하지만..재빠른 풍신대쉬 lk나 나락은 피해지지가 않는다.</p>
+<p>사실 풍신-풍신-나락 1타나 풍신-원-풍신-파쇄축이나 데미지는 거의 같다.</p>
+<p>원리는 설명하기 복잡하므로 넘어가겠다^^</p>
+<p>그래서 필자는 이 콤보를 즐겨쓰고..이 콤보 밖에 안 쓴다.</p>
+<p>가끔 컨디션 안 좋을때 1번 콤보를 쓴다.</p>
+<p>이 콤보의 장점은 데미지도 짭짤하지만..</p>
+<p>파쇄축으로 끝나는 콤보의 단점이 지속적인 공격을 할 수 없다는 점을 보완했다는 점이다.</p>
+<p>그냥 가서 한대 툭치고 재빠르게 달려가서 이지를 걸어주자.</p>
+<p>심리전을 걸고 싶으면 풍신대쉬 lk가 아니라 풍신대쉬 대종1타만 써주자.</p>
+<p>뒤로 굴러일어나는 상대는 맞고 다시 넘어질것이고..이때 대종2타가 추가타로 들어간다.</p>
+<p>옆으로 굴러도 한대는 맞는다. 단 ? 가만히 있으면 안 맞는다.</p>
+<p>하지만? 상대는 엎어져 누워있는 상태라 대종1타를 보고 공격을 한다 해도..</p>
+<p>느린 기상 공격으론 대종1타의 딜레이를 잡을 수가 없다.</p>
+<p>그래서 이 콤보가 위력을 더욱 발휘하게 된다^^</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 풍신-원투-풍신-풍신대쉬 lk</span></div>
+<p>풍신후에 원투를 넣어주고 대쉬 풍신을 넣어주면..</p>
+<p>낙법 불능 상태가 되는데.. 조금은 쓰기 어렵지만..</p>
+<p>그래도 익숙해지면..카즈야 최고의 공중 콤보가 된다.</p>
+<p>이유는? 다음 회에 설명하도록 하겠다.</p>
+<p>카즈야의 풍신 카운터 히트시 상대방은 엎어져서 떨어지게 되는데..</p>
+<p>이때 파쇄축이나..또는 풍신대쉬 lk..풍신대쉬대종..</p>
+<p>다 좋지만..</p>
+<p>상대방의 기상을 예견했다면??</p>
+<p>나락 2방도 상당히 괜찮다.</p>
+<p>가끔 써주도록 하자.</p>
+<hr class="dash">
+<p>음 이정도만 쓰도록 하겠습니다.</p>
+<p>나락은 별로 쓸 것도 없고..^^</p>
+<p>역시나 내용이 참 짧죠?^^</p>
+<p>이번에는 좀 짧군요^^</p>
+<p>하지만.. 어짜피 초급 수준의 강의이니 이해해 주시구요.</p>
+<p>다음부터는 중급,고급 강의로 들어가도록 하겠습니다.</p>
+  </div>
+</section>
+<section class="lecture" id="sec-8">
+  <div class="lec-head">
+    <span class="lec-badge">⑧</span>
+    <h2 class="lec-title">또히의 풍신류 강좌 8번째 - 광대쉬편 -</h2>
+  </div>
+  <div class="lec-body">
+<p>안녕하세요.</p>
+<p>이번엔 광대쉬 강의 차례입니다.</p>
+<p>저번에 거의 완벽하게 다 써놓고 저장을 안해서 날리는..</p>
+<p>어의 없는 사건 때문에 다시 피눈물 흘려가며 썼네요.ㅠ.ㅠ</p>
+<p>컴퓨터좀 한다고 뻐팅기던 넘이 이런 큰 실수를 하다니.........</p>
+<p>이젠 구석에 찌그러져 있어야 되겠습니당.ㅜ.ㅜ</p>
+<p>이제부턴 초보분들이 아닌 중고수 분들을 타켓으로 강의를 해나가겠습니다.</p>
+<p>자 그럼 어디 시작해볼까요?</p>
+<hr class="dash">
+<h3 class="subhead">또히의 풍신류 강좌 8번째 - 광대쉬편 -</h3>
+<p>광대쉬란 무엇인가?</p>
+<p>광대쉬는 초당 5,6번 정도에 해당하는 웨이브 속도를 말한다.</p>
+<p>일반 시계의 1초가 철권 시계의 1.2초에 해당하는데..</p>
+<p>철권 시계로 초당 6번이상 쓴다면 실제로 엄청나게 빠른 광대쉬를 구사한다고 볼 수 있다.</p>
+<p>사람들의 기준이 다르기 때문에..</p>
+<p>어떤 사람은 왠만해선 왠만큼 빠르지 않아서는 빠른 웨이브라 부르기도 하지만..</p>
+<p>일반적으로 철권 시계로 1초당 웨이브 5번이면 광대쉬라 불러도 무방할 듯 싶다.</p>
+<p>물론 평균 광대쉬의 속도가 더욱 빨라진 지금 철권 시계 1초당 5번이면 느린 광대쉬라 불러도 할말이 없다.</p>
+<p>초당 5번의 웨이브도 쓰는 사람의 스텝이 움직임이 뛰어나다면..</p>
+<p>당하는 사람에겐 5번 이상의 움직임으로 보일것이다.</p>
+<p>일반적으로 철권시계로 볼때 8번이상의 움직임은 불가능하다고 판단이 내려진다.</p>
+<p>부산 광대쉬 창시자인 우리팀의 윤도경(도경초고수)은 지금은 풍신류를 버리고 오거를 하지만 풍신류 한창할땐 최고의 스피드를 보여주었다.</p>
+<p>제일 빠를때 일반 시계로 초당 6.5(1프레임씩 다 쟀죠..^^)번에 해당하는..철권시계로 치면 거의 8번에 가까움 움직임을 보여줬던 것이다.</p>
+<p>필자가 보기엔 이 속도가 여태껏 본걱중엔 가장 빠르지 않았나 싶다.</p>
+<p>서울의 박수용(형^^), 부산의 김성환(형^^) .. 이 두 분이 아주 빠른 광대쉬를 구사하는데..</p>
+<p>둘다 보고 있어도 8번 이상이라는 느낌은 안든다.(광주분들은 제가 잘 모르니 죄송..^^)</p>
+<p>고로.. 인간이 쓰기엔 8번이상은 불가능이라는 판단이 내려진다^^</p>
+<p>필자가 광대쉬를 처음 본 것은 2년 반전 제1회 듀얼 대회때..</p>
+<p>광주의 박카스팀 분들과 그당시 서울 최고수중 한명이였던..</p>
+<p>철홍님에게 본 그것이 처음이였다.</p>
+<p>광대쉬를 처음 보고 처음 당했던 그때..</p>
+<p>필자에겐 상당한 충격이였다.</p>
+<p>(결승전에서 만났었는데.... 광대쉬로 들어와서 느린나락을..정말 수도없이 맞았죠..ㅜ.ㅜ 으악~ 기억이 되살아나.. 그때 10:9로 깨졌다는 슬픈 전설이..)</p>
+<p>광대쉬의 원조는 광주가 아닌가 싶은데..</p>
+<p>처음에는 광대쉬라 부르지 않고 ..</p>
+<p>딸딸이 대쉬라고 불렀다.</p>
+<p>딸딸~딸딸~~~~ 아알~딸딸딸딸~~ ^^γ하면서 앞으로 갔다는 소리이기 때문에 그런 용어를 썼던 것이다.</p>
+<p>그런데 시간이 지나면서 딸딸이 대쉬라는 말이 너무나 저급용어를 사용했기에..</p>
+<p>좀 더 멋있는 광대쉬라는 표현을 쓰게 된것이다.</p>
+<p>광대쉬에도 두가지 뜻이 있는데..</p>
+<p>미칠 광 - 狂 , 빛 광 - 光.</p>
+<p>이것이 그 2가지이다.</p>
+<p>미친척 웨이브를 한다고 해서 광대쉬...-.-;</p>
+<p>빛처럼 빠르다 해서 광대쉬...(음 이게 더 저아~ ^^)</p>
+<p>흔히 빛 광자의 뜻을 빌려서 표현하고 대부분 그렇게 알고 있다.</p>
+<p>광대쉬의 역사를 대충 정리해 보면..</p>
+<p>광주에서 시작을 해서..</p>
+<p>전국적으로 퍼지고 가장 늦게 부산이 광대쉬를 활용하게 되었다.</p>
+<p>부산에는 사각 레버를 쓰는데.. 사각 레버는 광대쉬를 쓰기에는 무리가 따르는 구조로 되어 있었기 때문이다.</p>
+<p>(하지만 사각 레버에서도 쓰는 사람은 잘 쓴다. 아주 극소수이지만..^^)</p>
+<p>부산이 가장 늦게 퍼지는 바람에..</p>
+<p>어이없게도 필자가 부산 2번째 광대쉬 소유자가 되었다...^^ (아이 부끄~~~~ *^^*)</p>
+<p>여기 에피소드가 하나 있는데 소개할까 한다.</p>
+<p>(광대쉬라는 한개의 주제로 글을 쓰다 보니 .. 양이 적어서 별게 다 나오는군요^^)</p>
+<hr class="dash">
+<p>Episode :</p>
+<p>2년전 그 ...어느날... 배틀계에 얼떨결에 티베리아(이봉준,현 우리팀 V.S.팀)와 함께 배틀계에 입문한 윤도경(도경초고수 , 현 V.S팀) ...</p>
+<p>동네에서만 끼적 끼적 대다가 고수들의 플레이를 보고는 눈이 휘둥그래 졌다.</p>
+<p>그는 같은 고등학교를 나온 김도희,한성우와 급속도로 친해지게 되었는데..</p>
+<p>그 와중에 도희라는 멋있는^^ 사람을 만나서 철권 과외를 받게 된다.</p>
+<p>그런데..배틀인들이 쓰는 그 엄청난 웨이브!! 웨이브를 보고 우리의 쫌생이 도경이가 미쳐버린것이다.</p>
+<p>웨이브에 미쳐버린 도경이가..</p>
+<p>필자에게 웨이브 어떻게 쓰냐고... 메일로 물어보고 만나서 직접 물어보고..</p>
+<p>또 물어보고 또 물어보고.. 정말 필자는 자세하게 가르쳐 준다고 노력했다.(솔직히 많이 지겨웠다...^^; 같은거 계속 물어보니깐...ㅜ.ㅜ)</p>
+<p>그런데 이럴 수가!! 한달 후 도경이를 만났다.</p>
+<p>풍신대쉬가 먼지도 모르고 웨이브는 한번도 본적이 없던 넘이..</p>
+<p>풍신류를 배운지 2주일만에 웨이브를 터득한것은 물론이거니와 ..</p>
+<p>부산 최초로 광대쉬를 완성시켰다는 것이다!!</p>
+<p>오메~ 이럴수가..</p>
+<p>그리고 전세는 역전되고...(실력은 택도 안됐지만^^)</p>
+<p>필자는 제자한테 매달렸다.</p>
+<p>광대쉬좀 가르쳐 주라고...-.-;</p>
+<p>조르고 졸라서..^^</p>
+<p>그래서 과외를 받았다. 첨에는 '저게 무신 소리여..'했지만..</p>
+<p>몇일 지난후 필자도 광대쉬의 진리를 조금씩은 깨닫기 시작했다.</p>
+<p>그렇게 해서 우여곡절 끝에 광대쉬를 배웠다.......</p>
+<p>그리곤 예상했다. 단 한번도 광대쉬(웨이브도...) 본적이 없는 넘이 광대쉬를 익혔으니.. 저넘은 장차 부산을 이끌고..더 나아가 한국 그리곤 세계를 제패할 초일류고수가 되리라!!!!</p>
+<p>필자는 슈퍼울트라초고수를 꿈꾸며 열심히 가르쳤다.</p>
+<p>그런데.. 이럴 수가..</p>
+<p>인간이 어찌 이럴 수가 있단 말인가!!</p>
+<p>저넘은 광대쉬만 익혔지...</p>
+<p>알고보니 완전 철권 쓰레기&amp;찌끄래기 였던 것이다.-.-</p>
+<p>광대쉬만 쓰면 머하나..창시하면 머하나..-.-</p>
+<p>(갑자기 그 노래가 생각난다. 그..머더라...태진아의 '풍신류는 아무나 하나~' 갑자기 듣고 싶어지는군..-.-)</p>
+<p>오로지 광대쉬 그 자체 밖에 쓸 줄 몰라서..광대쉬 하다가 맨날 두드려 맞는데..-.-</p>
+<p>도경이 취미이자 특기가 광대쉬 쓰다가 별구경 하는거였다.</p>
+<p>보다 보다 ...지친 우리의 호프 도희...</p>
+<p>도경이에게 풍신류를 포기시킬 것을 권고한다..-.-;</p>
+<p>..........</p>
+<p>끝내는 풍신류 초고수의 길을 외면한채...</p>
+<p>우리 부산 광대쉬 창시자 윤도경..</p>
+<p>비풍신류로 돌아가고 만 것이다.</p>
+<p>영원히~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+<p>Episode 끝~</p>
+<p>ps. 현재는 필자가 오거를 가르쳐서 오거 한다. 이젠 부산 오거 최고수중 한명이 되어 있다. ^^</p>
+<hr class="dash">
+<p>짧게 쓴다는게 잡설이 길었다.</p>
+<p>죄송한 마음으로 다시 강의를 시작할까 한다.</p>
+<p>바로 본론으로 들어가자~ (시간을 너무 지체했죠?^^)</p>
+<h3 class="topic">* 광대쉬 어캐 써영??</h3>
+<p>광대쉬를 쓰기 위해서는 좀 특별한 레버 잡는 법이 필요하다.</p>
+<p>지금은 누구나 익힐 수 있도록 널리 퍼져 있었지만..</p>
+<p>이전에는 1p와 2p웨이브의 속도가 같았었다.</p>
+<p>일반적으로 1p와 2p의 레버 쥐는 법이 같았기 때문이다.</p>
+<p>광대쉬가 2p전용인 만큼 2p에서는 레버 쥐는 법을 좀 다르게 해야 한다.</p>
+<p>1p에서도 광대쉬에 가까운 속도를 낼 수가 있긴 하지만..</p>
+<p>엄청난 노력이 뒷받침 되어야 한다.</p>
+<p>1p는 레버 잡는 법은 필요가 없으니 생략하고 (자신이 잡는 법이 정석이다)</p>
+<p>2p의 레버 쥐는 법을 설명하겠다.</p>
+<p>광대쉬는 손가락을 2~4개만 사용을 한다.</p>
+<p>엄지손가락(첫번째 손가락)으로 레버를 한 번 튕구고 , 일반적으로 중지(3번째 손가락)와 소지(4번째)로 레버를 당긴다.</p>
+<p>필자는 중지와 엄지만을 사용했는데 스피드는 더 빨리 나오지만..</p>
+<p>광대쉬를 지속적으로 쓰기에 힘이 부적하다는 생각이 들어..</p>
+<p>중지와 소지 . 이 2개를 같이 쓰기로 결정을 했다.</p>
+<p>다시 한번 설명 하겠다.</p>
+<p>키보드의 키패드를 같이 보면서 보자.</p>
+<p>7 8 9</p>
+<p>4 5 6 5- 중립</p>
+<p>1 2 3</p>
+<p>(2p 기준)</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1.엄지로 앞으로 한번 튕군다 . 4 입력.</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2.엄지를 땐다(중립을 만든다). 5(n-중립) 입력.</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3.그리고 중지와 소지로 레버를 대각선으로 당긴다. 1 입력(엄격하게 말하면 21)</span></div>
+<p>이로서 4n21 이라는 커맨드가 입력되게 되는 것이다.</p>
+<p>(4n21 이 풍신 대쉬의 커맨드인거 모두 아시죠?^^)</p>
+<p>1p기준으로 설명하면 6n23 이다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">4</span><span class="ctext">4.그리곤 다시 레버에서 중지와 소지를 땐다 . 5(n-중립) 입력.</span></div>
+<p>이제부터 1~4 까지 반복한다.</p>
+<p>고로 4 n 1 n 4 n 1 n 4 n 1 n............</p>
+<p>광대쉬의 커맨드가 완성이 되는 것이다.</p>
+<p>위 커맨드는 흔히 말하는..</p>
+<p>광백대쉬의 커맨드와도 같다.</p>
+<p>여담인데 저 커맨드는 최고의 백대쉬라 알려진 무인지경 백스텝이라 불린다.</p>
+<p>광대쉬의 커맨드가 백대쉬의 커맨드와 같다. 고로?</p>
+<p>광대쉬 잘 쓰는 사람 ..맘만 먹으면 얼마든지 도망도 잘간다..-.- 라는 이론이 성립된다.</p>
+<p>광대쉬를 쓸땐.</p>
+<p>중립이 참 중요하다.</p>
+<p>4 n 1 n 4 n 1 n ...커맨드를 보면 중립이 반이다..-.-;</p>
+<p>항상 중립을 염두해 두고..</p>
+<p>연습을 해보자.</p>
+<p>워낙에 고난이도의 기술이라...(첨에만 어렵지만..)</p>
+<p>자동적으로 풍신류 기술을 터득함에 있어서 거의 마지막 연습 단계에 위치하게 될 것이다.</p>
+<p>하지만..</p>
+<p>광대쉬만 쓴다고 풍신류 고수는 아니다.</p>
+<p>요즘 만나는 어이없는..상대들.</p>
+<p>광대쉬 쓰는 하수?(중수들이 대부분이지만..)들을 가끔 볼 수 있다.</p>
+<p>표현이 좀 심한지 모르겠지만...</p>
+<p>초풍도 못 쓰는 사람들이 어떻게 광대쉬를 익혀가지고 앞에서 광대쉬만 쓰는 사람을 볼 수 있다.</p>
+<p>이것은..</p>
+<p>레버 잡는 법만 확실하게 알면 실력과 관계 없이 누구나 쓸 수 있다는 말과도 같다.</p>
+<p>광대쉬를 연습하면서..</p>
+<p>광대쉬 도중 초풍을 비록한 각종 기술들을 꼭 연마하도록 하자.</p>
+<p>아무리 광대쉬를 잘 써봤자..</p>
+<p>광대쉬-초풍을 마음대로 쓰지 못하면..</p>
+<p>광대쉬는 무용지물이 되는것은 물론이거니와...</p>
+<p>오히려 더 두드려 맞기 좋은 조건을 제공하게 된다.</p>
+<p>동네 꼬마들도 앞에서 웨이브 3,4번 하면 먼저 공격한다-.-;</p>
+<p>첨에는 광대쉬 도중 통발을 연습하고..</p>
+<p>그 다음엔 나락..</p>
+<p>그 다음엔 초풍을 연습하자.</p>
+<p>마지막으로 광대쉬 도중 기상어퍼(추돌).</p>
+<p>풍신류 기술중 가장 어렵다는 광대쉬 추돌은 마지막단계에서 연습하자.</p>
+<p>상대방을 코앞에 두고..</p>
+<p>3번 이상 발동된 광대쉬에서 나오는 추돌과 나락은 그 어떤 이도 막을 수가 없다.</p>
+<p>이건 어딜찍어야 될지 감도 안온다..고 봐도 무방하다.</p>
+<p>하지만 자유 자재로 쓰기도 정말 어려운 기술임에는 틀림 없다.</p>
+<p>하지만 3번이상 광대쉬쓰면서 상대방 앞에 붙을 기회도 그리 많지 않으므로..</p>
+<p>중수분들은 익히지 않아도 될 기술이다.</p>
+<p>광대쉬라는게 잘 쓰면 약이지만 못 쓰면 해가 될 수 있으므로..</p>
+<p>연습을 충분히 하고 항상 방어도 같이 연습해나가자.</p>
+<p>그럼 광대쉬에 대한 강의를 마칠까 한다.</p>
+<hr class="dash">
+<p>오늘은 이정도 썼네요..^^</p>
+<p>다시 써서 그런지 빠진 부분도 있고 추가된 부분도 있지만...</p>
+<p>그럭 저럭 나름대로 광대쉬 입문서로서는 괜찮은 글 같네요..^^</p>
+<p>미흡했다면 정말 죄송합니다^^</p>
+<p>지금 제가 너무 잠이 와서..(현 시각 11:47분 원래 12시 땡하면 잡니다^^)</p>
+<p>거의 눈 감고 쓰고 있네요. 헤헤^^</p>
+<p>여기까지 읽어 주셨다니..저로서는 정말 감사하단 말밖엔^^</p>
+<p>이번 강의 부터 중수이상을 위한 강의를 시작했으니..</p>
+<p>앞으로도 많은 고급 패턴들을 강의하겠습니다.</p>
+<p>그럼~ 모두 안뇽~</p>
+  </div>
+</section>
+<section class="lecture" id="sec-9">
+  <div class="lec-head">
+    <span class="lec-badge">⑨</span>
+    <h2 class="lec-title">또히의 풍신류 강좌 9번째 - 또히류패턴모음 1 -</h2>
+  </div>
+  <div class="lec-body">
+<p>안녕하세요.</p>
+<p>또히에요.</p>
+<p>오늘 가만히 있다가 갑자기 강의를 게속 해볼까 하고 컴 앞에 앉었습니다.</p>
+<p>오늘은 뭐할까..했는데..</p>
+<p>다른 것들보다 좀 활용성있는 실용적인 패턴들을 공개할까 합니다^^</p>
+<p>아참 제가 쓰는 패턴이라고 전부 제가 만든 패턴이 아니니 ...</p>
+<p>오해하지 마세용^^</p>
+<p>원래 팀 애들 가르쳐 줄려고 생각해 놓은것들..</p>
+<p>그냥 모두 공개하도록 하겠습니당^^</p>
+<p>그럼 시작~~~~</p>
+<hr class="dash">
+<h3 class="subhead">또히의 풍신류 강좌 9번째 - 또히류패턴모음 1 -</h3>
+<p>오늘은 여러가지 팁에 대해 알아보도록 하겠다.</p>
+<p>일단 목록을 보고 하나 하나씩 설명해 나가도록 해보자.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 진의 가드 불능 나살문 쓰기.</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 헤이하치의 나락 활용</span></div>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 카즈야의 공중콤보 활용</span></div>
+<div class="combo"><span class="bullet" aria-hidden="true">1</span><span class="ctext">1. 진의 가드 불능 나살문<code class="cmd">(46+rp,lp,rp)</code></span></div>
+<p>오호라~~~~~ 이게 머시다냐.. 헛소리가 아니당. ^ㅇ^</p>
+<p>나살문을 가드 불능으로 맞출수가 있단 말인가...!!</p>
+<p>흔히 부살문(부산나살문 또는 가드불능나살문)이라 불리우는 이 기술은..</p>
+<p>한번 성공 시키면 지고 있던 게임도 바로 역전을 시킬수 있는 진 초유의 한방기이다</p>
+<p>사실 가드 불능은 아니지만 처음 맞는 사람.. 가드가 약한 사람..허약하거나 ..</p>
+<p>심장이 약하고..노약자..임산부..-.- 들은 아주 잘 맞는다.</p>
+<p>쓰는 방법을 차차 알아보자.</p>
+<p>일단 첫타는 카운터이어야 한다.</p>
+<p>우리는 흔희 나살문을 연타로 쓰는데..</p>
+<p>1타와 2타 사이를 연타로 쓰지 말고 딱딱 끊어서 써주자.</p>
+<p>첫타의 딜레이가 풀리자 마자 2타를 써주고.. 2타와 3타는 딜레이없이 연타로 써주자.</p>
+<p>이게 바로 부살문의 쓰는 방법이다.</p>
+<p>원리는 무엇이냐!!</p>
+<p>나살문을 카운터로 맞았을때 쓰는 사람이 3타 모두 딜레이 없이 써주면!!</p>
+<p>3타째는 레버를 앞으로만 하고 있어도 3타가 막아진다. 나살문에만 해당하는 자동가드이다. (우왕 버그다~ ^ㅇ^)</p>
+<p>보통 1타를 카운터로 맞자 마자 레버를 앞으로 해서 나살문을 푸는데..</p>
+<p>나살문 1타의 딜레이가 끝나고 나서 2타를 천천히 써주면..</p>
+<p>보통 맞는 이들은 평소때처럼 레버를 앞으로 민다.</p>
+<p>그러면? 2타를 천천히 썼기에.. 3타에서 자동 가드를 하게 될것이..</p>
+<p>2타에서 자동 가드가 되어 버리고..</p>
+<p>그리고 3타는 자동 가드가 안되어서 3타가 히트한다.</p>
+<p>무슨 말인지 조금 이해하기 어려울 것이다.</p>
+<p>그러나!! 오락실 가서 한번 써보자~</p>
+<p>항상 가드불능 나살문을 쓰는 필자도 가끔 방심하다가 우리팀 친구들에게 맞는다.</p>
+<p>막는 방법은 레버를 나살문 카운터를 풀자마자 재빠르게 레버를 뒤로 당기는 것이다.</p>
+<p>말처럼 그리 막기 쉽지가 않다.</p>
+<p>더 설명하고 싶지만.. 더욱 많이 설명하면 더 피곤할 것이므로.. 그만 설명하겠다.</p>
+<p>그냥 가서 고수들 상대로 써보자. 동네 하수들은 안 맞는다..</p>
+<p>보통 중고수나 고수까지 꽤 잘 맞는다.</p>
+<p>활용할 수 있는 패턴으로..</p>
+<p>오른 어퍼 - 나살문 을 써보자.</p>
+<p>카운터로 잘 들어가서 꽤나 쓸모 있다.</p>
+<p>이 연타 패턴은 고수에게는 쓰지 말자.</p>
+<p>고수들은 오른어퍼를 맞으면 백대쉬 하는 버릇이 있기에..</p>
+<p>초풍 맞기에도 좋다.</p>
+<p>필자는 나살문이 카운터다 싶으면 ..</p>
+<p>항상 가드 불능 나살문 이것을 쓰고..</p>
+<p>마지막 타는 자주 나살문 2로 변경해서 ..</p>
+<p>상대방을 뛰운다.</p>
+<p>이 가드 불능 나살문을 아는 사람도 그리 많지 않지만..</p>
+<p>이걸 보고 나살문 2로 넣을 줄 아는 사람은 거의 없다.</p>
+<p>하지만 평소에 가드 불능 나살문을 쓰면서 카운터이면..</p>
+<p>나살문2로 변경한다는 생각을 가지고 게임에 임하자.</p>
+<p>그럼 저절로 마스터가 될 것이다.</p>
+<p>(분노 게이지) 나살문2-나살문1-통발.</p>
+<p>이거 맞으면 normal+2 (플스로 140 or 150) 데미지에서도..</p>
+<p>거의 절명 상태로 만들수 있다.</p>
+<div class="combo"><span class="bullet" aria-hidden="true">2</span><span class="ctext">2. 헤이하치의 나락활용.<code class="cmd">(6n23+rk)</code></span></div>
+<p>헤이하치의 나락을 활용해서 상대방을 뛰워보도록 하자!</p>
+<p>무엇이냐~ 나락을 1타만 히트 시킨후.</p>
+<p>재빠르게 귀신권<code class="cmd">(66+rp)</code>을 써보자.</p>
+<p>대초가 능숙한 사람은 대초도 상당히 좋다.</p>
+<p>귀신권이 좋은 점은.. 스피드가 어정쩡하게 나가기 때문에..</p>
+<p>초풍보다 잘 맞는다.</p>
+<p><code class="cmd">(흔히 중수들이 이유 없이 계속 맞는 브라이언의 4+lp나 리의 블레이징 킥을 떠오르면 쉽게 이해가 갈 것이다)</code></p>
+<p>나락 1타만 히트하면 상대방은 흔히 이게 왠 재수냐 하고..</p>
+<p>백대쉬를 한다.</p>
+<p>보통 백대쉬 횡신을 하는데..</p>
+<p>이 타이밍에 귀신권이 들어가는 것이다.</p>
+<p>자신도 모르게 아차하는 사이에 가드를 못하고 공중 부양하게 된다.</p>
+<p>특히 흔히 초공격빵이라 불리는 사람들..</p>
+<p>기회만 보이면 백대쉬 초풍을 날린다.</p>
+<p>공격빵이라고 무조건 대쉬초풍만 날리는게 아니다. 백대쉬 초풍도 꽤 많이 쓴다.</p>
+<p>보통 초공격빵 맨들은 나락1타를 맞었으면 백대쉬를 한다음에 초풍을 날릴려고 한다.</p>
+<p>그렇다면?? 그 사이의 타이밍에 절묘하게 귀신권을 써서 카운터 히트 시킬 수 있게 되는 것이다.</p>
+<p>상당히 괜찮은 패턴이니 잘 활용해 보도록 하자.</p>
+<p>많이 맞다 보면 먼저 초풍을 때릴 수 있으니..</p>
+<p>나락1타-대쉬초풍도 섞어 가면서 써주도록 하자.</p>
+<p>몇 번 맞아본 상대는 위축되서 그냥 서 있는 경우가 꽤 많은데..</p>
+<p>(고수라고 예외가 아니다. 고수는 경험이 많아서 그렇지..자신도 처음 맞아 보는 것이면 당황하게 되어있다)</p>
+<p>이때 나락1타 - 나락1타 연타로 써주는 것도 괜찮은 방법이다.</p>
+<div class="numitem"><span class="bullet" aria-hidden="true">3</span><span class="ctext">3. 카즈야의 공중 콤보 활용</span></div>
+<p>카즈야의 풍신이 카운터 히트 됐을때 흔히 우리는 무엇을 쓰는가.</p>
+<p>풍신-원-풍신-파쇄축을 쓴다.</p>
+<p>하지막 이것보단 풍신-풍신-풍신대쉬 lk를 권장한다.</p>
+<p>데미지가 둘이 비슷하다.</p>
+<p>일단은 풍신-풍신-풍신대쉬 lk 를 쓴다는 가정하에 글을 쓰겠다.</p>
+<p>아참 마지막에 파쇄축을 안 쓰는 이유는 재빠르게 일어나서 가드가 가능하기 때문이다</p>
+<p>필자는 풍신-원-풍신-풍신대쉬 lk를 더 많이 쓴다 이유는..</p>
+<p>파쇄축을 쓰면 후에 거리가 엄청 멀어지지만..</p>
+<p>lk는 상대방을 멀리 튕구지 않기 때문에.. 빨리 추격해서 후속타를 노리기 더 쉽기 때문이다. (하지만 진 만큼은 아니다)</p>
+<p>하지만 이걸 응용해 보자..</p>
+<p>풍신-풍신-풍신대쉬대종1타<code class="cmd">(6n23n+rk)</code>를 써보도록 하자.</p>
+<p>흔히 풍신-풍신을 맞으면 고수가 아닌 이상..</p>
+<p>빨리 일어날려고 발악을 한다.(초고수도 안 맞아보면 맞는다..그런데 요즘은 초고수한텐 안 통하고 중고수 전용이 되어 버렸다)</p>
+<p>발악을 할때 그때 가서 풍신대쉬 대종1타를 써주면 뒤로 구르다가 한대 맞고 살짝 뜨게 되고..</p>
+<p>그때 대종 2타가 또 들어간다.</p>
+<p>이 얼마나 좋은 패턴인가.. 때리고 또 때리고~ 때리고 또 때리고~ ^ㅇ^</p>
+<p>풍신대쉬 대종1타가 히트하지 않는다 하더라도 기상 공격의 위험이 뒤따르지 않는다.</p>
+<p>상대방은 이미 엎어져 있는 상태..</p>
+<p>기상 공격이 무지 느리기 때문에 풍신대쉬대종1타가 헛치더라도 , 그것을 보고 기상 공격으로 반격하기에는 상당히 무리가 있다..</p>
+<p>기상 공격을 하면 자신이 이지선다에 빠지게 된다^^</p>
+<p>하단 기상 공격을 하고 막았으면.. 더블어퍼</p>
+<p>상당 기상 공격 이면? 풍신~ 와우 얼마나 좋은가~ 어부지리로 또 한대 더 때린다^^</p>
+<hr class="dash">
+<p>에구 오늘은 이정도만 쓸께요.^^</p>
+<p>풍신류 패턴모음 여러가지 더 올리구요.</p>
+<p>각종 글들을 올리고 싶네요.</p>
+<p>그럼..</p>
+  </div>
+</section>
+<section class="lecture" id="sec-comments">
+  <div class="lec-head"><span class="lec-badge">💬</span><h2 class="lec-title">원문 댓글 <span class="dim">— 당시(2001~2003) 코멘트</span></h2></div>
+  <div class="comments"><div class="comment"><div class="c-body"><span class="c-nick">이런..</span> 이런.. 중간에 왜 내 욕이..-_-;;</div><div class="c-date">2001/12/04</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">열분들..</span> 도희 찌끄레기 저랑 일댈해서 졸라 깨쪘어요^^ 중간에 저 글 믿지마셈^-^</div><div class="c-date">2001/12/04</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">김현식</span> 광대시 각성의 날까지.</div><div class="c-date">2001/12/07</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">태권브이</span> 한국 그리곤 세계를 제패할 초일류고수가 되리라!!!<br>-_-ㅋ</div><div class="c-date">2001/12/10</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">세휘러문^^</span> 도갱이 개씨레기</div><div class="c-date">2001/12/17</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">철권사랑</span> ㅡ.ㅡ; 욕은 달지마세염</div><div class="c-date">2001/12/27</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">세휘러문^^</span> 욕이 아니랍니다^^ 사실이죠.</div><div class="c-date">2001/12/28</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">복싱챔피언</span> 케케...카쟈로 풍신-풍신후 계속 뒤로 구르는놈한테 풍신 6방 맞춰서 퍼펙으로 이겨봤다..-_-v</div><div class="c-date">2001/12/28</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">ⓑless</span> ㅡㅡ;;</div><div class="c-date">2001/12/28</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">철권사랑</span> 나도 그런적 많은데..ㅋㅋ</div><div class="c-date">2001/12/30</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">콤보초보</span> 저 열라 허접인뎅염...질문하나만요...그 대쉬풍신은 어케 쓰는건지..글구 풍신중단점....</div><div class="c-date">2002/01/20</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">[D.r]오거매딕</span> 역시 도희님이야...--+ 허뻐.. 많이 아신다..<br>나는 초풍만 겨우 쓰는데 쩝...ㅡ.ㅡ;;<br>어쩔떄.. 컨디션좋을떄 풍텐기어같은거 이지 나오거 쩝..<br>연습을 마뉘 해야 되겠는데...</div><div class="c-date">2002/01/23</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">ogrekain</span> 중단풍신이 어딨다고....ㅡ.ㅡ;;;;....2에서는 풍신 중단임다</div><div class="c-date">2002/01/23</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">내사랑줄리아</span> 이걸봐도 어려운건 사실이다... 오로지 연습만이 있을뿐... -_ㅡγ</div><div class="c-date">2002/01/23</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">허접샤오</span> 흠.......도움많이 되었네요....요즘은 광대쉬도 살짝 쓰게됬네요^^;<br>그래도 역시 노력이 최거 ^~^</div><div class="c-date">2002/01/24</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">광마</span> 얼라들 나살문카운터 피하는법 퍽 (마자따)<br>아쒸 하면서 레버를 앞뒤로 갈긴다 ㅡㅡ;;</div><div class="c-date">2002/01/25</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">개조빱</span> 풍신중단...그거...ㅡㅡ..아마...풍신쓰면서...태그 키를 누르닌게 아닐까요??ㅡㅡ;<br>음..ㅡ_ㅡ;;<br>맞는거 가튼디..</div><div class="c-date">2002/01/27</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">神투신아날아봐風</span> 헉~~!!!!!!!!!!!!<br>혹시 도희님께서 남기신 메뉴얼 있나 보려고 보통메뉴얼란에 검색해봤는데, 여기도 똑같은 메뉴얼이... (김태형님이 올리신)<br>아 그리고 도경님 거의 비슷한 말씀을... 이런.. 저 중간에 씰데없는 글은 넣어가지구..ㅡ_ㅡ; (도경님)<br>거기다가 태권브이님꼐서는 아예 똑같은 말, 똑간은 제스처 (ㅋ)<br>ㅡㅡ;</div><div class="c-date">2002/02/02</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">샤오포유</span> 풍신과 함께 태그를 누르면 아쉽게도 중단으로 변하지는 않아요. 다만 특수중단으로 변해 앉아도 가드가 되게 해요. 카즈야와 헤이하치는 태그키를 눌러주지 않아도 원래가 특수중단이에요. 게다가 횡신도 잘 잡더군요..</div><div class="c-date">2002/02/19</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">풍신배우기</span> 감사함돠</div><div class="c-date">2002/03/02</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">진화랑매니아</span> ㅋㅋ 가드불능나살문 초보들은 레버막돌리다가안맞는데 ㅋㅋ</div><div class="c-date">2002/03/02</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">김시능</span> 카즈야는 풍신중단인데.. 앉으면 맞죠</div><div class="c-date">2002/03/23</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">도시락</span> ..특중인데..</div><div class="c-date">2002/04/01</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">철권사랑</span> ㅡㅡ;.. 카즈야 풍신 앉으면 막아져여.. 특중...<br>카즈야 풍신이 앉아서 안막아지면<br>개사기 캐러죠.. ㅡㅡ;</div><div class="c-date">2002/04/13</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">샤오샤오</span> 개사기 케러 아닌데여 3때는 헤이야치 초풍 중단이였슴</div><div class="c-date">2002/08/01</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">로맨스석</span> 3때는 초풍이 아니잖아요~~</div><div class="c-date">2002/08/08</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">철권사랑</span> 중단이면... 앉아서 맞는단 말씀이십니까??</div><div class="c-date">2002/08/16</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">릿차올란</span> 다 아는 내용 써놓고 자기 자랑만 하네...'6n236 이거 연습하쇼' 이런식으로 못쓰는 사람 어딨나요..사설도 너무 많고...겸손한 도희님이 되시길..</div><div class="c-date">2002/08/30</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">X-Phile</span> 지금이야 다 아시는 내용이시겠지만... 제가 볼 때만 해도 정말 엄청났었는데..;;<br>몇 년 전이던가...</div><div class="c-date">2002/09/28</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">지금</span> 봐도 별 무리없는.. 강좌^^ 예전에 이거 보고 많이 배웠는데:)</div><div class="c-date">2002/10/10</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">김영구</span> 이제 시작한지 두달두 안됐는데... 이 메뉴얼 땜에 빠르게 성장하구 있답니다~~~ 감사 감사~~^^&amp;</div><div class="c-date">2002/12/17</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">초보철권</span> 오늘 두 번째로 이 메뉴얼 보는데요..꼬릿말은 첨보는데 릿차올란님 말씀이 심하신듯 하네요 초보라면 이메뉴얼이 많이 도움이 됩니다..님이 그렇게 생각하신다면 님이 메뉴얼 작성을 해보시는건 어떤지요?<br>도희님 메뉴얼 감사합니다..잘보구 갑니다..더좋은 메뉴얼 써주시길..^^</div><div class="c-date">2003/03/05</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">철권이여~</span> 예전에 바써도....지금 바도 ......ㅜㅜ감격...</div><div class="c-date">2003/09/25</div></div>
+<div class="comment"><div class="c-body"><span class="c-nick">요시가좋아요</span> 오늘 보는데(10/11) 오늘 생일이시네요^^;; 축하드립니다~</div></div></div>
+</section>
+  </main>
+</div>
+
+<footer>
+  본 페이지는 <b>김도희님의 풍신류 메뉴얼</b>의 원문 텍스트를 <b>한 글자도 바꾸지 않고 보존</b>한 채,
+  가독성을 위해 구조·타이포그래피만 코드로 입힌 것입니다.<br>
+  원문 출처: <a href="https://cafe.daum.net/chonanTekken/I7Gn/44" target="_blank" rel="noopener">Daum 카페 · 천안철권</a>
+  <div class="disp">coding / 005 · 風神流</div>
+</footer>
+
+<a id="top" href="#pagetop" aria-label="맨 위로">↑</a>
+
+<script>
+(function(){
+  var bar=document.getElementById('progress'), top=document.getElementById('top');
+  function onScroll(){
+    var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop;
+    var max=(h.scrollHeight-h.clientHeight)||1;
+    bar.style.width=(sc/max*100)+'%';
+    top.classList.toggle('show', sc>500);
+  }
+  document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  var links=[].slice.call(document.querySelectorAll('.toc-link'));
+  var map={}; links.forEach(function(a){map[a.getAttribute('data-target')]=a;});
+  var secs=[].slice.call(document.querySelectorAll('.lecture'));
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.remove('active');});
+        var a=map[e.target.id]; if(a){a.classList.add('active');
+          a.scrollIntoView({block:'nearest',inline:'nearest'});}
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px',threshold:0});
+  secs.forEach(function(s){io.observe(s);});
+})();
+</script>
+</body>
+</html>
